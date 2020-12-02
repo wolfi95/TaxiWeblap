@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import App from './Pages/Reservation/ReservationPage';
 import reportWebVitals from './reportWebVitals';
 import { Route, BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
 import LoginPage from './Pages/Login/LoginPage';
@@ -14,6 +14,9 @@ ReactDOM.render(
     <React.StrictMode>
     <Router>
         <Switch>
+          {
+            store.getState().user.token === "" ? <Redirect to="/login"/> : ""
+          }
         <Route exact path="/home" component={App}/>
         <Route exact path="/login">
           <LoginPage />

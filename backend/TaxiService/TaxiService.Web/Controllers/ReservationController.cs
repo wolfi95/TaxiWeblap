@@ -35,9 +35,20 @@ namespace TaxiService.Web.Controllers
 
         [HttpPost]
         [Route("price")]
-        public async Task<double> GetReservationPrice([FromBody] ReservationDto reservation)
+        public async Task<double> GetReservationPrice([FromBody] ReservationPriceDto reservation)
         {
-            ValidateReservation(reservation);
+            if (String.IsNullOrEmpty(reservation.FromAddress))
+            {
+                throw new ArgumentNullException("From address cannot be empty.");
+            }
+            if (String.IsNullOrEmpty(reservation.ToAddrress))
+            {
+                throw new ArgumentNullException("Destination address cannot be empty.");
+            }
+            if (reservation.ReservationType == Dal.Enums.ReservationType.ByTheHour && (reservation.Duration == null || (reservation.Duration < 0 || reservation.Duration > 12)))
+            {
+                throw new ArgumentException("Reservation duration out of bounds.");
+            }
 
             return await reservationService.GetPrice(reservation);
         }

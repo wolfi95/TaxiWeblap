@@ -1,32 +1,30 @@
 import React from 'react';
-import "./App.scss";
+import "./ReservationPage.scss";
 import {
   MuiPickersUtilsProvider,
   DateTimePicker,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import { Container, Grid, Snackbar, Checkbox, Button } from "@material-ui/core";
-import { axiosInstance } from "./config/Axiosconfig";
+import { axiosInstance } from "../../config/Axiosconfig";
 import { Redirect, RouteComponentProps} from "react-router-dom";
 import Alert from "@material-ui/lab/Alert";
 import { connect } from "react-redux";
-import { RootState } from "./redux/reducers/rootReducer";
+import { RootState } from "../../redux/reducers/rootReducer";
 import {  Dispatch } from 'redux';
-import { CarType } from './config/Enums/CarType';
-import { ReservationType } from './config/Enums/ReservationType';
-import { Preference } from './config/Interfaces/Preference';
-import ReservationPriceDto from './dtos/Reservation/ReservationPriceDto';
-import { apiKey } from './config/Googleconfig';
+import { CarType } from '../../config/Enums/CarType';
+import { ReservationType } from '../../config/Enums/ReservationType';
+import { Preference } from '../../config/Interfaces/Preference';
+import ReservationPriceDto from '../../dtos/Reservation/ReservationPriceDto';
+import { apiKey } from '../../config/Googleconfig';
 
 export interface DispatchedProps {
   mock: any;
 }
 
-export interface IRentState {
+export interface IReservationPageState {
   date: any;
   selectedType?: CarType;
-  email: string;
-  name: string;
   origin: string;
   destination: string;
   open: boolean;
@@ -35,11 +33,22 @@ export interface IRentState {
   time: number;
   price?: number;
   preferences: Preference[];
-  login: boolean;
   summary: boolean;
   typesClosed: boolean;
-  longDistance: boolean;
-  longTime: boolean;
+}
+const initialState: IReservationPageState = { 
+  date: new Date(),
+  destination: "",
+  errorMsg: "",
+  open: false,
+  origin: "",
+  preferences: [],
+  summary: false,
+  tab: ReservationType.Oneway,
+  time: 0,
+  typesClosed: true,
+  price: undefined,
+  selectedType: undefined
 }
 
 interface IMappedProps{
@@ -52,12 +61,18 @@ interface OwnProps {
 
 type Props = DispatchedProps & IMappedProps & RouteComponentProps<OwnProps>;
 
-class App extends React.Component<Props, IRentState> {
+class App extends React.Component<Props, IReservationPageState> {
   /**
    *
    */
   constructor(props: Props) {
-    super(props);             
+    super(props);
+    this.state = initialState;
+
+    var prefs: Preference[] = [];
+    axiosInstance.get("preferences")
+      .then(res => prefs = res.data)
+    this.setState({preferences: prefs});
   }
 
   autocompleteOrigin?: google.maps.places.Autocomplete;
@@ -340,16 +355,6 @@ class App extends React.Component<Props, IRentState> {
     }
   };
 
-  handleEmailChange = (val: string) => {
-    this.setState({ email: val });
-    (document.getElementById("email-input") as HTMLInputElement).className = "col-md-4";
-  };
-
-  handleNameChange = (val: string) => {
-    this.setState({ name: val });
-    (document.getElementById("name-input") as HTMLInputElement).className = "col-md-4";
-  };
-
   getMinDate = (): Date => {
     var now = new Date();
     var min = now.setHours(now.getHours() + 12);
@@ -364,34 +369,6 @@ class App extends React.Component<Props, IRentState> {
       x?.scrollIntoView({behavior:"smooth", block:"center"})
       error = true;
     }
-    if(this.props.token === "")
-      if (this.state.email.length === 0) {
-        error = true;
-        this.setState({
-          open: true,
-          errorMsg: "Email address cannot be empty.",
-        });
-        (document.getElementById("email-input") as HTMLInputElement).className +=" error";
-        (document.getElementById("email-input") as HTMLInputElement).scrollIntoView({behavior: "smooth",block: "center"});
-      } else {
-        if (!this.state.email.includes("@")) {
-          error = true;
-          this.setState({
-            open: true,
-            errorMsg: "Email address must contain '@' character.",
-          });
-          (document.getElementById("email-input") as HTMLInputElement).className +=" error";
-          (document.getElementById("email-input") as HTMLInputElement).scrollIntoView({behavior: "smooth",block: "center"});
-        } else {
-          var reg = new RegExp("^[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,4}$");
-          if (!reg.test(this.state.email)) {
-            error = true;
-            this.setState({ open: true, errorMsg: "Email address not valid." });
-            (document.getElementById("email-input") as HTMLInputElement).className +=" error";
-            (document.getElementById("email-input") as HTMLInputElement).scrollIntoView({behavior: "smooth",block: "center"});
-          }
-        }
-      }
 
     if(this.state.selectedType === undefined) {
       error = true;
@@ -538,17 +515,8 @@ class App extends React.Component<Props, IRentState> {
   }
 
   render() {
-    if(this.state.login)
-      return <Redirect to="/login"/>
-    else
     if(this.state.summary)
-      return <Redirect to="/summary"/>
-    else
-    if(this.state.longDistance)
-      return <Redirect to="/longdistance" />
-    else
-    if(this.state.longTime)
-      return <Redirect to="/longtime" />
+      return <Redirect to="/summary"/>    
     else {
       return (
         <div className="container-width">
@@ -663,7 +631,7 @@ class App extends React.Component<Props, IRentState> {
                     </li>
                     <li>
                       <img
-                        src={require("../images/executive/mercedes_e.jpg")}
+                        //src={require("../images/executive/mercedes_e.jpg")}
                         className="car"
                       />
                     </li>
@@ -688,7 +656,7 @@ class App extends React.Component<Props, IRentState> {
                     </li>
                     <li>
                       <img
-                        src={require("../images/luxury/mercedes_s.png")}
+                        //src={require("../images/luxury/mercedes_s.png")}
                         className="car"
                       />
                     </li>
@@ -713,7 +681,7 @@ class App extends React.Component<Props, IRentState> {
                     </li>
                     <li>
                       <img
-                        src={require("../images/7seater/mercedes_v.jpg")}
+                        //src={require("../images/7seater/mercedes_v.jpg")}
                         className="car"
                       />
                     </li>
@@ -790,5 +758,5 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  undefined
 )(App);

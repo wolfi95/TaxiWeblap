@@ -10,7 +10,7 @@ namespace TaxiService.Bll.ServiceInterfaces
 {
     public interface IReservationService
     {
-        public Task<double> GetPrice(ReservationDto reservation);
+        public Task<double> GetPrice(ReservationPriceDto reservation);
         public Task MakeReservation(ReservationDto reservation);
         public Task<ReservationDetailDto> GetUserReservations(string userId);
         public Task CancelReservation(Guid reservationId, User user);

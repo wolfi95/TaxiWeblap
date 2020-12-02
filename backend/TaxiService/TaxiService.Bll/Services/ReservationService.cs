@@ -24,7 +24,7 @@ namespace TaxiService.Bll.Services
             throw new NotImplementedException();
         }
 
-        public Task<double> GetPrice(ReservationDto reservation)
+        public Task<double> GetPrice(ReservationPriceDto reservation)
         {
             throw new NotImplementedException();
         }

@@ -13,7 +13,7 @@ import { Redirect } from "react-router";
 import UserRegisterDto from "../../dtos/User/UserRegisterDto"
 import { Snackbar } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
-import './RegisterPage.css'
+import './RegisterPage.scss'
 import { axiosInstance } from "../../config/Axiosconfig";
 
 const useStyles = makeStyles((theme) => ({
