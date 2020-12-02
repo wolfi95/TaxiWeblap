@@ -5,7 +5,7 @@ import {
   DateTimePicker,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import { Container, Grid, Snackbar, Checkbox, Button } from "@material-ui/core";
+import { Container, Grid, Snackbar, Checkbox, Button, TextField } from "@material-ui/core";
 import { axiosInstance } from "../../config/Axiosconfig";
 import { Redirect, RouteComponentProps} from "react-router-dom";
 import Alert from "@material-ui/lab/Alert";
@@ -33,8 +33,8 @@ export interface IReservationPageState {
   time: number;
   price?: number;
   preferences: Preference[];
+  comment: string;
   summary: boolean;
-  typesClosed: boolean;
 }
 const initialState: IReservationPageState = { 
   date: new Date(),
@@ -46,9 +46,9 @@ const initialState: IReservationPageState = {
   summary: false,
   tab: ReservationType.Oneway,
   time: 0,
-  typesClosed: true,
   price: undefined,
-  selectedType: undefined
+  selectedType: undefined,
+  comment: "",
 }
 
 interface IMappedProps{
@@ -210,8 +210,8 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
     }
   };
 
-  getPrice = (rentType: ReservationType) => {   
-    if (rentType === ReservationType.Oneway) {
+  getPrice = () => {   
+    if (this.state.tab === ReservationType.Oneway) {
        //Google Autocomple is not a react Native element
       var origin = (document.getElementById(
         "origin-oneway"
@@ -444,6 +444,10 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
     this.setState({destination: e?.currentTarget.value})
   }
 
+  handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    this.setState({comment: e.currentTarget.value})
+  }
+
   componentDidMount() {
     if(this.state.tab === ReservationType.Oneway) {
     var origin = document.getElementById("origin-oneway") as HTMLInputElement;
@@ -474,36 +478,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
 
     this.state.tab === ReservationType.Oneway ?
       this.switchTab(null, "oneway", true)
-      : this.switchTab(null, "bythehour", true);
-    switch (this.state.selectedType) {
-      case CarType.Executive:
-        var element = document.getElementById("executive-card");
-        if (element != null) {
-          element.className = "price price-selected";
-        }
-        this.setState({typesClosed: false});
-        break;
-      case CarType.Luxury:
-        var element = document.getElementById("luxury-card");
-        if (element != null) {
-          element.className = "price price-selected";
-        }
-        this.setState({typesClosed: false});
-        break;
-      case CarType.SevenSeater:
-        var element = document.getElementById("sevenSeater-card");
-        if (element != null) {
-          element.className = "price price-selected";
-        }
-        this.setState({typesClosed: false});
-        break;
-      default:
-        var container = document.getElementById("typeContainer");
-        if(container !== null)
-          container.style.display = "none";
-          this.setState({typesClosed: true});
-        break;
-    }
+      : this.switchTab(null, "bythehour", true);    
   }
 
   componentDidUpdate(){
@@ -520,7 +495,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
     else {
       return (
         <div className="container-width">
-          <div className={this.state.typesClosed ? "initial-height" : ""}>
+          <div>
             <div className="tab">
               <button
                 className="tablinks"
@@ -698,8 +673,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                   </ul>
                 </Grid>
               </Grid>
-            </div>  
-            {this.state.selectedType !== undefined &&
+            </div>              
             <div>
               <Container>
                 {this.state.preferences.map(pref => (
@@ -713,13 +687,23 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                     <span>{pref.Text}</span>
                   </div>
                 ))}
+                <TextField 
+                  label="Comment" 
+                  value={this.state.comment} 
+                  onChange={(e) => this.handleCommentChange(e)}
+                  fullWidth={true}
+                  multiline={true}
+                  rows={20}
+                  rowsMax={20}>
+                </TextField>
                 <input
                   className="searchButton"
                   id="search-oneway"
                   type="button"
-                  value="Get Price"
-                  onClick={() => this.getPrice(ReservationType.Oneway)}
-                />
+                  value="Calculate"
+                  onClick={() => this.getPrice()}
+                /> 
+                <span>{this.state.price ?? "xxx"} .-</span>               
               </Container>                 
               <div className="d-md-flex justify-content-md-center mt-3 form-end">                
                 <Button
@@ -727,11 +711,10 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                   id="continue-button"                  
                   onClick={(e) => this.submit(e)}
                 >
-                  Continue to summary
+                  Make Reservation
                 </Button>
               </div>              
             </div>
-            }          
           </div>                
           <Snackbar
             open={this.state.open}
