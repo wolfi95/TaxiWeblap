@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
         Email: email,
         Password: pass
       }
-      axiosInstance.post("user/login",data)
+      axiosInstance.post("user/login", data)
         .then(response => {
           axiosInstance.defaults.headers["Authentication"] = "Bearer " + response.data
           dispatchH(saveToken(response.data));

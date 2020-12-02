@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
 import LoginPage from './Pages/Login/LoginPage';
 import store from './redux/store';
 import { Provider } from 'react-redux';
@@ -21,6 +21,7 @@ ReactDOM.render(
         <Route exact path="/register">
           <RegisterPage />
         </Route>
+        <Redirect to="/home"/>
         </Switch>
       </Router>
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
