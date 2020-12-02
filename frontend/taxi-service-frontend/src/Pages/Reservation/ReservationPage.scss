@@ -278,3 +278,14 @@ body {
     display: block !important;
   }
 }
+
+.comment-box {
+  .MuiInputLabel-formControl{
+    top: 5px !important;
+    left: 5px !important;
+  }
+  textarea {
+    border: 1px solid grey !important;
+    padding: 5px;
+  }
+}

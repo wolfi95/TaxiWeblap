@@ -17,6 +17,7 @@ import { ReservationType } from '../../config/Enums/ReservationType';
 import { Preference } from '../../config/Interfaces/Preference';
 import ReservationPriceDto from '../../dtos/Reservation/ReservationPriceDto';
 import { apiKey } from '../../config/Googleconfig';
+import 'bootstrap'
 
 export interface DispatchedProps {
   mock: any;
@@ -176,9 +177,6 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
   ) => {
     // Declare all variables
     var i, tabcontent, tablinks;
-
-    //When switching tabs set the selected car type to none
-    this.setState({selectedType: undefined});
 
     // Get all elements with class="tabcontent" and hide them
     tabcontent = document.getElementsByClassName("tabcontent");
@@ -606,7 +604,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                     </li>
                     <li>
                       <img
-                        //src={require("../images/executive/mercedes_e.jpg")}
+                        src={require('../../resources/images/executive/mercedes_e.jpg').default}
                         className="car"
                       />
                     </li>
@@ -631,7 +629,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                     </li>
                     <li>
                       <img
-                        //src={require("../images/luxury/mercedes_s.png")}
+                        src={require("../../resources/images/luxury/mercedes_s.png").default}
                         className="car"
                       />
                     </li>
@@ -656,7 +654,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                     </li>
                     <li>
                       <img
-                        //src={require("../images/7seater/mercedes_v.jpg")}
+                        src={require("../../resources/images/7seater/mercedes_v.jpg").default}
                         className="car"
                       />
                     </li>
@@ -688,13 +686,14 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                   </div>
                 ))}
                 <TextField 
+                  className="comment-box"
                   label="Comment" 
                   value={this.state.comment} 
                   onChange={(e) => this.handleCommentChange(e)}
                   fullWidth={true}
                   multiline={true}
-                  rows={20}
-                  rowsMax={20}>
+                  rows={15}
+                  rowsMax={15}>
                 </TextField>
                 <input
                   className="searchButton"
@@ -704,8 +703,8 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                   onClick={() => this.getPrice()}
                 /> 
                 <span>{this.state.price ?? "xxx"} .-</span>               
-              </Container>                 
-              <div className="d-md-flex justify-content-md-center mt-3 form-end">                
+                             
+              <div className="d-md-flex justify-content-md-end mt-3 form-end">                
                 <Button
                   className="continueButton"
                   id="continue-button"                  
@@ -713,7 +712,8 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                 >
                   Make Reservation
                 </Button>
-              </div>              
+              </div>     
+            </Container>           
             </div>
           </div>                
           <Snackbar

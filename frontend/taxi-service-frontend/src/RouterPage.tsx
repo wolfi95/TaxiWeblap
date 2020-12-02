@@ -25,10 +25,10 @@ function RouterPage(props: IMappedState){
                     (
                         <Redirect to="/login"/>
                     ) : (
-                        <div>
+                        <React.Fragment>
                             <Route exact path="/home" component={ReservationPage}/>                                            
                             <Redirect to="/home"/>
-                        </div>
+                        </React.Fragment>
                     )
                 }
                 <Redirect to="/login"/>
