@@ -3,11 +3,29 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+import LoginPage from './Pages/Login/LoginPage';
+import store from './redux/store';
+import { Provider } from 'react-redux';
+import RegisterPage from './Pages/Register/RegisterPage';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <Provider store={store}>
+    <React.StrictMode>
+    <Router>
+        <Switch>
+        <Route exact path="/home" component={App}/>
+        <Route exact path="/login">
+          <LoginPage />
+        </Route>
+        <Route exact path="/register">
+          <RegisterPage />
+        </Route>
+        </Switch>
+      </Router>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    </React.StrictMode>
+  </Provider>,
   document.getElementById('root')
 );
 
