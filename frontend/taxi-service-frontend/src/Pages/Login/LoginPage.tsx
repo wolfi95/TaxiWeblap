@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
     }
     
     if(redirect){
-      return (<Redirect to="/"/>)
+      return (<Redirect to="/home"/>)
     }
     else
       return (

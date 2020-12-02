@@ -20,7 +20,7 @@ function RouterPage(props: IMappedState){
                 <Route exact path="/register">
                     <RegisterPage />
                 </Route>
-                <Redirect to="/login"/>
+                
                 {!props.token ? 
                     (
                         <Redirect to="/login"/>
@@ -31,6 +31,7 @@ function RouterPage(props: IMappedState){
                         </div>
                     )
                 }
+                <Redirect to="/login"/>
             </Switch>
         </Router>
     )
