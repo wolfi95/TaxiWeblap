@@ -75,7 +75,7 @@ export default function RegisterPage() {
       Name: name,
       PasswordRe: passRe
     }
-    axiosInstance.post("user/register",data)
+    axiosInstance.post("user/register", data)
       .then(response => {
         setSuccess(true);
       })

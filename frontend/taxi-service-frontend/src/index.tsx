@@ -1,32 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './Pages/Reservation/ReservationPage';
 import reportWebVitals from './reportWebVitals';
-import { Route, BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
-import LoginPage from './Pages/Login/LoginPage';
 import store from './redux/store';
 import { Provider } from 'react-redux';
-import RegisterPage from './Pages/Register/RegisterPage';
+import RouterPage from './RouterPage';
 
 ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>
-    <Router>
-        <Switch>
-          {
-            store.getState().user.token === "" ? <Redirect to="/login"/> : ""
-          }
-        <Route exact path="/home" component={App}/>
-        <Route exact path="/login">
-          <LoginPage />
-        </Route>
-        <Route exact path="/register">
-          <RegisterPage />
-        </Route>
-        <Redirect to="/home"/>
-        </Switch>
-      </Router>
+      <RouterPage />
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     </React.StrictMode>
   </Provider>,

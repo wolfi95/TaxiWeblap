@@ -61,7 +61,7 @@ interface OwnProps {
 
 type Props = DispatchedProps & IMappedProps & RouteComponentProps<OwnProps>;
 
-class App extends React.Component<Props, IReservationPageState> {
+class ReservationPage extends React.Component<Props, IReservationPageState> {
   /**
    *
    */
@@ -755,8 +755,6 @@ const mapStateToProps = (state: RootState): IMappedProps => {
 const mapDispatchToProps = (dispatch: Dispatch) => {
  
 }
+const connector = connect(mapStateToProps)
 
-export default connect(
-  mapStateToProps,
-  undefined
-)(App);
+export default connector(ReservationPage);

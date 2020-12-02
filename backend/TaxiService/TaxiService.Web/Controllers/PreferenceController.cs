@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Dal.Entities.Modles;
 
 namespace TaxiService.Web.Controllers
@@ -11,10 +12,16 @@ namespace TaxiService.Web.Controllers
     [Route("preferences")]
     public class PreferenceController : Controller
     {
-        [HttpGet]
-        public Task<List<Preference>> GetAllPreferences()
+        private readonly IPreferenceService preferenceService;
+
+        public PreferenceController(IPreferenceService preferenceService)
         {
-            throw new NotImplementedException();
+            this.preferenceService = preferenceService;
+        }
+        [HttpGet]
+        public async Task<List<Preference>> GetAllPreferences()
+        {
+            return await this.preferenceService.GetAllPreferences();
         }
     }
 }
