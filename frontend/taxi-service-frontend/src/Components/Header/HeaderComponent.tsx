@@ -122,7 +122,7 @@ function HeaderComponent(props: Mapped) {
                             <Button onClick={() => {sessionStorage.clear(); setRedirect(true)}}>
                                 LOG OUT
                             </Button>
-                            <span>Email: {props.email}</span>
+                            <span className="user-email">Email: {props.email}</span>
                         </div>
                     )}
                     </div>

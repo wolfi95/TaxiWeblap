@@ -22,6 +22,11 @@ import 'bootstrap'
 export interface DispatchedProps {
   mock: any;
 }
+const getMinDate = (): Date => {
+  var now = new Date();
+  var min = now.setHours(now.getHours() + 12);
+  return new Date(min);
+};
 
 export interface IReservationPageState {
   date: any;
@@ -38,7 +43,7 @@ export interface IReservationPageState {
   summary: boolean;
 }
 const initialState: IReservationPageState = { 
-  date: new Date(),
+  date: getMinDate().setMinutes((getMinDate().getMinutes()) + 10),
   destination: "",
   errorMsg: "",
   open: false,
@@ -351,18 +356,12 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
         this.setState({ selectedType: undefined, price: undefined });
         break;
     }
-  };
-
-  getMinDate = (): Date => {
-    var now = new Date();
-    var min = now.setHours(now.getHours() + 12);
-    return new Date(min);
-  };
+  };  
 
   submit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     var error = false;    
-    if(this.state.date < this.getMinDate()){
+    if(this.state.date < getMinDate()){
       var x = document.getElementById("date-picker");
       x?.scrollIntoView({behavior:"smooth", block:"center"})
       error = true;
@@ -538,7 +537,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                     ampm={true}
                     strictCompareDates
                     className="col-md datepicker"
-                    minDate={this.getMinDate()}
+                    minDate={getMinDate()}
                     variant="inline"
                     format="MM/dd/yyyy h:mm a"
                     margin="normal"
@@ -579,7 +578,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                     ampm={true}
                     strictCompareDates                  
                     className="col-md datepicker"
-                    minDate={this.getMinDate().setMinutes(this.getMinDate().getMinutes()-1)}             
+                    minDate={getMinDate().setMinutes(getMinDate().getMinutes()-1)}             
                     variant="inline"
                     format="MM/dd/yyyy hh:mm"
                     margin="normal"

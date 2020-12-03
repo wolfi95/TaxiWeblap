@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route, BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
+import FooterComponent from './Components/Footer/FooterComponent';
 import HeaderComponent from './Components/Header/HeaderComponent';
 import LoginPage from './Pages/Login/LoginPage';
 import RegisterPage from './Pages/Register/RegisterPage';
@@ -41,6 +42,7 @@ function RouterPage(props: IMappedState){
                 }
                 <Redirect to="/login"/>
             </Switch>
+        <FooterComponent/>
         </Router>
     )
 }

@@ -1,0 +1,21 @@
+.footer {
+    background-color: black;
+    color: white;
+    padding: 20px;
+    justify-content: space-between;
+    position: absolute;
+    bottom: -280px;
+    width: 100%;
+}
+
+span {
+    margin: 6px 0;
+}
+
+.header {
+    font-size: 2em;
+    font-weight: bolder;
+    @media screen and (max-width: 900px){
+        font-size: 1.2em !important;
+    }
+}
