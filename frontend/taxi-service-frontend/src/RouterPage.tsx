@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Route, BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
+import HeaderComponent from './Components/Header/HeaderComponent';
 import LoginPage from './Pages/Login/LoginPage';
 import RegisterPage from './Pages/Register/RegisterPage';
 import ReservationPage from './Pages/Reservation/ReservationPage';
@@ -13,7 +14,8 @@ interface IMappedState{
 function RouterPage(props: IMappedState){    
     return(
         <Router>
-            <Switch>   
+        <HeaderComponent/>
+            <Switch>  
                 <Route exact path="/login">
                     <LoginPage />
                 </Route>
@@ -26,7 +28,13 @@ function RouterPage(props: IMappedState){
                         <Redirect to="/login"/>
                     ) : (
                         <React.Fragment>
-                            <Route exact path="/home" component={ReservationPage}/>                                            
+                            <Route exact path="/home" component={ReservationPage}/>
+                            <Route exact path="/about"/>
+                            <Route exact path="/account"/>
+                            <Route exact path="/contact"/>
+                            <Route exact path="/services/airport"/>
+                            <Route exact path="/services/chaffeurs"/>
+                            <Route exact path="/services/events"/>
                             <Redirect to="/home"/>
                         </React.Fragment>
                     )
