@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaxiService.Bll.ServiceInterfaces;
@@ -64,9 +65,25 @@ namespace TaxiService.Bll.Services
             };
         }
 
-        public Task<PagedData<UserDetailDto>> SearchUsers(SearchUserDto searchData)
+        public async Task<PagedData<UserDetailDto>> SearchUsers(SearchUserDto searchData)
         {
-            throw new NotImplementedException();
+            var usersQuery = context.Users.AsQueryable();
+
+            if (!String.IsNullOrEmpty(searchData.UserName))
+            {
+                usersQuery = usersQuery.Where(x => x.UserName.Contains(searchData.UserName));
+            }
+
+            if (!String.IsNullOrEmpty(searchData.UserAddress))
+            {
+                usersQuery = usersQuery.Where(x => x.Address.Contains(searchData.UserAddress));
+            }
+
+            var resultCount = await usersQuery.CountAsync();
+
+            var pageCount =  Math.Ceiling((double)(resultCount / searchData.PageSize));
+
+            return new PagedData<UserDetailDto> { Data = await usersQuery.Select(x => new UserDetailDto { Id = x.Id, Address = x.Address, Email = x.Email, Name = x.UserName }).ToListAsync(), ResultCount = (int)pageCount };
         }
     }
 }
