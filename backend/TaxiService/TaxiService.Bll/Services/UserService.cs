@@ -47,9 +47,21 @@ namespace TaxiService.Bll.Services
             await context.SaveChangesAsync();
         }
 
-        public Task<UserDetailDto> GetUserDetail(string id)
+        public async Task<UserDetailDto> GetUserDetail(string id)
         {
-            throw new NotImplementedException();
+            var user = await context.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (user == null)
+            {
+                throw new ArgumentException("Cannot find User");
+            }
+
+            return new UserDetailDto
+            {
+                Id = user.Id,
+                Address = user.Address,
+                Email = user.Email,
+                Name = user.UserName
+            };
         }
 
         public Task<PagedData<UserDetailDto>> SearchUsers(SearchUserDto searchData)
