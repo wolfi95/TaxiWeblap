@@ -131,7 +131,7 @@ namespace TaxiService.Web.Controllers
 
         [HttpGet]
         [Route("{id}/reservations")]
-        public async Task<ReservationDetailDto> GetUserReservations([FromRoute] string id)
+        public async Task<List<ReservationDetailDto>> GetUserReservations([FromRoute] string id)
         {
             if (String.IsNullOrEmpty(id))
             {

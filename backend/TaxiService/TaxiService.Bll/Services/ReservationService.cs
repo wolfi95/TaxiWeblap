@@ -388,9 +388,20 @@ namespace TaxiService.Bll.Services
             return result;
         }
 
-        public Task<ReservationDetailDto> GetUserReservations(string userId)
+        public async Task<List<ReservationDetailDto>> GetUserReservations(string userId)
         {
-            throw new NotImplementedException();
+            return await context.Reservations.Include(x => x.Preferences).Where(x => x.User.Id == userId).Select(x =>
+                    new ReservationDetailDto {
+                        CarType = x.CarType,
+                        Comment = x.Comment,
+                        Date = x.Date,
+                        Duration = x.Duration,
+                        FromAddress = x.FromAddress,
+                        PreferenceIds = x.Preferences.Select(x => x.Id).ToList(),
+                        Price = x.Price,
+                        ReservationType = x.ReservationType,
+                        ToAddrress = x.ToAddress
+                    }).ToListAsync();
         }
 
         public Task MakeReservation(ReservationDto reservation)
