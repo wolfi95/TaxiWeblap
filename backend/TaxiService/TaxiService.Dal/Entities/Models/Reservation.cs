@@ -18,9 +18,7 @@ namespace TaxiService.Dal.Entities.Modles
         public double Price { get; set; }
         public int? Duration { get; set; }
         public DateTime Date { get; set; }
-        public string Email { get; set; }
-        public string Name { get; set; }
-        public List<Preference> Preferences { get; set; }
+        public List<ReservationPreference> Preferences { get; set; }
         public string Comment { get; set; }
     }
 }

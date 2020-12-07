@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using TaxiService.Bll.ServiceInterfaces;
+using TaxiService.Dal;
 using TaxiService.Dto.User;
 using TaxiService.Dto.Utils;
 
@@ -10,9 +12,23 @@ namespace TaxiService.Bll.Services
 {
     public class UserService : IUserService
     {
-        public Task ChangeEmailNotificationSetting(string id)
+        private readonly TaxiServiceContext context;
+
+        public UserService(TaxiServiceContext context)
         {
-            throw new NotImplementedException();
+            this.context = context;
+        }
+
+        public async Task ChangeEmailNotificationSetting(string id)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(x => x.Id == id);    
+
+            if(user == null)
+            {
+                throw new ArgumentException("Cannot find User");
+            }
+            user.AllowNews = !user.AllowNews;
+            await context.SaveChangesAsync();
         }
 
         public Task ChangePersonalData(ChangePersonalDataDto personalDataDto)

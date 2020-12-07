@@ -1,8 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GoogleMapsApi" Version="0.80.0" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TaxiService.Dto\TaxiService.Dto.csproj" />

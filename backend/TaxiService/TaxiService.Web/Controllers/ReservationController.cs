@@ -59,7 +59,7 @@ namespace TaxiService.Web.Controllers
         {
             ValidateReservation(reservation);
 
-            await reservationService.MakeReservation(reservation);
+            await reservationService.MakeReservation(reservation, await userManager.GetUserAsync(User));
         }
 
         [HttpDelete]

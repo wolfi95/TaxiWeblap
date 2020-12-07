@@ -12,6 +12,6 @@ namespace TaxiService.Dto.Reservation
         public int? Duration { get; set; }
         public ReservationType ReservationType { get; set; }
         public CarType CarType { get; set; }
-        public List<Guid> PreferenceIds { get; set; }
+        public List<int> PreferenceIds { get; set; }
     }
 }

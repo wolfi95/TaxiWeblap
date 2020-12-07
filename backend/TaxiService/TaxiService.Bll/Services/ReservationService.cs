@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Dal;
 using TaxiService.Dal.Entities.Authentication;
+using TaxiService.Dal.Entities.Modles;
 using TaxiService.Dal.Enums;
 using TaxiService.Dto.Reservation;
 using TaxiService.Dto.Utils;
@@ -127,9 +128,7 @@ namespace TaxiService.Bll.Services
                 throw new ArgumentException("You can only cancel reservations 12 hours before.");
             }
 
-            var resPrefs = context.ReservationPreferences.Where(x => reservation.Preferences.Any(y => y.Id == x.PrefId));
-
-            context.ReservationPreferences.RemoveRange(resPrefs);
+            context.ReservationPreferences.RemoveRange(reservation.Preferences);
             context.Reservations.Remove(reservation);
             await context.SaveChangesAsync();
         }
@@ -397,16 +396,44 @@ namespace TaxiService.Bll.Services
                         Date = x.Date,
                         Duration = x.Duration,
                         FromAddress = x.FromAddress,
-                        PreferenceIds = x.Preferences.Select(x => x.Id).ToList(),
+                        PreferenceIds = x.Preferences.Select(x => x.PrefId).ToList(),
                         Price = x.Price,
                         ReservationType = x.ReservationType,
                         ToAddrress = x.ToAddress
                     }).ToListAsync();
         }
 
-        public Task MakeReservation(ReservationDto reservation)
+        public async Task MakeReservation(ReservationDto reservation, User user)
         {
-            throw new NotImplementedException();
+            var resPrefs = await context.Preferences.Where(x => reservation.PreferenceIds.Any(y => y == x.Id)).Select(x =>
+                                new ReservationPreference
+                                {
+                                    Preference = x,
+                                    PrefId = x.Id,
+                                }).ToListAsync();
+
+            var reservationData = new Reservation
+            {
+                CarType = reservation.CarType,
+                Preferences = resPrefs,
+                Comment = reservation.Comment,
+                Date = reservation.Date,
+                Duration = reservation.Duration,
+                FromAddress = reservation.FromAddress,
+                Price = await GetPrice(new ReservationPriceDto {
+                                    ReservationType = reservation.ReservationType,
+                                    FromAddress = reservation.FromAddress,
+                                    Duration = reservation.Duration,
+                                    CarType = reservation.CarType,
+                                    PreferenceIds = reservation.PreferenceIds,
+                                    ToAddrress = reservation.ToAddrress
+                                }),
+                ReservationType = reservation.ReservationType,
+                ToAddress = reservation.ToAddrress,
+                User = user
+            };
+            //TODO: Create payment session here
+            await context.SaveChangesAsync();
         }
 
         public Task<PagedData<ReservationDetailDto>> SearchReservations(SearchReservationDto searchData)

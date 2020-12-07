@@ -13,7 +13,7 @@ namespace TaxiService.Dto.Reservation
         public ReservationType ReservationType { get; set; }
         public DateTime Date { get; set; }
         public CarType CarType { get; set; } 
-        public List<Guid> PreferenceIds { get; set; }
+        public List<int> PreferenceIds { get; set; }
         public string Comment { get; set; }
     }
 }

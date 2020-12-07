@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaxiService.Dal;
 
 namespace TaxiService.Dal.Migrations
 {
     [DbContext(typeof(TaxiServiceContext))]
-    partial class TaxiServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20201207202827_ReservationDoesntNeedEmail")]
+    partial class ReservationDoesntNeedEmail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,10 +233,15 @@ namespace TaxiService.Dal.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<Guid?>("ReservationId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ReservationId");
 
                     b.ToTable("Preferences");
 
@@ -374,6 +381,13 @@ namespace TaxiService.Dal.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TaxiService.Dal.Entities.Modles.Preference", b =>
+                {
+                    b.HasOne("TaxiService.Dal.Entities.Modles.Reservation", null)
+                        .WithMany("Preferences")
+                        .HasForeignKey("ReservationId");
+                });
+
             modelBuilder.Entity("TaxiService.Dal.Entities.Modles.Reservation", b =>
                 {
                     b.HasOne("TaxiService.Dal.Entities.Authentication.User", "User")
@@ -388,7 +402,7 @@ namespace TaxiService.Dal.Migrations
                         .HasForeignKey("PreferenceId");
 
                     b.HasOne("TaxiService.Dal.Entities.Modles.Reservation", "Reservation")
-                        .WithMany("Preferences")
+                        .WithMany()
                         .HasForeignKey("ReservationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
