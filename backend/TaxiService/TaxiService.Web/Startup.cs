@@ -123,7 +123,7 @@ namespace TaxiService.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleManager<IdentityRole> roleManager)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
         {
             if (env.IsDevelopment())
             {
@@ -134,6 +134,23 @@ namespace TaxiService.Web
                 roleManager.CreateAsync(new IdentityRole { Name = UserRoles.User }).Wait();
             if (!roleManager.RoleExistsAsync(UserRoles.Administrator).Result)
                 roleManager.CreateAsync(new IdentityRole { Name = UserRoles.Administrator }).Wait();
+
+            var user = userManager.FindByEmailAsync("adminemail@smth.com");
+            user.Wait();
+            if (user.Result == null)
+            {
+                var cu = userManager.CreateAsync(new User
+                {
+                    Email = "adminemail@smth.com",
+                    UserName = "adminemail@smth.com",
+                    Address = "new address 1"
+                });
+                cu.Wait();
+                var u = userManager.FindByEmailAsync("adminemail@smth.com");
+                u.Wait();
+                userManager.AddPasswordAsync(u.Result, "AdminPass1").Wait();
+                userManager.AddToRoleAsync(u.Result, UserRoles.Administrator).Wait();
+            }
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

@@ -22,14 +22,16 @@ namespace TaxiService.Web.Controllers
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
+        private readonly RoleManager<User> roleManager;
         private readonly IConfiguration configuration;
         private readonly IReservationService reservationService;
         private readonly IUserService userService;
 
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration, IReservationService reservationService, IUserService userService)
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<User> roleManager, IConfiguration configuration, IReservationService reservationService, IUserService userService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.roleManager = roleManager;
             this.configuration = configuration;
             this.reservationService = reservationService;
             this.userService = userService;
@@ -104,7 +106,7 @@ namespace TaxiService.Web.Controllers
             {
                 Email = registerData.Email,
                 TwoFactorEnabled = false,
-                UserName = registerData.Email
+                UserName = registerData.Name,
             };
 
             var result = await userManager.CreateAsync(newUser, registerData.Password);            
@@ -118,6 +120,7 @@ namespace TaxiService.Web.Controllers
                 }
                 return new BadRequestObjectResult(msg);
             }
+            await userManager.AddToRoleAsync(newUser, UserRoles.User);
 
             return new OkResult();
         }
