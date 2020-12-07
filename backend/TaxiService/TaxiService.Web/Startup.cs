@@ -143,7 +143,8 @@ namespace TaxiService.Web
                 {
                     Email = "adminemail@smth.com",
                     UserName = "adminemail@smth.com",
-                    Address = "new address 1"
+                    Address = "new address 1",
+                    Role = UserRoles.Administrator
                 });
                 cu.Wait();
                 var u = userManager.FindByEmailAsync("adminemail@smth.com");

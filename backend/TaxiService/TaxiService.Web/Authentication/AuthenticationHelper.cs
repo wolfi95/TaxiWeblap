@@ -19,7 +19,7 @@ namespace TaxiService.Web.Helpers
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserName),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, UserRoles.User),
+                new Claim(ClaimTypes.Role, user.Role),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));

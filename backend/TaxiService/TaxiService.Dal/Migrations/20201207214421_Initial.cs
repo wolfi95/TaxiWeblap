@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TaxiService.Dal.Migrations
 {
-    public partial class Inital : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -41,12 +41,26 @@ namespace TaxiService.Dal.Migrations
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     Address = table.Column<string>(nullable: true),
+                    Role = table.Column<string>(nullable: true),
                     AllowNotifications = table.Column<bool>(nullable: false),
                     AllowNews = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Preferences",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Text = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Preferences", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -169,8 +183,6 @@ namespace TaxiService.Dal.Migrations
                     Price = table.Column<double>(nullable: false),
                     Duration = table.Column<int>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false),
-                    Email = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
                     Comment = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -185,32 +197,12 @@ namespace TaxiService.Dal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Preferences",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Text = table.Column<string>(nullable: true),
-                    ReservationId = table.Column<Guid>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Preferences", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Preferences_Reservations_ReservationId",
-                        column: x => x.ReservationId,
-                        principalTable: "Reservations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ReservationPreferences",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     PreferenceId = table.Column<int>(nullable: true),
-                    PrefId = table.Column<Guid>(nullable: false),
+                    PrefId = table.Column<int>(nullable: false),
                     ReservationId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -232,18 +224,18 @@ namespace TaxiService.Dal.Migrations
 
             migrationBuilder.InsertData(
                 table: "Preferences",
-                columns: new[] { "Id", "ReservationId", "Text" },
-                values: new object[] { 1, null, "Example1" });
+                columns: new[] { "Id", "Text" },
+                values: new object[] { 1, "Example1" });
 
             migrationBuilder.InsertData(
                 table: "Preferences",
-                columns: new[] { "Id", "ReservationId", "Text" },
-                values: new object[] { 2, null, "Example2" });
+                columns: new[] { "Id", "Text" },
+                values: new object[] { 2, "Example2" });
 
             migrationBuilder.InsertData(
                 table: "Preferences",
-                columns: new[] { "Id", "ReservationId", "Text" },
-                values: new object[] { 3, null, "Example3" });
+                columns: new[] { "Id", "Text" },
+                values: new object[] { 3, "Example3" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -283,11 +275,6 @@ namespace TaxiService.Dal.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Preferences_ReservationId",
-                table: "Preferences",
-                column: "ReservationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReservationPreferences_PreferenceId",
