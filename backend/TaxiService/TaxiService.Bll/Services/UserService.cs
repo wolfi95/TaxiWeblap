@@ -31,9 +31,20 @@ namespace TaxiService.Bll.Services
             await context.SaveChangesAsync();
         }
 
-        public Task ChangePersonalData(ChangePersonalDataDto personalDataDto)
+        public async Task ChangePersonalData(ChangePersonalDataDto personalDataDto, string userId)
         {
-            throw new NotImplementedException();
+            var user = await context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (user == null)
+            {
+                throw new ArgumentException("Cannot find User");
+            }
+            user.UserName = personalDataDto.Name;
+            user.NormalizedUserName = personalDataDto.Name.ToUpper().Trim();
+            user.Email = personalDataDto.Email;
+            user.NormalizedEmail = personalDataDto.Email.ToUpper().Trim();
+            user.Address = personalDataDto.Address;
+
+            await context.SaveChangesAsync();
         }
 
         public Task<UserDetailDto> GetUserDetail(string id)

@@ -9,7 +9,7 @@ namespace TaxiService.Bll.ServiceInterfaces
 {
     public interface IUserService
     {
-        public Task ChangePersonalData(ChangePersonalDataDto personalDataDto);
+        public Task ChangePersonalData(ChangePersonalDataDto personalDataDto, string userId);
         public Task<UserDetailDto> GetUserDetail(string id);
         public Task ChangeEmailNotificationSetting(string id);
         public Task<PagedData<UserDetailDto>> SearchUsers(SearchUserDto searchData);

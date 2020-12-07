@@ -191,7 +191,7 @@ namespace TaxiService.Web.Controllers
                 throw new ArgumentException("Unauthorized access attempt.");
             }
 
-            await userService.ChangePersonalData(personalDataDto);
+            await userService.ChangePersonalData(personalDataDto, userManager.GetUserId(User));
         }
 
         [HttpGet]
