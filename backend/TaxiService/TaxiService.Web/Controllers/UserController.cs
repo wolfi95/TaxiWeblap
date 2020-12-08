@@ -59,7 +59,8 @@ namespace TaxiService.Web.Controllers
                     UserId = user.Id,
                     Email = user.Email,
                     Token = token,
-                    Name = user.UserName
+                    Name = user.UserName,
+                    Address = user.Address
                 };
                 return new OkObjectResult(res);
             }

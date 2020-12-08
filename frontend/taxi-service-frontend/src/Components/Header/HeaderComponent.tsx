@@ -27,10 +27,14 @@ function HeaderComponent(props: Props) {
     const [accountRedirect, setAccountRedirect] = useState(false);
     const [aboutRedirect, setAboutRedirect] = useState(false);
     const [contactRedirect, setContactRedirect] = useState(false);    
+    const [logoutRedirect, setLogoutRedirect] = useState(false);   
 
     useEffect(() => {
         if(redirect) {
             setRedirect(false);
+        }
+        if(logoutRedirect) {
+            setLogoutRedirect(false);
             props.clearUserState();
         }
         if(loginRedirect)
@@ -63,6 +67,10 @@ function HeaderComponent(props: Props) {
         return(<Redirect to="/home"/>)
     }
     else 
+    if(logoutRedirect) {
+        return(<Redirect to="/home"/>)
+    }
+    else
     if(loginRedirect) {
         return(<Redirect to="/login"/>)
     }
@@ -126,7 +134,7 @@ function HeaderComponent(props: Props) {
                             <Button onClick={() => {setAccountRedirect(true)}}>
                                 ACCOUNT
                             </Button>
-                            <Button onClick={() => {sessionStorage.clear(); setRedirect(true)}}>
+                            <Button onClick={() => {sessionStorage.clear(); setLogoutRedirect(true)}}>
                                 LOG OUT
                             </Button>
                             <span className="user-email">Email: {props.email}</span>

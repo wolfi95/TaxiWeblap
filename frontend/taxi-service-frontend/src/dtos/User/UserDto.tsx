@@ -3,4 +3,5 @@ export default interface UserDto {
     email: string;
     userId: string;
     name: string;
+    address: string;
 }
