@@ -2,7 +2,7 @@ import { AppBar, createStyles, CssBaseline, Divider, Drawer, IconButton, List, L
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { RootState } from '../../../redux/reducers/rootReducer';
+import { RootState } from '../../redux/reducers/rootReducer';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'

@@ -1,8 +1,8 @@
 import { Email } from '@material-ui/icons';
 import React from 'react'
 import { connect } from 'react-redux';
+import AccountPageWrapper from '../../../Components/AccountPageWrapper/AccountPageWrapper';
 import { RootState } from '../../../redux/reducers/rootReducer';
-import AccountPageWrapper from '../Wrapper/AccountPageWrapper';
 import './OverViewPage.scss';
 
 interface IMappedProps {
