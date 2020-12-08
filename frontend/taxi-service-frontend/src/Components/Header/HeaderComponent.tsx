@@ -65,7 +65,7 @@ function HeaderComponent(props: Mapped) {
     }
     else
     if(accountRedirect) {
-        return(<Redirect to="/account"/>)
+        return(<Redirect to="/account/overview"/>)
     }
     else
     if(aboutRedirect) {
