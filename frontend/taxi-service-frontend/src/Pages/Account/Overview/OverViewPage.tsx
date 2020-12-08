@@ -6,7 +6,7 @@ export default function OverViewPage(){
     return (
         <AccountPageWrapper>
             <div>
-                asd
+
             </div>
         </AccountPageWrapper>
     )
