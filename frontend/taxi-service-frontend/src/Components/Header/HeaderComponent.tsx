@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { clearUserState, UserActionTypes } from '../../redux/actions/userActions';
 import { RootState } from '../../redux/reducers/rootReducer';
@@ -8,23 +8,30 @@ import Navbar from 'react-bootstrap/Navbar';
 import { Button, Menu, MenuItem } from '@material-ui/core';
 import { Redirect } from 'react-router';
 
-interface Mapped{
+interface IMappedProps{
     token: string;
     email: string;
 }
 
-function HeaderComponent(props: Mapped) {
+interface IDispatchedProps {
+    clearUserState: () => void;
+}
+
+type Props = IMappedProps & IDispatchedProps;
+
+function HeaderComponent(props: Props) {
 
     const [redirect, setRedirect] = useState(false);
     const [loginRedirect, setLoginRedirect] = useState(false);
     const [servicesRedirect, setServicesRedirect] = useState("");
     const [accountRedirect, setAccountRedirect] = useState(false);
     const [aboutRedirect, setAboutRedirect] = useState(false);
-    const [contactRedirect, setContactRedirect] = useState(false);
+    const [contactRedirect, setContactRedirect] = useState(false);    
 
     useEffect(() => {
         if(redirect) {
             setRedirect(false);
+            props.clearUserState();
         }
         if(loginRedirect)
             setLoginRedirect(false);
@@ -140,7 +147,7 @@ const mapDispatchToProps = (dispatch: Dispatch<UserActionTypes>) =>
       dispatch
     );
   
-  const mapStateToProps = (state: RootState): Mapped => {
+  const mapStateToProps = (state: RootState): IMappedProps => {
     return {
       token: state.user.token,
       email: state.user.email
