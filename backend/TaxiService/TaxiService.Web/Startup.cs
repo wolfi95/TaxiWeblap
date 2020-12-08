@@ -142,7 +142,7 @@ namespace TaxiService.Web
                 var cu = userManager.CreateAsync(new User
                 {
                     Email = "adminemail@smth.com",
-                    UserName = "adminemail@smth.com",
+                    UserName = "Admin1",
                     Address = "new address 1",
                     Role = UserRoles.Administrator
                 });

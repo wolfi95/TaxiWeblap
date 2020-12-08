@@ -13,10 +13,20 @@ interface IMappedProps {
 
 function OverViewPage(Props: IMappedProps){
     return (
-        <AccountPageWrapper>
-            <div className="data-row">
-                <span>Name:</span>
-                <span>{Props.name}</span>
+        <AccountPageWrapper header="Overview">
+            <div>
+                <div className="data-row">
+                    <span>Name:</span>
+                    <span>{Props.name}</span>
+                </div>
+                <div className="data-row">
+                    <span>Email:</span>
+                    <span>{Props.email}</span>
+                </div>
+                <div className="data-row">
+                    <span>Address:</span>
+                    <span>{Props.address}</span>
+                </div>
             </div>
         </AccountPageWrapper>
     )

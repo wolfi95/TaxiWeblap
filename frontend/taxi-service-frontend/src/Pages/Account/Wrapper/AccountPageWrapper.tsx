@@ -16,6 +16,7 @@ interface IMappedProps {
 
 interface IOwnProps {
     children: JSX.Element
+    header: string;
 }
 
 type Props = IMappedProps & IOwnProps;
@@ -142,7 +143,7 @@ function AccountPageWrapper(props: Props) {
                     <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap>
-                    My Account
+                      My Account / {props.header}
                     </Typography>
                 </Toolbar>
                 </AppBar>

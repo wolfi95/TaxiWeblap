@@ -50,7 +50,7 @@ namespace TaxiService.Web.Controllers
                 return new UnauthorizedObjectResult("Cannot find user");
             }
 
-            var result = await signInManager.PasswordSignInAsync(loginData.Email, loginData.Password, false, false);
+            var result = await signInManager.PasswordSignInAsync(user, loginData.Password, false, false);
             if (result.Succeeded)
             {
                 var token = AuthenticationHelper.GenerateJwtToken(user, configuration);
