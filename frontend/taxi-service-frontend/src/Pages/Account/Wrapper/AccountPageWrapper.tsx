@@ -91,7 +91,7 @@ function AccountPageWrapper(props: Props) {
     const [open, setOpen] = React.useState(false);
     const [content, changeContent] = React.useState("");
     const menuRedirects = [
-        '/',
+        'overview',
         'pass',
         'personal',
         'reservations',
@@ -107,7 +107,7 @@ function AccountPageWrapper(props: Props) {
     };
 
     const handleMenuClick = (index: number) =>{
-        changeContent("/account/overview")
+        changeContent("/account/" + menuRedirects[index])
     }
 
     useEffect(() => {
