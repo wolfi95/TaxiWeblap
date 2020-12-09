@@ -1,5 +1,6 @@
-import { SAVE_TOKEN, CLEAR_USER_STATE } from "../actionTypes/userActionTypes";
+import { SAVE_TOKEN, CLEAR_USER_STATE, UPDATE_DATA } from "../actionTypes/userActionTypes";
 import { UserActionTypes } from "../actions/userActions";
+import ChangePersonalDataDto from "../../dtos/Account/ChangePersonalDataDto";
 
 export interface IUserState{
   token: string;
@@ -36,6 +37,18 @@ export default function(state = initialState, action: UserActionTypes): IUserSta
     }
     case CLEAR_USER_STATE: {
       return initialState;
+    }
+    case UPDATE_DATA: {
+      var data = action.payload as ChangePersonalDataDto;
+      sessionStorage.setItem("email", data.Email);
+      sessionStorage.setItem("name", data.Name);
+      sessionStorage.setItem("address", data.Address)
+      return{
+        ...state,
+        email: data.Email,
+        name: data.Name,
+        address: data.Address
+      }
     }
     default:
       return state;

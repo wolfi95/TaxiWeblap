@@ -1,9 +1,15 @@
-import { SAVE_TOKEN, CLEAR_USER_STATE } from "../actionTypes/userActionTypes";
+import { SAVE_TOKEN, CLEAR_USER_STATE, UPDATE_DATA } from "../actionTypes/userActionTypes";
 import UserDto from "../../dtos/User/UserDto"
+import ChangePersonalDataDtoDto from '../../dtos/Account/ChangePersonalDataDto'
 
 export interface ISaveTokenActionType {
     type: string,
     payload?: UserDto
+}
+
+export interface IUpdateUserStateActionType {
+    type: string,
+    payload?: ChangePersonalDataDtoDto
 }
 
 export interface IClearUserStateActionType {
@@ -23,6 +29,14 @@ export const clearUserState = (): IClearUserStateActionType => {
     }
 }
 
+export const updateUserState = (content: ChangePersonalDataDtoDto) => {
+    return {
+        type: UPDATE_DATA,
+        payload: content
+    }
+}
+
 export type UserActionTypes = 
     ISaveTokenActionType &
-    IClearUserStateActionType;
+    IClearUserStateActionType &
+    IUpdateUserStateActionType;

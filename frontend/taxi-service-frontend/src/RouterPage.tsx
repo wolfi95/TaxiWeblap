@@ -4,6 +4,7 @@ import { Route, BrowserRouter as Router, Switch, Redirect } from 'react-router-d
 import FooterComponent from './Components/Footer/FooterComponent';
 import HeaderComponent from './Components/Header/HeaderComponent';
 import ChangePasswordPage from './Pages/Account/ChangePasswordPage/ChangePasswordPage';
+import ChangePersonalDataPage from './Pages/Account/ChangePersonalData/ChangePersonalDataPage';
 import OverViewPage from './Pages/Account/Overview/OverViewPage'
 import LoginPage from './Pages/Login/LoginPage';
 import RegisterPage from './Pages/Register/RegisterPage';
@@ -35,7 +36,7 @@ function RouterPage(props: IMappedState){
                             <Route exact path="/about"/>
                             <Route exact path="/account/overview" component={OverViewPage}/>
                             <Route exact path="/account/pass" component={ChangePasswordPage}/>
-                            <Route exact path="/account/personal" component={OverViewPage}/>
+                            <Route exact path="/account/personal" component={ChangePersonalDataPage}/>
                             <Route exact path="/account/reservations" component={OverViewPage}/>
                             <Route exact path="/account/settings" component={OverViewPage}/>
                             <Route exact path="/contact"/>
