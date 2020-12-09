@@ -11,7 +11,7 @@ namespace TaxiService.Dto.Reservation
         public string ToAddrress { get; set; }
         public int? Duration { get; set; }
         public ReservationType ReservationType { get; set; }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public CarType CarType { get; set; } 
         public List<int> PreferenceIds { get; set; }
         public string Comment { get; set; }

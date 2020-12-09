@@ -41,7 +41,7 @@ namespace TaxiService.Web.Controllers
             {
                 throw new ArgumentNullException("From address cannot be empty.");
             }
-            if (String.IsNullOrEmpty(reservation.ToAddrress))
+            if (reservation.Duration == null && String.IsNullOrEmpty(reservation.ToAddrress))
             {
                 throw new ArgumentNullException("Destination address cannot be empty.");
             }
@@ -80,15 +80,15 @@ namespace TaxiService.Web.Controllers
             {
                 throw new ArgumentNullException("From address cannot be empty.");
             }
-            if (String.IsNullOrEmpty(reservation.ToAddrress))
+            if (reservation.Duration == null && String.IsNullOrEmpty(reservation.ToAddrress))
             {
                 throw new ArgumentNullException("Destination address cannot be empty.");
             }
-            if(reservation.Date < DateTime.Now.AddMinutes(-10))
+            if (DateTime.Parse(reservation.Date) < DateTime.Now.AddHours(-12))
             {
-                throw new ArgumentException("Reservation time cannot be a past date.");
+                throw new ArgumentException("Reservation time must be in 12 hours advance.");
             }
-            if(reservation.ReservationType == Dal.Enums.ReservationType.ByTheHour && (reservation.Duration == null || (reservation.Duration < 0 || reservation.Duration > 12)))
+            if (reservation.ReservationType == Dal.Enums.ReservationType.ByTheHour && (reservation.Duration == null || (reservation.Duration < 0 || reservation.Duration > 12)))
             {
                 throw new ArgumentException("Reservation duration out of bounds.");
             }            

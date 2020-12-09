@@ -18,6 +18,7 @@ import { Preference } from '../../config/Interfaces/Preference';
 import ReservationPriceDto from '../../dtos/Reservation/ReservationPriceDto';
 import { apiKey } from '../../config/Googleconfig';
 import 'bootstrap'
+import ReservationDto from '../../dtos/Reservation/ReservationDto';
 
 export interface DispatchedProps {
   mock: any;
@@ -27,9 +28,14 @@ const getMinDate = (): Date => {
   var min = now.setHours(now.getHours() + 12);
   return new Date(min);
 };
+const getSettableMinDate = (): Date => {
+  var now = new Date();
+  var min = now.setHours(now.getHours() + 11.8);  
+  return new Date(min);
+};
 
 export interface IReservationPageState {
-  date: any;
+  date: Date;
   selectedType?: CarType;
   origin: string;
   destination: string;
@@ -43,7 +49,7 @@ export interface IReservationPageState {
   summary: boolean;
 }
 const initialState: IReservationPageState = { 
-  date: getMinDate().setMinutes((getMinDate().getMinutes()) + 10),
+  date: getMinDate(),
   destination: "",
   errorMsg: "",
   open: false,
@@ -76,6 +82,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
     this.state = initialState;
 
     var prefs: Preference[] = [];
+    axiosInstance.defaults.headers["Authorization"] = "Bearer " + props.token;
     axiosInstance.get("preferences")
       .then(res => prefs = res.data)
     this.setState({preferences: prefs});
@@ -224,8 +231,9 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
       ) as HTMLInputElement).value;
 
       this.setState({origin: origin, destination: destination});
-      if(!this.state.selectedType) {
+      if(this.state.selectedType === undefined) {
         this.setState({errorMsg: "You must select a car type", open: true});
+        return;
       }
       var data: ReservationPriceDto = {
         FromAddress: origin,
@@ -246,7 +254,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
             this.setState({errorMsg: "Unknown error occured", open: true});
           } else {
             if(error.response?.data !== undefined){
-              this.setState({errorMsg: error.response.data, open: true})
+              this.setState({errorMsg: error.response.data.message, open: true})
             }          
             else{
               this.setState({errorMsg: "Cannot reach server", open: true})
@@ -262,7 +270,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
         .value;
 
       this.setState({origin: origin, time: +hours});
-      if(!this.state.selectedType) {
+      if(this.state.selectedType === undefined) {
         this.setState({errorMsg: "You must select a car type", open: true});
       }
 
@@ -286,7 +294,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
           }
           else {
             if(error.response?.data !== undefined){
-              this.setState({errorMsg: error.response.data, open: true});
+              this.setState({errorMsg: error.response.data.message, open: true});
             }          
             else{
               this.setState({errorMsg: "Cannot reach server", open: true});
@@ -323,38 +331,38 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
       default:
         break;
     }
-
-    switch (event.currentTarget.id) {
-      case "executive":
+    console.log(event.currentTarget.id);
+    switch (event.currentTarget.id) {      
+      case "executive": {
         var element = document.getElementById("executive-card");
         if (element != null) {
           element.className = "price price-selected";
         }
-
-        var price = +((document.getElementById("execprice") as Element).innerHTML.split(" ")[0]);
-        this.setState({ selectedType: CarType.Executive, price: price });
+        this.setState({ selectedType: CarType.Executive});
         break;
-      case "luxury":
+      }
+      case "luxury": {
         var element = document.getElementById("luxury-card");
         if (element != null) {
           element.className = "price price-selected";
         }
 
-        var price = +((document.getElementById("luxprice") as Element).innerHTML.split(" ")[0]);
-        this.setState({ selectedType: CarType.Luxury, price: price });
+        this.setState({ selectedType: CarType.Luxury });
         break;
-      case "sevenSeater":
+      }
+      case "sevenSeater": {
         var element = document.getElementById("sevenSeater-card");
         if (element != null) {
           element.className = "price price-selected";
         }
 
-        var price = +((document.getElementById("7seaterprice") as Element).innerHTML.split(" ")[0]);
-        this.setState({ selectedType: CarType.SevenSeater, price: price });
+        this.setState({ selectedType: CarType.SevenSeater });
         break;
-      default:
+      }
+      default: {
         this.setState({ selectedType: undefined, price: undefined });
         break;
+      }
     }
   };  
 
@@ -365,6 +373,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
       var x = document.getElementById("date-picker");
       x?.scrollIntoView({behavior:"smooth", block:"center"})
       error = true;
+      this.setState({open: true, errorMsg: "Yout can only make reservations 12 hours in advance."})
     }
 
     if(this.state.selectedType === undefined) {
@@ -381,40 +390,68 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
         });
     }
 
+    var origin;
+    var destination;
+
     if (this.state.tab === ReservationType.Oneway) {
-      if ((document.getElementById("destination-oneway") as HTMLInputElement).value.length === 0) {
+      origin = document.getElementById("origin-oneway") as HTMLInputElement;
+      destination = document.getElementById("destination-oneway") as HTMLInputElement;
+
+      if (destination.value.length === 0) {
         error = true;
         this.setState({
           open: true,
           errorMsg: "Destination address cannot be empty.",
         });
-        (document.getElementById("destination-oneway") as HTMLInputElement).className +=" error";
-        (document.getElementById("destination-oneway") as HTMLInputElement).scrollIntoView({behavior: "smooth",block: "center"});
+        destination.className +=" error";
+        destination.scrollIntoView({behavior: "smooth",block: "center"});
       }
 
-      if ((document.getElementById("origin-oneway") as HTMLInputElement).value.length === 0) {
+      if (origin.value.length === 0) {
         error = true;
         this.setState({
           open: true,
           errorMsg: "Origin address cannot be empty.",
         });
-        (document.getElementById("origin-oneway") as HTMLInputElement).className +=" error";
-        (document.getElementById("origin-oneway") as HTMLInputElement).scrollIntoView({behavior: "smooth",block: "center"});
+        origin.className +=" error";
+        origin.scrollIntoView({behavior: "smooth",block: "center"});
       }
     } else {
-      if ((document.getElementById("origin-bythehour") as HTMLInputElement).value.length === 0) {
+      origin = (document.getElementById("origin-bythehour") as HTMLInputElement);
+      if (origin.value.length === 0) {
         error = true;
         this.setState({
           open: true,
           errorMsg: "Origin address cannot be empty.",
         });
-        (document.getElementById("origin-bythehour") as HTMLInputElement).className +=" error";
-        (document.getElementById("origin-bythehour") as HTMLInputElement).scrollIntoView({behavior: "smooth",block: "center"});
+        origin.className +=" error";
+        origin.scrollIntoView({behavior: "smooth",block: "center"});
       }
     }
     if(!error) {
-      this.setState({summary: true});
-      this.saveState();
+      var data = {
+        CarType: this.state.selectedType,
+        Comment: this.state.comment,
+        Date: this.state.date.getFullYear() + "/" + (this.state.date.getMonth() + 1) + "/" + this.state.date.getDate() + " " + (this.state.date.getHours() % 12) + ":" + (this.state.date.getMinutes() < 10 ? ("0"+this.state.date.getMinutes()) : this.state.date.getMinutes()) + (this.state.date.getHours() >= 12 ? ' pm' : ' am'),
+        FromAddress: origin.value,
+        PreferenceIds: [],
+        ReservationType: this.state.tab,
+        ToAddrress: destination?.value ?? "",
+        Duration: this.state.time
+      } as ReservationDto;
+      debugger;
+      axiosInstance.post("reservation/make", data)
+        .then(res => {
+          //TODO: redirect to payment page
+          this.setState({summary: true});
+          this.saveState();
+        })
+        .catch(err => {
+          this.setState({
+            open: true,
+            errorMsg: err.response.data.message,
+          });
+        })
     }
   };
 
@@ -537,7 +574,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                     ampm={true}
                     strictCompareDates
                     className="col-md datepicker"
-                    minDate={getMinDate()}
+                    minDate={getSettableMinDate()}
                     variant="inline"
                     format="MM/dd/yyyy h:mm a"
                     margin="normal"
@@ -578,7 +615,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                     ampm={true}
                     strictCompareDates                  
                     className="col-md datepicker"
-                    minDate={getMinDate().setMinutes(getMinDate().getMinutes()-1)}             
+                    minDate={getSettableMinDate()}             
                     variant="inline"
                     format="MM/dd/yyyy hh:mm"
                     margin="normal"

@@ -417,7 +417,7 @@ namespace TaxiService.Bll.Services
                 CarType = reservation.CarType,
                 Preferences = resPrefs,
                 Comment = reservation.Comment,
-                Date = reservation.Date,
+                Date = DateTime.Parse(reservation.Date),
                 Duration = reservation.Duration,
                 FromAddress = reservation.FromAddress,
                 Price = await GetPrice(new ReservationPriceDto {
@@ -433,6 +433,8 @@ namespace TaxiService.Bll.Services
                 User = user
             };
             //TODO: Create payment session here
+            context.ReservationPreferences.AddRange(resPrefs);
+            context.Reservations.Add(reservationData);
             await context.SaveChangesAsync();
         }
 
