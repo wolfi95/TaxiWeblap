@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import { clearUserState, UserActionTypes } from '../../redux/actions/userActions';
 import { RootState } from '../../redux/reducers/rootReducer';
@@ -7,6 +6,7 @@ import './HeaderComponent.scss'
 import Navbar from 'react-bootstrap/Navbar';
 import { Button, Menu, MenuItem } from '@material-ui/core';
 import { Redirect } from 'react-router';
+import { connect } from 'react-redux';
 
 interface IMappedProps{
     token: string;
