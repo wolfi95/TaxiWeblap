@@ -67,6 +67,7 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'flex-end',
     },
     content: {
+      maxWidth: '100%',
       flexGrow: 1,
       padding: theme.spacing(3),
       transition: theme.transitions.create('margin', {
@@ -124,13 +125,13 @@ function AccountPageWrapper(props: Props) {
     }
     else {
         return (
-            <div>
+            <div className="acc-nav-root">
                 <CssBaseline />
                 <AppBar
-                position="relative"
-                className={clsx(classes.appBar, {
-                    [classes.appBarShift]: open,
-                })}
+                  position="relative"
+                  className={clsx(classes.appBar, {
+                      [classes.appBarShift]: open,
+                  })}
                 >
                 <Toolbar>
                     <IconButton
@@ -142,20 +143,21 @@ function AccountPageWrapper(props: Props) {
                     >
                     <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap>
-                      My Account / {props.header}
+                    <Typography variant="h6">
+                    <span>My Account / </span>
+                    <span>{" " + props.header}</span>
                     </Typography>
                 </Toolbar>
                 </AppBar>
                 <div className={classes.drawerRoot}>
                 <Drawer
-                className={classes.drawer}
-                variant="persistent"
-                anchor="left"
-                open={open}
-                classes={{
+                  className={classes.drawer}
+                  variant="persistent"
+                  anchor="left"
+                  open={open}
+                  classes={{
                     paper: classes.drawerPaper,
-                }}
+                  }}
                 >
                 <div className={classes.drawerHeader}>
                     <IconButton onClick={handleDrawerClose}>

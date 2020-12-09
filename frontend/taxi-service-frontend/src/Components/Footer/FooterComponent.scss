@@ -1,4 +1,8 @@
 .footer {
+    div:first-child {
+        margin-right: 10px;
+    }
+    overflow: hidden;
     background-color: black;
     color: white;
     padding: 20px;
@@ -10,6 +14,9 @@
 
 span {
     margin: 6px 0;
+    word-wrap: break-word !important;
+    display: inline-block;
+    word-break: break-all;
 }
 
 .header {

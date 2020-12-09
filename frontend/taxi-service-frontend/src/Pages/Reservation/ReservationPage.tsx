@@ -19,6 +19,7 @@ import ReservationPriceDto from '../../dtos/Reservation/ReservationPriceDto';
 import { apiKey } from '../../config/Googleconfig';
 import 'bootstrap'
 import ReservationDto from '../../dtos/Reservation/ReservationDto';
+import { preProcessFile } from 'typescript';
 
 export interface DispatchedProps {
   mock: any;
@@ -80,12 +81,11 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
   constructor(props: Props) {
     super(props);
     this.state = initialState;
-
-    var prefs: Preference[] = [];
     axiosInstance.defaults.headers["Authorization"] = "Bearer " + props.token;
     axiosInstance.get("preferences")
-      .then(res => prefs = res.data)
-    this.setState({preferences: prefs});
+      .then(res => {
+        this.setState({preferences: res.data});
+      });
   }
 
   autocompleteOrigin?: google.maps.places.Autocomplete;
@@ -240,7 +240,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
         ToAddrress: destination,
         ReservationType: ReservationType.Oneway,
         CarType: this.state.selectedType,
-        PreferenceIds: this.state.preferences.map(x => x.Id),
+        PreferenceIds: this.state.preferences.map(x => x.id),
         Duration: undefined
       };
 
@@ -280,7 +280,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
         ReservationType: ReservationType.ByTheHour,
         Duration: +hours,
         CarType: this.state.selectedType as CarType,
-        PreferenceIds: this.state.preferences.map(x => x.Id)
+        PreferenceIds: this.state.preferences.map(x => x.id)
       };
 
       axiosInstance
@@ -428,13 +428,14 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
         origin.scrollIntoView({behavior: "smooth",block: "center"});
       }
     }
+    var prefs = this.state.preferences.filter(p => p.value).map(p => p.id);
     if(!error) {
       var data = {
         CarType: this.state.selectedType,
         Comment: this.state.comment,
         Date: this.state.date.getFullYear() + "/" + (this.state.date.getMonth() + 1) + "/" + this.state.date.getDate() + " " + (this.state.date.getHours() % 12) + ":" + (this.state.date.getMinutes() < 10 ? ("0"+this.state.date.getMinutes()) : this.state.date.getMinutes()) + (this.state.date.getHours() >= 12 ? ' pm' : ' am'),
         FromAddress: origin.value,
-        PreferenceIds: [],
+        PreferenceIds: prefs,
         ReservationType: this.state.tab,
         ToAddrress: destination?.value ?? "",
         Duration: this.state.time
@@ -465,8 +466,8 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
 
   handlePrefChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     var temp = this.state.preferences;
-    var index = temp.findIndex(pref => pref.Text == e.currentTarget.id);
-    temp[index].Value = !temp[index].Value
+    var index = temp.findIndex(pref => pref.text == e.currentTarget.id);
+    temp[index].value = !temp[index].value
     this.setState({preferences: temp});
   }
 
@@ -710,17 +711,19 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
             </div>              
             <div>
               <Container>
-                {this.state.preferences.map(pref => (
+                {this.state.preferences.map(pref => {
+                  return (
                   <div className="pref-row">
                     <Checkbox
-                      id={pref.Text}
-                      checked={pref.Value}
+                      id={pref.text}
+                      checked={pref.value}
                       onChange={(e) => this.handlePrefChange(e)}
                       inputProps={{ "aria-label": "Checkbox A" }}
                     />
-                    <span>{pref.Text}</span>
+                    <span>{pref.text}</span>
                   </div>
-                ))}
+                  )}
+                )}
                 <TextField 
                   className="comment-box"
                   label="Comment" 

@@ -60,18 +60,26 @@ function MyReservationsPage(props: IMappedProps) {
                                         )}
                                 </div>
                                 <div className="preferences-column">
-                                    {res.preferences.map(pref => {
-                                        return (
-                                            <li>
-                                                {pref}
-                                            </li>
-                                        )
-                                    })}
+                                    <span>Preferences:</span>
+                                    {res.preferences.length !== 0 ? (
+                                    <ul>                                        
+                                        {res.preferences.map(pref => {
+                                            return (
+                                                <li>
+                                                    {pref}
+                                                </li>
+                                            )
+                                        })}
+                                    </ul>
+                                    ) : (
+                                        <span className="no-preference">-</span>
+                                    )
+                                    }
                                 </div>
                                 <div className="last-column">
                                     {isNotPastCancelDate(res.date) &&
                                     <Button variant="outlined">Cancel</Button>}
-                                    {res.price + " "} .-
+                                    <span>Price: {res.price + " "} .-</span>
                                 </div>
                             </CardContent>
                         </Card>

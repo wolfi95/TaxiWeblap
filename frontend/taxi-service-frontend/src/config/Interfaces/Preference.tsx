@@ -1,5 +1,5 @@
 export interface Preference {
-    Id: number;
-    Value: boolean;
-    Text: string;
+    id: number;
+    value: boolean;
+    text: string;
 }
