@@ -389,14 +389,14 @@ namespace TaxiService.Bll.Services
 
         public async Task<List<ReservationDetailDto>> GetUserReservations(string userId)
         {
-            return await context.Reservations.Include(x => x.Preferences).Where(x => x.User.Id == userId).Select(x =>
+            return await context.Reservations.Include(x => x.Preferences).ThenInclude(y => y.Preference).Where(x => x.User.Id == userId).Select(x =>
                     new ReservationDetailDto {
                         CarType = x.CarType,
                         Comment = x.Comment,
                         Date = x.Date,
                         Duration = x.Duration,
                         FromAddress = x.FromAddress,
-                        PreferenceIds = x.Preferences.Select(x => x.PrefId).ToList(),
+                        Preferences = x.Preferences.Select(x => x.Preference.Text).ToList(),
                         Price = x.Price,
                         ReservationType = x.ReservationType,
                         ToAddrress = x.ToAddress

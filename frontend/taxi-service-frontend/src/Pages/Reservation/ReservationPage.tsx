@@ -23,7 +23,7 @@ import ReservationDto from '../../dtos/Reservation/ReservationDto';
 export interface DispatchedProps {
   mock: any;
 }
-const getMinDate = (): Date => {
+export const getMinDate = (): Date => {
   var now = new Date();
   var min = now.setHours(now.getHours() + 12);
   return new Date(min);
@@ -239,7 +239,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
         FromAddress: origin,
         ToAddrress: destination,
         ReservationType: ReservationType.Oneway,
-        CarType: this.state.selectedType as CarType,
+        CarType: this.state.selectedType,
         PreferenceIds: this.state.preferences.map(x => x.Id),
         Duration: undefined
       };

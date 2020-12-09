@@ -1,6 +1,5 @@
-import { Card, CardActions, CardContent } from '@material-ui/core';
-import React from 'react';
-import { propTypes } from 'react-bootstrap/esm/Image';
+import { Button, Card, CardContent } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import AccountPageWrapper from '../../../Components/AccountPageWrapper/AccountPageWrapper';
 import { axiosInstance } from '../../../config/Axiosconfig';
@@ -14,26 +13,67 @@ interface IMappedProps {
 }
 
 function MyReservationsPage(props: IMappedProps) {
-    var myReservations: ReservationDetailDto[] = [];
-    axiosInstance.defaults.headers["Authorization"] = "Bearer " + props.token;
-    axiosInstance.get("/user/" + props.id + "/reservations")
-        .then(res => {
-            myReservations = res.data;
-        })
-        .catch(err => {
-        })
-        
+    var [myReservations, setReservations] = useState([] as ReservationDetailDto[]);
+    
+    useEffect(() => {
+        if(myReservations.length === 0) {
+        axiosInstance.defaults.headers["Authorization"] = "Bearer " + props.token;
+        axiosInstance.get("/user/" + props.id + "/reservations")
+            .then(res => {
+                setReservations(res.data);
+            })
+            .catch(err => {
+            })
+        }
+    })
+
+    const isNotPastCancelDate = (date: Date): boolean => {
+        var now = new Date();
+        var min = new Date(now.setHours(now.getHours() + 12));
+        return min < new Date(date);
+    }
+    
     return (
         <AccountPageWrapper header="My Reservations">
             <div className="reservation-wrapper">
                 {myReservations.map(res => {
+                    console.log(res) 
                     return(
                         <Card variant="outlined">
                             <CardContent>
+                                <div className="address-column">
+                                    <div className="address-row">
+                                        <span>From: </span>
+                                        <span>{ res.fromAddress }</span>
+                                    </div>
+                                    {res.duration === undefined 
+                                        ? (
+                                            <div className="address-row">
+                                                <span>To:</span>
+                                                <span>{ res.toAddrress }</span>                                                                                    
+                                            </div>
+                                        ) : (
+                                            <div className="address-row">
+                                                <span>Duration:</span>
+                                                <span>{ res.duration }</span>                                                                                    
+                                            </div>
+                                        )}
+                                </div>
+                                <div className="preferences-column">
+                                    {res.preferences.map(pref => {
+                                        return (
+                                            <li>
+                                                {pref}
+                                            </li>
+                                        )
+                                    })}
+                                </div>
+                                <div className="last-column">
+                                    {isNotPastCancelDate(res.date) &&
+                                    <Button variant="outlined">Cancel</Button>}
+                                    {res.price + " "} .-
+                                </div>
                             </CardContent>
-                            <CardActions>
-
-                            </CardActions>
                         </Card>
                     )
                 })

@@ -1,3 +1,27 @@
 .reservation-wrapper {
     overflow-y: auto;
 }
+
+.addres-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.last-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.address-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.MuiCardContent-root {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
