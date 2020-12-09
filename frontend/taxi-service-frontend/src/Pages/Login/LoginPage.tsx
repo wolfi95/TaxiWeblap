@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
       }
       axiosInstance.post("user/login", data)
         .then(response => {
-          axiosInstance.defaults.headers["Authentication"] = "Bearer " + response.data
+          axiosInstance.defaults.headers["Authorization"] = "Bearer " + response.data
           dispatchH(saveToken(response.data));
           setRedirect(true);
         })

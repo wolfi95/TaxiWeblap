@@ -19,6 +19,7 @@ using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Bll.Services;
 using TaxiService.Dal;
 using TaxiService.Dal.Entities.Authentication;
+using TaxiService.Web.Middlewares;
 
 namespace TaxiService.Web
 {
@@ -54,13 +55,11 @@ namespace TaxiService.Web
                .AddEntityFrameworkStores<TaxiServiceContext>()
                .AddDefaultTokenProviders();
 
-            services.AddAuthentication();
-            services.AddAuthorization();
-
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(cfg =>
             {
                 cfg.RequireHttpsMetadata = false;
@@ -71,8 +70,7 @@ namespace TaxiService.Web
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
                     ValidateIssuer = true,
                     ValidIssuer = configuration["Jwt:Issuer"],
-                    ValidateAudience = true,
-                    ValidAudience = configuration["Jwt:Issuer"],
+                    ValidateAudience = false,
                     ClockSkew = TimeSpan.Zero // remove delay of token when expire
                 };
             });
@@ -159,9 +157,14 @@ namespace TaxiService.Web
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Taxi API V1");
             });
 
-            app.UseCors(options => options.WithOrigins("http://localhost:3000/", "*.herokuapp.com").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
+            app.UseHttpsRedirection();
+
+            app.UseCors(options => options.WithOrigins("http://localhost:3000", "*.herokuapp.com").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
             app.UseRouting();
+
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
+
             app.UseAuthentication();
             app.UseAuthorization();
 

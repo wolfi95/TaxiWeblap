@@ -68,7 +68,7 @@ function HeaderComponent(props: Props) {
     }
     else 
     if(logoutRedirect) {
-        return(<Redirect to="/home"/>)
+        return(<Redirect to="/login"/>)
     }
     else
     if(loginRedirect) {

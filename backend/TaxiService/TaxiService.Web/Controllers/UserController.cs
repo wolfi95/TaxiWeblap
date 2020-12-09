@@ -154,14 +154,21 @@ namespace TaxiService.Web.Controllers
         }  
         
         [HttpPost]
+        [AllowAnonymous]
         [Route("{id}/changePassword")]
-        public async Task ChangePassword([FromRoute] string id, ResetPassDto resetPassDto)
+        public async Task ChangePassword([FromRoute] string id, [FromBody] ResetPassDto resetPassDto)
         {
             if (String.IsNullOrEmpty(id))
             {
                 throw new ArgumentNullException("User identifier cannot be empty");
             }
-            if ((await userManager.GetUserAsync(User)).Id != id)
+            var user = await userManager.GetUserAsync(User);
+            if(user == null)
+            {
+                throw new ArgumentException("Cannot find user");
+            }
+
+            if ( user.Id != id)
             {
                 throw new ArgumentException("Unauthorized access attempt.");
             }
@@ -169,7 +176,6 @@ namespace TaxiService.Web.Controllers
             {
                 throw new ArgumentNullException("Fields cannot be empty.");
             }
-            var user = await userManager.GetUserAsync(User);
             if (!(await userManager.CheckPasswordAsync(user, resetPassDto.OldPassword)))
             {
                 throw new ArgumentException("Wrong old password.");
