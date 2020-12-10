@@ -8,6 +8,7 @@ import ChangePersonalDataPage from './Pages/Account/ChangePersonalData/ChangePer
 import OverViewPage from './Pages/Account/Overview/OverViewPage'
 import MyReservationsPage from './Pages/Account/Reservations/MyReservationsPage';
 import SettingsPage from './Pages/Account/Settings/SettingsPage';
+import ContactPage from './Pages/ContactPage/ContactPage';
 import LoginPage from './Pages/Login/LoginPage';
 import RegisterPage from './Pages/Register/RegisterPage';
 import ReservationPage from './Pages/Reservation/ReservationPage';
@@ -41,7 +42,7 @@ function RouterPage(props: IMappedState){
                             <Route exact path="/account/personal" component={ChangePersonalDataPage}/>
                             <Route exact path="/account/reservations" component={MyReservationsPage}/>
                             <Route exact path="/account/settings" component={SettingsPage}/>
-                            <Route exact path="/contact"/>
+                            <Route exact path="/contact" component={ContactPage}/>
                             <Route exact path="/services/airport"/>
                             <Route exact path="/services/chaffeurs"/>
                             <Route exact path="/services/events"/>
