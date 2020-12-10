@@ -4,6 +4,15 @@
     button {
         margin-top: 20px;
     }
+    .switch-gorup {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        span:last-child input {
+            padding-top: 10px;
+        }
+    }
 }
 
 .delete-button {

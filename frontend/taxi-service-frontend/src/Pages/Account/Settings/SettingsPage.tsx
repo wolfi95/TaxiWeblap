@@ -62,12 +62,14 @@ function SettingsPage(props: Props) {
     return(
         <AccountPageWrapper header="Settings">
             <div className="settings-root">
-                <span>Email notifications:</span>
-                <Switch
-                    checked={emailChecked}
-                    onChange={() => trySetEmailChecked()}
-                    color="primary"
-                />
+                <div className="switch-gorup">
+                    <span>Email notifications:</span>
+                    <Switch
+                        checked={emailChecked}
+                        onChange={() => trySetEmailChecked()}
+                        color="primary"
+                    />
+                </div>
                 <Button 
                     className="delete-button"
                     variant="contained"
