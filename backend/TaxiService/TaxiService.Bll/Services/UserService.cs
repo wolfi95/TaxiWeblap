@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Dal;
+using TaxiService.Dal.Entities.Authentication;
 using TaxiService.Dto.User;
 using TaxiService.Dto.Utils;
 
@@ -14,10 +16,12 @@ namespace TaxiService.Bll.Services
     public class UserService : IUserService
     {
         private readonly TaxiServiceContext context;
+        private readonly UserManager<User> userManager;
 
-        public UserService(TaxiServiceContext context)
+        public UserService(TaxiServiceContext context, UserManager<User> userManager)
         {
             this.context = context;
+            this.userManager = userManager;
         }
 
         public async Task ChangeEmailNotificationSetting(string id)
@@ -48,6 +52,26 @@ namespace TaxiService.Bll.Services
             await context.SaveChangesAsync();
         }
 
+        public async Task DeleteAccount(User user)
+        {
+            using (var transation = context.Database.BeginTransaction())
+            {
+                if (context.Reservations.Where(x => x.User == user).Any(x => x.Date < DateTime.Now)) {
+                    throw new ArgumentException("Cannot delete account while there are active reservations. Please cancel any active reservations or contact support.");
+                }
+
+                var reservations = await context.Reservations.Include(x => x.Preferences).Where(x => x.User == user).ToListAsync();
+                context.ReservationPreferences.RemoveRange(reservations.SelectMany(x => x.Preferences));
+                context.Reservations.RemoveRange(reservations);
+
+                await userManager.DeleteAsync(user);
+
+                await context.SaveChangesAsync();
+
+                await transation.CommitAsync();
+            }
+        }
+
         public async Task<UserDetailDto> GetUserDetail(string id)
         {
             var user = await context.Users.FirstOrDefaultAsync(x => x.Id == id);
@@ -62,6 +86,20 @@ namespace TaxiService.Bll.Services
                 Address = user.Address,
                 Email = user.Email,
                 Name = user.UserName
+            };
+        }
+
+        public async Task<UserSettingsDto> GetUserSettings(string id)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(x => x.Id == id);
+            if (user == null)
+            {
+                throw new ArgumentException("Cannot find User");
+            }
+
+            return new UserSettingsDto
+            {
+                AllowEmails = user.AllowNews
             };
         }
 

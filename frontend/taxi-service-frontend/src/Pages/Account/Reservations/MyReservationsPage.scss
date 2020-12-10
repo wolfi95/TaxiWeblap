@@ -1,5 +1,18 @@
 .reservation-wrapper {
     overflow-y: auto;
+    .MuiCardContent-root {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+        @media screen and (max-width: 600px){
+            flex-direction: column;
+        }
+    }
+    
+    .MuiCard-root {
+        margin: 25px;
+    }
 }
 
 .address-column {
@@ -39,22 +52,9 @@
 .address-row {
     span:first-child {
         margin-right: 5px;
+        margin-bottom: 20px;
     }
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-}
-
-.MuiCardContent-root {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-between;
-    @media screen and (max-width: 600px){
-        flex-direction: column;
-    }
-}
-
-.MuiCard-root {
-    margin: 25px;
 }

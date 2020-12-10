@@ -1,4 +1,3 @@
-import { Email } from '@material-ui/icons';
 import React from 'react'
 import { connect } from 'react-redux';
 import AccountPageWrapper from '../../../Components/AccountPageWrapper/AccountPageWrapper';

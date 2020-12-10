@@ -1,4 +1,4 @@
-.form-wrapper {
+.personal-form-wrapper {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -10,9 +10,9 @@
     @media screen and (min-width: 1600px) {
         width: 20% !important;
     }
-}
-.MuiFormControl-root {
-    margin: 15px 0 !important;
+    .MuiFormControl-root {
+        margin: 15px 0 !important;
+    }
 }
 
 .change-button {

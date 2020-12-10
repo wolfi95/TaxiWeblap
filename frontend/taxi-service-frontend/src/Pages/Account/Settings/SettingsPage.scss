@@ -1,0 +1,17 @@
+.settings-root {
+    display: flex;
+    flex-direction: column;
+    button {
+        margin-top: 20px;
+    }
+}
+
+.delete-button {
+    color: white !important;
+    width: fit-content;
+    background-color: rgb(172, 11, 11) !important;
+
+    &:hover {
+        background-color: rgb(216, 9, 9) !important;
+    }
+}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using TaxiService.Dal.Entities.Authentication;
 using TaxiService.Dto.User;
 using TaxiService.Dto.Utils;
 
@@ -12,6 +13,8 @@ namespace TaxiService.Bll.ServiceInterfaces
         public Task ChangePersonalData(ChangePersonalDataDto personalDataDto, string userId);
         public Task<UserDetailDto> GetUserDetail(string id);
         public Task ChangeEmailNotificationSetting(string id);
+        public Task<UserSettingsDto> GetUserSettings(string id);
         public Task<PagedData<UserDetailDto>> SearchUsers(SearchUserDto searchData);
+        public Task DeleteAccount(User user);
     }
 }

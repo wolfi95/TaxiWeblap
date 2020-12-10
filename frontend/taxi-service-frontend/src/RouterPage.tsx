@@ -7,6 +7,7 @@ import ChangePasswordPage from './Pages/Account/ChangePasswordPage/ChangePasswor
 import ChangePersonalDataPage from './Pages/Account/ChangePersonalData/ChangePersonalDataPage';
 import OverViewPage from './Pages/Account/Overview/OverViewPage'
 import MyReservationsPage from './Pages/Account/Reservations/MyReservationsPage';
+import SettingsPage from './Pages/Account/Settings/SettingsPage';
 import LoginPage from './Pages/Login/LoginPage';
 import RegisterPage from './Pages/Register/RegisterPage';
 import ReservationPage from './Pages/Reservation/ReservationPage';
@@ -39,7 +40,7 @@ function RouterPage(props: IMappedState){
                             <Route exact path="/account/pass" component={ChangePasswordPage}/>
                             <Route exact path="/account/personal" component={ChangePersonalDataPage}/>
                             <Route exact path="/account/reservations" component={MyReservationsPage}/>
-                            <Route exact path="/account/settings" component={OverViewPage}/>
+                            <Route exact path="/account/settings" component={SettingsPage}/>
                             <Route exact path="/contact"/>
                             <Route exact path="/services/airport"/>
                             <Route exact path="/services/chaffeurs"/>

@@ -19,7 +19,6 @@ import ReservationPriceDto from '../../dtos/Reservation/ReservationPriceDto';
 import { apiKey } from '../../config/Googleconfig';
 import 'bootstrap'
 import ReservationDto from '../../dtos/Reservation/ReservationDto';
-import { preProcessFile } from 'typescript';
 
 export interface DispatchedProps {
   mock: any;

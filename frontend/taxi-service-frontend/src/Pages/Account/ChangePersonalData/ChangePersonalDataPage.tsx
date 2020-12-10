@@ -61,7 +61,7 @@ function ChangePersonalDataPage(props: Props) {
 
     return(
         <AccountPageWrapper header="Change Personal Data">
-            <div className="form-wrapper">
+            <div className="personal-form-wrapper">
                 <TextField id="name-field" label="Name" variant="outlined" value={name} onChange={(e) => setName(e.currentTarget.value)}/>
                 <TextField id="email-field"  error={emailError !== ""} label="Email" variant="outlined" value={email} onChange={(e) => setEmail(e.currentTarget.value)}/>
                 {emailError && <span className="error-text">{emailError}</span>}

@@ -236,9 +236,9 @@ namespace TaxiService.Web.Controllers
             await userService.ChangeEmailNotificationSetting(id);
         }
 
-        [HttpDelete]
-        [Route("{id}")]
-        public async Task DeleteAccount([FromRoute] string id)
+        [HttpGet]
+        [Route("{id}/settings")]
+        public async Task<UserSettingsDto> GetUserSettings([FromRoute] string id)
         {
             if (String.IsNullOrEmpty(id))
             {
@@ -248,8 +248,24 @@ namespace TaxiService.Web.Controllers
             {
                 throw new ArgumentException("Unauthorized access attempt.");
             }
-           
-            await userManager.DeleteAsync(await userManager.GetUserAsync(User));
+
+            return await userService.GetUserSettings(id);
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task DeleteAccount([FromRoute] string id)
+        {
+            if (String.IsNullOrEmpty(id))
+            {
+                throw new ArgumentNullException("User identifier cannot be empty");
+            }
+            var user = await userManager.GetUserAsync(User);
+            if (user.Id != id)
+            {
+                throw new ArgumentException("Unauthorized access attempt.");
+            }
+            await userService.DeleteAccount(user);            
         }
     }
 }

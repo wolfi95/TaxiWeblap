@@ -36,7 +36,13 @@ export default function(state = initialState, action: UserActionTypes): IUserSta
         }
     }
     case CLEAR_USER_STATE: {
-      return initialState;
+      return {
+        address: "",
+        email: "",
+        name: "",
+        token: "",
+        userId: ""
+      };
     }
     case UPDATE_DATA: {
       var data = action.payload as ChangePersonalDataDto;
