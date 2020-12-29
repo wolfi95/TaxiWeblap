@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import AccountPageWrapper from '../../../Components/AccountPageWrapper/AccountPageWrapper';
 import { axiosInstance } from '../../../config/Axiosconfig';
+import { ReservationType } from '../../../config/Enums/ReservationType';
 import ReservationDetailDto from '../../../dtos/Reservation/ReservationDetailDto';
 import { RootState } from '../../../redux/reducers/rootReducer';
 import './MyReservationsPage.scss'
@@ -46,7 +47,7 @@ function MyReservationsPage(props: IMappedProps) {
                                         <span>From: </span>
                                         <span>{ res.fromAddress }</span>
                                     </div>
-                                    {res.duration === undefined 
+                                    {res.reservationType === ReservationType.Oneway 
                                         ? (
                                             <div className="address-row">
                                                 <span>To:</span>

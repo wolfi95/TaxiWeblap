@@ -154,7 +154,6 @@ namespace TaxiService.Web.Controllers
         }  
         
         [HttpPost]
-        [AllowAnonymous]
         [Route("{id}/changePassword")]
         public async Task ChangePassword([FromRoute] string id, [FromBody] ResetPassDto resetPassDto)
         {

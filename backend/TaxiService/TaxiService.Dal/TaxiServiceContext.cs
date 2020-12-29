@@ -34,17 +34,17 @@ namespace TaxiService.Dal
                 new Preference
                 {
                     Id = 1,
-                    Text = "Example1"
+                    Text = "Smoking"
                 },
                 new Preference
                 {
                     Id = 2,
-                    Text = "Example2"
+                    Text = "Pets allowed"
                 },
                 new Preference
                 {
                     Id = 3,
-                    Text = "Example3"
+                    Text = "Big trunk"
                 }
             });
         }
