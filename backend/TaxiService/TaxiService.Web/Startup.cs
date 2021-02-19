@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -60,11 +59,6 @@ namespace TaxiService.Web
                 options.KnownProxies.Clear();
                 options.ForwardedHeaders =
                     ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-            });
-
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "Client/build";    
             });
 
             services.AddIdentity<User, IdentityRole>()
@@ -204,7 +198,6 @@ namespace TaxiService.Web
             app.UseCors(options => options.WithOrigins("http://localhost:3000", "*.herokuapp.com").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
 
             app.UseRouting(); 
 
@@ -216,16 +209,6 @@ namespace TaxiService.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
-
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "Client";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
             });
         }
     }
