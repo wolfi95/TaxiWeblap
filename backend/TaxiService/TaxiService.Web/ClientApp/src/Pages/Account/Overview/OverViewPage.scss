@@ -1,0 +1,18 @@
+.data-row {
+    margin-bottom: 20px;    
+    span:first-child {
+        font-weight: bold;
+        display: block;
+    }
+    @media screen and (min-width: 767px) {
+        justify-content: space-between;
+        display: flex;
+        width: 50%;
+        span {
+            display: inline;
+        }
+    }
+    @media screen and (min-width: 1600px) {
+        width: 30%;
+    }
+}

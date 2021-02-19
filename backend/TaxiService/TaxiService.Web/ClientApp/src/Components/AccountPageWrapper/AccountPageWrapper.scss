@@ -1,0 +1,27 @@
+.acc-nav-root {
+    .MuiDrawer-paper {
+        top: auto !important;
+        position: relative !important;    
+    }
+
+    .MuiList-root {
+        background-color: white;
+        color: black;
+        border-right: 1px solid rgba(0, 0, 0, 0.12) !important;
+    }
+
+    ul {
+        padding-bottom: 0 !important;
+    }
+
+    .MuiAppBar-colorPrimary {
+        background-color: black !important;
+        border-top: 1px solid white !important;    
+    }
+
+    .MuiDrawer-paperAnchorDockedLeft {
+        border-right: none !important;
+    }
+
+    overflow-x: hidden;
+}

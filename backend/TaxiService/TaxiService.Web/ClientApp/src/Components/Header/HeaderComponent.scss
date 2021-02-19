@@ -1,0 +1,115 @@
+.header-container {
+    padding-bottom: 20px;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: left !important;  
+    background-color: black;
+
+    .navbar-toggler{
+        color: white;
+    }
+
+    .end {
+        margin-left: auto;
+    }
+
+    Button {
+        font-weight: bolder;
+        padding: 10px 20px;
+        font-size: 1rem;
+        color: white;
+    }
+    .collapse {
+        white-space: nowrap;
+        flex-basis: 100% !important;
+        flex-wrap: wrap;
+    }
+
+    .menu {
+        width: calc(100vw - 0px);
+        background-color: black;
+        margin: 6px -1rem -0.5rem -1rem;
+    }
+
+    @media screen and (max-width: 1269px) {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        div {
+            display: flex;
+            //width: 100%;
+            justify-content: space-between;
+            padding-left: 25px;
+            padding-right: 25px;
+        }  
+        Button {
+            padding: 6px 16px;
+            font-size: inherit;
+        } 
+        
+        .menu {
+            width: calc(100vw - 17px);
+            margin: 0px -1rem -0.5rem -1rem;
+        }
+    }
+    @media screen and (max-width: 767px) {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        div {
+            display: flex;
+            flex-direction: column;
+            padding-left: 0px;
+            padding-right: 0px;
+            width: auto;
+        }
+        .header-img {
+            width: 150px;
+            height: 150px;
+        } 
+        .header-title {
+            font-size: 3rem;
+        }    
+        .end {
+            margin-left: inherit;
+        } 
+        .menu {
+            width: inherit;
+            background-color: inherit;
+            margin: inherit;
+        }
+    }
+}
+
+.user-email {
+    color: white;
+    padding-right: 10px;
+}
+
+.header-img {
+    margin-left: 20px;
+    margin-right: 30px;
+    height: 130px;
+    width: 130px;
+}
+
+.header-title {
+    color: goldenrod;;
+    background: -webkit-linear-gradient(45deg, goldenrod, rgb(238, 198, 97)) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent;
+    font-size: 5rem;
+    letter-spacing: 0.05em;
+    font-family: Drugs !important;
+    font-weight: lighter;
+}
+
+.MuiList-root {
+    background-color: black;
+    color: white;
+    li {
+        font-weight: bolder;
+    }
+}

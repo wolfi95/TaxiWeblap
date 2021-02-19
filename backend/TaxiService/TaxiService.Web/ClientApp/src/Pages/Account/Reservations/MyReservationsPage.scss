@@ -1,0 +1,60 @@
+.reservation-wrapper {
+    overflow-y: auto;
+    .MuiCardContent-root {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+        @media screen and (max-width: 600px){
+            flex-direction: column;
+        }
+    }
+    
+    .MuiCard-root {
+        margin: 25px;
+    }
+}
+
+.address-column {
+    padding-right: 25px;
+    flex-grow: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.last-column {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    button {
+        margin-bottom: 15px;
+    }
+}
+
+.preferences-column {
+    flex-grow: 2;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: row;
+    ul li:first-child {
+        padding-top: 20px;
+    }
+}
+
+.no-preference {
+    margin-left: 15px;
+    font-size: large;
+}
+
+.address-row {
+    span:first-child {
+        margin-right: 5px;
+        margin-bottom: 20px;
+    }
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
