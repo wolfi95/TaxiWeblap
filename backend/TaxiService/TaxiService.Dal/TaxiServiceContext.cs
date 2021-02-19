@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SimberWebapp.Dal.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,7 +24,30 @@ namespace TaxiService.Dal
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
-        {        
+        {
+            if (configuration["DatabaseType"] == "POSTGRES")
+            {
+                var connectionString = "";
+                if (Environment.GetEnvironmentVariable("DATABASE_URL") == null)
+                {
+                    connectionString = configuration.GetConnectionString("TaxiServiceContextPostgres");
+                }
+                else
+                {
+                    connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+                }
+                var stringBuilder = new PostgreSqlConnectionStringBuilder(connectionString)
+                {
+                    Pooling = true,
+                    TrustServerCertificate = true,
+                    SslMode = SslMode.Require
+                };
+                var connectionUrl = stringBuilder.ConnectionString;
+                builder.UseNpgsql(connectionUrl, builder =>
+                {
+                    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+                });
+            }
             base.OnConfiguring(builder);
         }
 

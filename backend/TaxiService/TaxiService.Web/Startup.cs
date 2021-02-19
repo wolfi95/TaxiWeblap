@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SimberWebapp.Dal.Helpers;
 using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Bll.Services;
 using TaxiService.Dal;
@@ -80,10 +81,32 @@ namespace TaxiService.Web
                     ClockSkew = TimeSpan.Zero // remove delay of token when expire
                 };
             });
-
-            services.AddDbContext<TaxiServiceContext>(options =>
-             options.UseSqlServer(configuration.GetConnectionString("TaxiServiceContext")));
-
+            if(configuration["DatabaseType"] == "POSTGRES") {
+                var connectionString = "";
+                if (Environment.GetEnvironmentVariable("DATABASE_URL") == null)
+                {
+                    connectionString = configuration.GetConnectionString("TaxiServiceContextPostgres");
+                }
+                else
+                {
+                    connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+                }
+                var builder = new PostgreSqlConnectionStringBuilder(connectionString)
+                {
+                    Pooling = true,
+                    TrustServerCertificate = true,
+                    SslMode = SslMode.Require
+                };
+                var connectionUrl = builder.ConnectionString;
+                services.AddDbContext<TaxiServiceContext>(o => o.UseNpgsql(connectionUrl));
+            }
+            else
+            {
+                services.AddDbContext<TaxiServiceContext>(options =>
+                    options.UseSqlServer(configuration.GetConnectionString("TaxiServiceContext"))
+                );
+            }
+            
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
