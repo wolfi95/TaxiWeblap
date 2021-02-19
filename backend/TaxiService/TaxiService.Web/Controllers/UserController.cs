@@ -107,7 +107,8 @@ namespace TaxiService.Web.Controllers
                 Email = registerData.Email,
                 TwoFactorEnabled = false,
                 UserName = registerData.Name,
-                AllowNews = registerData.AllowSpam
+                AllowNews = registerData.AllowSpam,
+                Role = UserRoles.User
             };
 
             var result = await userManager.CreateAsync(newUser, registerData.Password);            

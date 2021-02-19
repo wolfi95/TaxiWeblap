@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,6 +50,11 @@ namespace TaxiService.Web
                 options.User.AllowedUserNameCharacters =
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                 options.User.RequireUniqueEmail = true;
+            });
+
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "Client";    
             });
 
             services.AddIdentity<User, IdentityRole>()
@@ -161,7 +167,10 @@ namespace TaxiService.Web
 
             app.UseCors(options => options.WithOrigins("http://localhost:3000", "*.herokuapp.com").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
-            app.UseRouting();
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+
+            app.UseRouting(); 
 
             app.UseMiddleware<ExceptionHandlerMiddleware>();
 
@@ -171,6 +180,11 @@ namespace TaxiService.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "Client";                
             });
         }
     }
