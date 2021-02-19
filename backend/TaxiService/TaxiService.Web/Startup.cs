@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +52,14 @@ namespace TaxiService.Web
                 options.User.AllowedUserNameCharacters =
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                 options.User.RequireUniqueEmail = true;
+            });
+
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
             });
 
             services.AddSpaStaticFiles(configuration =>
@@ -155,6 +164,10 @@ namespace TaxiService.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseForwardedHeaders();
             }
 
             if (!roleManager.RoleExistsAsync(UserRoles.User).Result)
