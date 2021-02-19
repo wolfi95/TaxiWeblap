@@ -64,7 +64,7 @@ namespace TaxiService.Web
 
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "Client";    
+                configuration.RootPath = "Client/build";    
             });
 
             services.AddIdentity<User, IdentityRole>()
@@ -220,7 +220,12 @@ namespace TaxiService.Web
 
             app.UseSpa(spa =>
             {
-                spa.Options.SourcePath = "Client";                
+                spa.Options.SourcePath = "Client";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
             });
         }
     }

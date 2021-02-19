@@ -1,0 +1,291 @@
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+body {
+  margin: 0;
+  width: 100%;
+  background-color: white;
+  background-size: cover;
+}
+
+#root {
+  width: 100%;
+}
+
+.container-width {
+  width: 100%;
+}
+
+.none{
+  clear:both;
+  display: none;
+}
+
+.car {
+  width: 100%;
+  height: 100%;
+  max-height: 450px;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.datepicker {
+  min-width: 275px !important;
+  max-width: 275px !important;
+}
+
+.row {
+  text-align: center;
+  padding-top: 8px;
+  padding-bottom: 10px;
+  
+  height: fit-content;
+  align-items: center;
+}
+
+.row * {
+  margin: 10px;
+}
+
+.results {
+  margin: 50px;
+  text-align: center;
+  justify-content: center;
+}
+
+.typeContainer {
+  margin: 0 40px !important;
+}
+
+.typeCard {
+  width: 100%;
+}
+
+.devider {
+  width: 40vw;
+}
+
+.price {
+  list-style-type: none;
+  border: 1px solid #eee;
+  margin: 0;
+  padding: 0;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  width:100%
+}
+
+/* Add shadows on hover */
+.price:hover {
+  box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2);
+  transform: scale(1.03);
+}
+
+.price-selected {
+  box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2);
+  transform: scale(1.03);
+}
+
+.price-selected a {
+  background-color: #4A569D;
+}
+
+/* Pricing header */
+.price .header {
+  background-color: #111;
+  color: white;
+  font-size: 25px;
+}
+
+/* List items */
+.price li {
+  border-bottom: 1px solid #eee;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Grey list item */
+.price .grey {
+  background-color: #eee;
+  font-size: 20px;
+}
+
+.result {
+  text-align: center;
+  display: inline-block;
+  width: calc(100%/3);
+}
+
+.result:hover {
+  background-color: lightgray;
+}
+
+.searchButton {
+  color: white;
+  font-family: Helvetica;
+  font-size: 1.2em;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background-image: linear-gradient(315deg, #dc244c 0%, #4A569D 100%);
+  padding: 5px;
+  margin: 10px;
+  width: 100px !important;
+  height: 40px;
+}
+
+.searchButton:hover{
+  background-image: linear-gradient(315deg, #4A569D 0%, #DC2424 100%);
+  text-decoration: none;
+  color: white;
+  box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2);
+}
+
+.login-button {
+  color: white !important;
+  font-family: Helvetica;
+  font-size: 1.2em;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background-image: linear-gradient(315deg, #dc244c 0%, #4A569D 100%);
+  padding: 5px;
+  margin: 10px;
+  height: 40px;
+  margin-bottom: 15px !important;
+  margin-left: 8px !important;
+}
+
+.login-button:hover{
+  background-image: linear-gradient(315deg, #4A569D 0%, #dc244c 100%);
+  text-decoration: none !important;
+  color: white;
+  box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2);
+}
+
+.continueButton {
+  color: white !important;
+  font-weight: 800 !important;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background-image: linear-gradient(315deg, #dc244c 0%, #4A569D 100%);
+  padding: 5px;
+  margin: 10px;
+  height: 40px;
+}
+
+.continueButton:hover{
+  background-image: linear-gradient(315deg, #4A569D 0%, #dc244c 100%);
+  text-decoration: none;
+  color: white;
+  box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2);
+}
+
+#origin-oneway, #origin-bythehour, #destination-oneway, #destination-bythehour, #duration, #email-input, #name-input{
+  flex-grow: 2;
+  background-color: #e5e5e5;
+  border: 1px solid transparent;
+  font-size: 1.1em;
+  padding: 5px;
+  border-radius: 5px;
+  margin: 10px;
+  width: 90%;
+}
+
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 4px 16px;
+  transition: 0.3s;
+  width: 50%;
+  font-size: 1.1em;
+  color: black;
+  font-weight: bold;
+}
+
+.tab button:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.tab button.active {
+  background-color: #ccc;
+}
+
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border-top: none;
+}
+
+.button {
+  background-color: #dc244c;
+  border: none;
+  color: white !important;
+  padding: 10px 25px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.button:hover {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.hour-select {
+  width: 200px;
+}
+
+.error {
+  border: 2px solid red !important;
+}
+
+.pref-row {
+  display: flex;
+  align-items: center;
+}
+
+.initial-height {
+  min-height: 100vh;
+}
+
+.form-end {
+  margin-bottom: 20px;
+}
+
+.accordions {
+  margin-top: 200px;
+}
+
+.offer-button {
+  color: white !important;
+  width: fit-content !important;
+  margin-left: 15px !important;
+
+  @media screen and(max-width: 769px) {
+    margin-left: 0 !important;
+    margin-top: 15px !important;
+  }
+}
+
+.offer-text {
+  @media screen and(max-width: 769px) {
+    display: block !important;
+  }
+}
+
+.comment-box {
+  .MuiInputLabel-formControl{
+    top: 5px !important;
+    left: 5px !important;
+  }
+  textarea {
+    border: 1px solid grey !important;
+    padding: 5px;
+  }
+}
