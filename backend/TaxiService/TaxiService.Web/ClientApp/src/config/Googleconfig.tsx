@@ -1,1 +1,0 @@
-export const apiKey = "AIzaSyDTwayprqd-pYQE82aU5iYKkIDcyXMIFMY&libraries=places";
