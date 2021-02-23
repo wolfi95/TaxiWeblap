@@ -16,5 +16,6 @@ namespace TaxiService.Bll.ServiceInterfaces
         public Task<UserSettingsDto> GetUserSettings(string id);
         public Task<PagedData<UserDetailDto>> SearchUsers(SearchUserDto searchData);
         public Task DeleteAccount(User user);
+        public Task<List<User>> GetAllUsers();
     }
 }

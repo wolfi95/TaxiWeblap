@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Dal.Entities.Authentication;
+using TaxiService.Dal.Entities.Models;
 using TaxiService.Dto.Reservation;
 using TaxiService.Dto.User;
 using TaxiService.Dto.Utils;
@@ -102,7 +103,7 @@ namespace TaxiService.Web.Controllers
                 return new BadRequestObjectResult("Email already in use.");
             }
 
-            var newUser = new User
+            var newUser = new ApplicationClient
             {
                 Email = registerData.Email,
                 TwoFactorEnabled = false,
@@ -266,6 +267,14 @@ namespace TaxiService.Web.Controllers
                 throw new ArgumentException("Unauthorized access attempt.");
             }
             await userService.DeleteAccount(user);            
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("all")]
+        public async Task<List<User>> GetAllUsers()
+        {
+            return await userService.GetAllUsers();
         }
     }
 }

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using TaxiService.Dal.Entities.Authentication;
+using TaxiService.Dal.Entities.Models;
 using TaxiService.Dal.Entities.Modles;
 
 namespace TaxiService.Dal
@@ -17,6 +18,8 @@ namespace TaxiService.Dal
         public DbSet<Reservation> Reservations{ get; set; }
         public DbSet<Preference> Preferences { get; set; }
         public DbSet<ReservationPreference> ReservationPreferences { get; set; }
+        public DbSet<ApplicationClient> Clients { get; set; }
+        public DbSet<Worker> Workers { get; set; }
 
         public TaxiServiceContext(DbContextOptions options, IConfiguration configuration) : base(options)
         {
@@ -54,6 +57,12 @@ namespace TaxiService.Dal
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>()
+                .HasDiscriminator(d => d.Role)
+                .HasValue<User>(Entities.Authentication.UserRoles.Administrator)
+                .HasValue<ApplicationClient>(Entities.Authentication.UserRoles.User)
+                .HasValue<Worker>(Entities.Authentication.UserRoles.Worker);
+            
             modelBuilder.Entity<Preference>().HasData(new List<Preference> {
                 new Preference
                 {

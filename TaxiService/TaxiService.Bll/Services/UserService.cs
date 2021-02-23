@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Dal;
 using TaxiService.Dal.Entities.Authentication;
+using TaxiService.Dal.Entities.Models;
 using TaxiService.Dto.User;
 using TaxiService.Dto.Utils;
 
@@ -26,13 +27,14 @@ namespace TaxiService.Bll.Services
 
         public async Task ChangeEmailNotificationSetting(string id)
         {
-            var user = await context.Users.FirstOrDefaultAsync(x => x.Id == id);    
+            var user = await context.Users.FirstOrDefaultAsync(x => x.Id == id);
+            var userAsClient = user as ApplicationClient;
 
-            if(user == null)
+            if(userAsClient == null)
             {
                 throw new ArgumentException("Cannot find User");
             }
-            user.AllowNews = !user.AllowNews;
+            userAsClient.AllowNews = !userAsClient.AllowNews;
             await context.SaveChangesAsync();
         }
 
@@ -56,11 +58,11 @@ namespace TaxiService.Bll.Services
         {
             using (var transation = context.Database.BeginTransaction())
             {
-                if (context.Reservations.Where(x => x.User == user).Any(x => x.Date < DateTime.Now)) {
+                if (context.Reservations.Where(x => x.Client== user).Any(x => x.Date < DateTime.Now)) {
                     throw new ArgumentException("Cannot delete account while there are active reservations. Please cancel any active reservations or contact support.");
                 }
 
-                var reservations = await context.Reservations.Include(x => x.Preferences).Where(x => x.User == user).ToListAsync();
+                var reservations = await context.Reservations.Include(x => x.Preferences).Where(x => x.Client == user).ToListAsync();
                 context.ReservationPreferences.RemoveRange(reservations.SelectMany(x => x.Preferences));
                 context.Reservations.RemoveRange(reservations);
 
@@ -92,14 +94,17 @@ namespace TaxiService.Bll.Services
         public async Task<UserSettingsDto> GetUserSettings(string id)
         {
             var user = await context.Users.FirstOrDefaultAsync(x => x.Id == id);
-            if (user == null)
+
+            var userAsClient = user as ApplicationClient;
+
+            if (userAsClient == null)
             {
                 throw new ArgumentException("Cannot find User");
             }
 
             return new UserSettingsDto
             {
-                AllowEmails = user.AllowNews
+                AllowEmails = userAsClient.AllowNews
             };
         }
 
@@ -122,6 +127,11 @@ namespace TaxiService.Bll.Services
             var pageCount =  Math.Ceiling((double)(resultCount / searchData.PageSize));
 
             return new PagedData<UserDetailDto> { Data = await usersQuery.Select(x => new UserDetailDto { Id = x.Id, Address = x.Address, Email = x.Email, Name = x.UserName }).ToListAsync(), ResultCount = (int)pageCount };
+        }
+
+        public async Task<List<User>> GetAllUsers()
+        {
+            return  await context.Users.ToListAsync();
         }
     }
 }

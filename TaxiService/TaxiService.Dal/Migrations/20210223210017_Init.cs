@@ -42,13 +42,30 @@ namespace TaxiService.Dal.Migrations
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     Address = table.Column<string>(nullable: true),
-                    Role = table.Column<string>(nullable: true),
-                    AllowNotifications = table.Column<bool>(nullable: false),
-                    AllowNews = table.Column<bool>(nullable: false)
+                    Role = table.Column<string>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    AllowNotifications = table.Column<bool>(nullable: true),
+                    AllowNews = table.Column<bool>(nullable: true),
+                    Car = table.Column<int>(nullable: true),
+                    Active = table.Column<bool>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Discount",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    DiscountAmount = table.Column<double>(nullable: true),
+                    DiscountPercent = table.Column<double>(nullable: true),
+                    ExpireDate = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Discount", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -176,7 +193,7 @@ namespace TaxiService.Dal.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Identifier = table.Column<int>(nullable: true),
-                    UserId = table.Column<string>(nullable: true),
+                    ClientId = table.Column<string>(nullable: true),
                     ReservationType = table.Column<int>(nullable: false),
                     CarType = table.Column<int>(nullable: false),
                     FromAddress = table.Column<string>(nullable: true),
@@ -184,14 +201,57 @@ namespace TaxiService.Dal.Migrations
                     Price = table.Column<double>(nullable: false),
                     Duration = table.Column<int>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false),
-                    Comment = table.Column<string>(nullable: true)
+                    Comment = table.Column<string>(nullable: true),
+                    DiscountId = table.Column<Guid>(nullable: false),
+                    ArriveTime = table.Column<DateTime>(nullable: false),
+                    WorkerId = table.Column<string>(nullable: true),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    EditedDate = table.Column<DateTime>(nullable: false),
+                    Status = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reservations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reservations_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Reservations_AspNetUsers_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reservations_Discount_DiscountId",
+                        column: x => x.DiscountId,
+                        principalTable: "Discount",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reservations_AspNetUsers_WorkerId",
+                        column: x => x.WorkerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkerPreference",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    WorkerId = table.Column<string>(nullable: true),
+                    PreferenceId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkerPreference", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WorkerPreference_Preferences_PreferenceId",
+                        column: x => x.PreferenceId,
+                        principalTable: "Preferences",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WorkerPreference_AspNetUsers_WorkerId",
+                        column: x => x.WorkerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -221,6 +281,35 @@ namespace TaxiService.Dal.Migrations
                         principalTable: "Reservations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WorkItem",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Hours = table.Column<double>(nullable: false),
+                    Distance = table.Column<double>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    ReservationId = table.Column<Guid>(nullable: false),
+                    WorkerId = table.Column<string>(nullable: true),
+                    Comment = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WorkItem_Reservations_ReservationId",
+                        column: x => x.ReservationId,
+                        principalTable: "Reservations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WorkItem_AspNetUsers_WorkerId",
+                        column: x => x.WorkerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
@@ -281,9 +370,39 @@ namespace TaxiService.Dal.Migrations
                 column: "ReservationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservations_UserId",
+                name: "IX_Reservations_ClientId",
                 table: "Reservations",
-                column: "UserId");
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_DiscountId",
+                table: "Reservations",
+                column: "DiscountId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservations_WorkerId",
+                table: "Reservations",
+                column: "WorkerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkerPreference_PreferenceId",
+                table: "WorkerPreference",
+                column: "PreferenceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkerPreference_WorkerId",
+                table: "WorkerPreference",
+                column: "WorkerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkItem_ReservationId",
+                table: "WorkItem",
+                column: "ReservationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkItem_WorkerId",
+                table: "WorkItem",
+                column: "WorkerId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -307,6 +426,12 @@ namespace TaxiService.Dal.Migrations
                 name: "ReservationPreferences");
 
             migrationBuilder.DropTable(
+                name: "WorkerPreference");
+
+            migrationBuilder.DropTable(
+                name: "WorkItem");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -317,6 +442,9 @@ namespace TaxiService.Dal.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Discount");
         }
     }
 }

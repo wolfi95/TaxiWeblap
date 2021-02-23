@@ -7,6 +7,7 @@ namespace TaxiService.Dal.Enums
     public enum ReservationType
     {
         Oneway = 0,
-        ByTheHour = 1
+        ByTheHour = 1,
+        RightNow = 2
     }
 }

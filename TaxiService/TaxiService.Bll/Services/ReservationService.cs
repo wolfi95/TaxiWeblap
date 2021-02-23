@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Dal;
 using TaxiService.Dal.Entities.Authentication;
+using TaxiService.Dal.Entities.Models;
 using TaxiService.Dal.Entities.Modles;
 using TaxiService.Dal.Enums;
 using TaxiService.Dto.Reservation;
@@ -389,7 +390,7 @@ namespace TaxiService.Bll.Services
 
         public async Task<List<ReservationDetailDto>> GetUserReservations(string userId)
         {
-            return await context.Reservations.Include(x => x.Preferences).ThenInclude(y => y.Preference).Where(x => x.User.Id == userId).Select(x =>
+            return await context.Reservations.Include(x => x.Preferences).ThenInclude(y => y.Preference).Where(x => x.ClientId == userId).Select(x =>
                     new ReservationDetailDto {
                         CarType = x.CarType,
                         Comment = x.Comment,
@@ -403,7 +404,7 @@ namespace TaxiService.Bll.Services
                     }).ToListAsync();
         }
 
-        public async Task MakeReservation(ReservationDto reservation, User user)
+        public async Task MakeReservation(ReservationDto reservation, ApplicationClient user)
         {
             var resPrefs = await context.Preferences.Where(x => reservation.PreferenceIds.Any(y => y == x.Id)).Select(x =>
                                 new ReservationPreference
@@ -430,7 +431,7 @@ namespace TaxiService.Bll.Services
                                 }),
                 ReservationType = reservation.ReservationType,
                 ToAddress = reservation.ToAddrress,
-                User = user
+                Client = user
             };
             //TODO: Create payment session here
             context.ReservationPreferences.AddRange(resPrefs);

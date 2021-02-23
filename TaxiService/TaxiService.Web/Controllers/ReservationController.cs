@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Dal.Entities.Authentication;
+using TaxiService.Dal.Entities.Models;
 using TaxiService.Dto.Reservation;
 using TaxiService.Dto.Utils;
 
@@ -59,7 +60,7 @@ namespace TaxiService.Web.Controllers
         {
             ValidateReservation(reservation);
 
-            await reservationService.MakeReservation(reservation, await userManager.GetUserAsync(User));
+            await reservationService.MakeReservation(reservation, (await userManager.GetUserAsync(User)) as ApplicationClient);
         }
 
         [HttpDelete]

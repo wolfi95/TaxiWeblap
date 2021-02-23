@@ -10,7 +10,7 @@ using TaxiService.Dal;
 namespace TaxiService.Dal.Migrations
 {
     [DbContext(typeof(TaxiServiceContext))]
-    [Migration("20210219175319_Init")]
+    [Migration("20210223210017_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -162,15 +162,12 @@ namespace TaxiService.Dal.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("text");
 
-                    b.Property<bool>("AllowNews")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("AllowNotifications")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Email")
                         .HasColumnType("character varying(256)")
@@ -203,6 +200,7 @@ namespace TaxiService.Dal.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("Role")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("SecurityStamp")
@@ -225,6 +223,82 @@ namespace TaxiService.Dal.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Role").HasValue("Adminsitrator");
+                });
+
+            modelBuilder.Entity("TaxiService.Dal.Entities.Models.Discount", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<double?>("DiscountAmount")
+                        .HasColumnType("double precision");
+
+                    b.Property<double?>("DiscountPercent")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime>("ExpireDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Discount");
+                });
+
+            modelBuilder.Entity("TaxiService.Dal.Entities.Models.WorkItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<double>("Distance")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Hours")
+                        .HasColumnType("double precision");
+
+                    b.Property<Guid>("ReservationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("WorkerId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReservationId");
+
+                    b.HasIndex("WorkerId");
+
+                    b.ToTable("WorkItem");
+                });
+
+            modelBuilder.Entity("TaxiService.Dal.Entities.Models.WorkerPreference", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("PreferenceId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("WorkerId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PreferenceId");
+
+                    b.HasIndex("WorkerId");
+
+                    b.ToTable("WorkerPreference");
                 });
 
             modelBuilder.Entity("TaxiService.Dal.Entities.Modles.Preference", b =>
@@ -265,17 +339,32 @@ namespace TaxiService.Dal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("ArriveTime")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<int>("CarType")
                         .HasColumnType("integer");
+
+                    b.Property<string>("ClientId")
+                        .HasColumnType("text");
 
                     b.Property<string>("Comment")
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp without time zone");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<Guid>("DiscountId")
+                        .HasColumnType("uuid");
+
                     b.Property<int?>("Duration")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime>("EditedDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("FromAddress")
                         .HasColumnType("text");
@@ -289,15 +378,22 @@ namespace TaxiService.Dal.Migrations
                     b.Property<int>("ReservationType")
                         .HasColumnType("integer");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
                     b.Property<string>("ToAddress")
                         .HasColumnType("text");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("WorkerId")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("DiscountId");
+
+                    b.HasIndex("WorkerId");
 
                     b.ToTable("Reservations");
                 });
@@ -324,6 +420,32 @@ namespace TaxiService.Dal.Migrations
                     b.HasIndex("ReservationId");
 
                     b.ToTable("ReservationPreferences");
+                });
+
+            modelBuilder.Entity("TaxiService.Dal.Entities.Models.ApplicationClient", b =>
+                {
+                    b.HasBaseType("TaxiService.Dal.Entities.Authentication.User");
+
+                    b.Property<bool>("AllowNews")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("AllowNotifications")
+                        .HasColumnType("boolean");
+
+                    b.HasDiscriminator().HasValue("User");
+                });
+
+            modelBuilder.Entity("TaxiService.Dal.Entities.Models.Worker", b =>
+                {
+                    b.HasBaseType("TaxiService.Dal.Entities.Authentication.User");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Car")
+                        .HasColumnType("integer");
+
+                    b.HasDiscriminator().HasValue("Worker");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -377,11 +499,47 @@ namespace TaxiService.Dal.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TaxiService.Dal.Entities.Models.WorkItem", b =>
+                {
+                    b.HasOne("TaxiService.Dal.Entities.Modles.Reservation", "Reservation")
+                        .WithMany()
+                        .HasForeignKey("ReservationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TaxiService.Dal.Entities.Models.Worker", "Worker")
+                        .WithMany("WorkItems")
+                        .HasForeignKey("WorkerId");
+                });
+
+            modelBuilder.Entity("TaxiService.Dal.Entities.Models.WorkerPreference", b =>
+                {
+                    b.HasOne("TaxiService.Dal.Entities.Modles.Preference", "Preference")
+                        .WithMany()
+                        .HasForeignKey("PreferenceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TaxiService.Dal.Entities.Models.Worker", "Worker")
+                        .WithMany("WorkerPreferences")
+                        .HasForeignKey("WorkerId");
+                });
+
             modelBuilder.Entity("TaxiService.Dal.Entities.Modles.Reservation", b =>
                 {
-                    b.HasOne("TaxiService.Dal.Entities.Authentication.User", "User")
+                    b.HasOne("TaxiService.Dal.Entities.Models.ApplicationClient", "Client")
+                        .WithMany("Reservations")
+                        .HasForeignKey("ClientId");
+
+                    b.HasOne("TaxiService.Dal.Entities.Models.Discount", "Discount")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TaxiService.Dal.Entities.Models.Worker", "Worker")
+                        .WithMany("Reservations")
+                        .HasForeignKey("WorkerId");
                 });
 
             modelBuilder.Entity("TaxiService.Dal.Entities.Modles.ReservationPreference", b =>

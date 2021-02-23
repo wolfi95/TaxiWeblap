@@ -8,5 +8,6 @@ namespace TaxiService.Dal.Entities.Authentication
     {
         public const string User = "User";
         public const string Administrator = "Adminsitrator";
+        public const string Worker = "Worker";
     }
 }

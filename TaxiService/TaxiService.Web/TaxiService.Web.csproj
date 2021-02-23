@@ -50,7 +50,14 @@
 		<Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
 	</Target>
 
-	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+	<Target Name="DeleteTsConfigBeforeBuild" BeforeTargets="Build">
+		<ItemGroup>
+			<FileToDelete Include="$(SpaRoot)tsconfig.json"/>
+		</ItemGroup>
+		<Exec Command="del /F /Q &quot;@(FileToDelete)&quot;"/>					
+	</Target>
+
+	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">		
 		<!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
 		<Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
 		<Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
