@@ -24,7 +24,7 @@ using TaxiService.Dal;
 using TaxiService.Dal.Entities.Authentication;
 using TaxiService.Web.Middlewares;
 
-namespace TaxiService.Web
+namespace TaxiService.Web 
 {
     public class Startup
     {
