@@ -4,4 +4,11 @@ export default interface UserDto {
     userId: string;
     name: string;
     address: string;
+    role: string;
+}
+
+export const UserRoles = {
+    User: "User",
+    Administrator: "Adminsitrator",
+    Worker: "Worker"
 }

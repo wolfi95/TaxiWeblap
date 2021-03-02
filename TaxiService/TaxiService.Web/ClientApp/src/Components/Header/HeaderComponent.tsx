@@ -7,10 +7,12 @@ import Navbar from 'react-bootstrap/Navbar';
 import { Button, Menu, MenuItem } from '@material-ui/core';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
+import { UserRoles } from '../../dtos/User/UserDto';
 
 interface IMappedProps{
     token: string;
     email: string;
+    role: string;
 }
 
 interface IDispatchedProps {
@@ -26,12 +28,18 @@ function HeaderComponent(props: Props) {
     const [servicesRedirect, setServicesRedirect] = useState("");
     const [accountRedirect, setAccountRedirect] = useState(false);
     const [aboutRedirect, setAboutRedirect] = useState(false);
-    const [contactRedirect, setContactRedirect] = useState(false);    
-    const [logoutRedirect, setLogoutRedirect] = useState(false);   
+    const [contactRedirect, setContactRedirect] = useState(false);
+    const [logoutRedirect, setLogoutRedirect] = useState(false);
+    const [usersRedirect, setUsersRedirect] = useState(false);
+    const [manageRedirect, setManageRedirect] = useState(false);
+    const [reserveRedirect, setReserveRedirect] = useState(false);
 
     useEffect(() => {
         if(redirect) {
             setRedirect(false);
+        }
+        if(reserveRedirect) {
+            setReserveRedirect(false)
         }
         if(logoutRedirect) {
             setLogoutRedirect(false);
@@ -50,12 +58,22 @@ function HeaderComponent(props: Props) {
         if(contactRedirect) {
             setContactRedirect(false);
         }
+        if(usersRedirect) {
+            setUsersRedirect(false)
+        }
+        if(manageRedirect) {
+            setManageRedirect(false)
+        }
     })
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [adminAnchor, setAdminAnchor] = React.useState<null | HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
+    };
+    const handleAdminClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAdminAnchor(event.currentTarget);
     };
 
     const handleMenuClose = (redirectString: string) => {
@@ -90,6 +108,18 @@ function HeaderComponent(props: Props) {
     if(contactRedirect) {
         return(<Redirect to="/contact"/>)
     }
+    else
+    if(usersRedirect) {
+        return(<Redirect to="/users"/>)
+    }
+    else
+    if(manageRedirect) {
+        return(<Redirect to="/manage"/>)
+    }
+    else
+    if(reserveRedirect) {
+        return(<Redirect to="/reserve"/>)
+    }
     else {
         return (
             <Navbar variant="dark" expand="md" className="header-container">                        
@@ -101,7 +131,7 @@ function HeaderComponent(props: Props) {
                 <Navbar.Toggle />            
                 <Navbar.Collapse className="menu">
                     <Button onClick={() => setRedirect(true)}>
-                        HOME
+                        Reservations
                     </Button>
                     <Button onClick={() => setAboutRedirect(true)}>
                         ABOUT US
@@ -122,6 +152,25 @@ function HeaderComponent(props: Props) {
                     <Button onClick={() => setContactRedirect(true)}>
                         CONTACT US
                     </Button>
+                    <Button aria-controls="admin-menu" aria-haspopup="true" onClick={handleAdminClick}>
+                        Admin
+                    </Button>
+                    {props.role === UserRoles.Administrator && 
+                    <React.Fragment>
+                        <Menu
+                            id="admin-menu"
+                            anchorEl={adminAnchor}
+                            keepMounted
+                            open={Boolean(adminAnchor)}
+                            onClose={() => setAdminAnchor(null)}>
+                                <MenuItem onClick={() => { setAdminAnchor(null); setUsersRedirect(true)}}>Users</MenuItem>
+                                <MenuItem onClick={() => { setAdminAnchor(null);setManageRedirect(true)}}>Mange</MenuItem>
+                        </Menu>
+                        <Button onClick={() => setReserveRedirect(true)}>
+                            Reserve
+                        </Button>
+                    </React.Fragment>
+                    }                    
                     <div className="end">
                     {!props.token ? 
                     (
@@ -158,7 +207,8 @@ const mapDispatchToProps = (dispatch: Dispatch<UserActionTypes>) =>
   const mapStateToProps = (state: RootState): IMappedProps => {
     return {
       token: state.user.token,
-      email: state.user.email
+      email: state.user.email,
+      role: state.user.role
     }
   }
 

@@ -8,6 +8,7 @@ export interface IUserState{
   userId: string;
   name: string;
   address: string;
+  role: string;
 }
 
 const initialState: IUserState = {
@@ -15,7 +16,8 @@ const initialState: IUserState = {
    email: sessionStorage.getItem("email") ?? "",
    userId: sessionStorage.getItem("userId") ?? "",
    name: sessionStorage.getItem("name") ?? "",
-   address: sessionStorage.getItem("address") ?? ""
+   address: sessionStorage.getItem("address") ?? "",
+   role: sessionStorage.getItem("role") ?? ""
 };
   
 export default function(state = initialState, action: UserActionTypes): IUserState {
@@ -26,13 +28,15 @@ export default function(state = initialState, action: UserActionTypes): IUserSta
         sessionStorage.setItem("userId", action.payload?.userId ?? "");
         sessionStorage.setItem("name", action.payload?.name ?? "");
         sessionStorage.setItem("address", action.payload?.address ?? "")
+        sessionStorage.setItem("role", action.payload?.role ?? "")
         return{
             ...state,
             token: action.payload?.token ?? "",
             email: action.payload?.email ?? "",
             userId: action.payload?.userId ?? "",
             name: action.payload?.name ?? "",
-            address: action.payload?.address ?? ""
+            address: action.payload?.address ?? "",
+            role: action.payload?.role ?? ""
         }
     }
     case CLEAR_USER_STATE: {
@@ -41,7 +45,8 @@ export default function(state = initialState, action: UserActionTypes): IUserSta
         email: "",
         name: "",
         token: "",
-        userId: ""
+        userId: "",
+        role: ""
       };
     }
     case UPDATE_DATA: {
