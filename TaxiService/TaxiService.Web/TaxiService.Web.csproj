@@ -54,7 +54,7 @@
 		<ItemGroup>
 			<FileToDelete Include="$(SpaRoot)tsconfig.json"/>
 		</ItemGroup>
-		<Exec Command="del /F /Q &quot;@(FileToDelete)&quot;"/>					
+		<Exec ContinueOnError="true" Command="del /F /Q &quot;@(FileToDelete)&quot;"/>					
 	</Target>
 
 	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">		
