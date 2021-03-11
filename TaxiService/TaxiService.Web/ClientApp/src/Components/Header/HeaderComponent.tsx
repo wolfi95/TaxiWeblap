@@ -152,9 +152,10 @@ function HeaderComponent(props: Props) {
                     <Button onClick={() => setContactRedirect(true)}>
                         CONTACT US
                     </Button>
-                    <Button aria-controls="admin-menu" aria-haspopup="true" onClick={handleAdminClick}>
+                    {props.role === UserRoles.Administrator && <Button aria-controls="admin-menu" aria-haspopup="true" onClick={handleAdminClick}>
                         Admin
                     </Button>
+                    }
                     {props.role === UserRoles.Administrator && 
                     <React.Fragment>
                         <Menu

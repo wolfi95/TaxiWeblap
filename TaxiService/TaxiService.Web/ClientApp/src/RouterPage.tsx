@@ -46,7 +46,7 @@ function RouterPage(props: IMappedState){
                                     {props.role === UserRoles.Administrator && <Route exact path="/home" component={ReservationsPage}/>}
                                     {props.role === UserRoles.Administrator && <Route exact path="/manage" component={ManagePage}/>}
                                     {props.role === UserRoles.Administrator && <Route exact path="/reserve" component={ReservationPage}/>}
-                                    {props.role === UserRoles.Administrator || <Route exact path="/home" component={ReservationPage}/>}                                    
+                                    {props.role === UserRoles.Administrator || <Route exact path="/home" component={ReservationPage}/>}
                                     <Route exact path="/about"/>
                                     <Route exact path="/account/overview" component={OverViewPage}/>
                                     <Route exact path="/account/pass" component={ChangePasswordPage}/>
