@@ -4,12 +4,15 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BarionClientLibrary;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -153,9 +156,21 @@ namespace TaxiService.Web
 
             services.AddCors();
 
+            var barionSettings = new BarionSettings
+            {
+                BaseUrl = new Uri("https://api.test.barion.com/"),
+                POSKey = Guid.Parse("3681fed64489418e8ece8c04d6500d02"),
+                Payee = "taxiservicediploma@gmail.com",
+            };
+
+            services.AddSingleton(barionSettings);
+            services.AddTransient<BarionClient>();
+            services.AddHttpClient<BarionClient>();
+
             services.AddScoped<IPreferenceService, PreferenceService>();
             services.AddScoped<IReservationService, ReservationService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPaymentService, PaymentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -207,18 +222,17 @@ namespace TaxiService.Web
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
-            app.UseRouting(); 
+            app.UseRouting();
 
             app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
@@ -228,6 +242,8 @@ namespace TaxiService.Web
                     spa.UseReactDevelopmentServer(npmScript: "startdebug");
                 }
             });
+            
+
         }
     }
 }

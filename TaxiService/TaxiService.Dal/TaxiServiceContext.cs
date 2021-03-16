@@ -17,6 +17,7 @@ namespace TaxiService.Dal
         private readonly IConfiguration configuration;
         public DbSet<Reservation> Reservations{ get; set; }
         public DbSet<Preference> Preferences { get; set; }
+        public DbSet<Discount> Discounts { get; set; }
         public DbSet<ReservationPreference> ReservationPreferences { get; set; }
         public DbSet<ApplicationClient> Clients { get; set; }
         public DbSet<Worker> Workers { get; set; }
@@ -62,6 +63,10 @@ namespace TaxiService.Dal
                 .HasValue<User>(Entities.Authentication.UserRoles.Administrator)
                 .HasValue<ApplicationClient>(Entities.Authentication.UserRoles.User)
                 .HasValue<Worker>(Entities.Authentication.UserRoles.Worker);
+
+            modelBuilder.Entity<Discount>()
+                .HasIndex(d => d.DiscountCode)
+                .IsUnique();
             
             modelBuilder.Entity<Preference>().HasData(new List<Preference> {
                 new Preference

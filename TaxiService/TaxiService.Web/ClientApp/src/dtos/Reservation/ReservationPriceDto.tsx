@@ -8,4 +8,5 @@ export default interface ReservationPriceDto {
     ReservationType: ReservationType;
     CarType: CarType;
     PreferenceIds: number[];
+    DiscountCode: string;
 }

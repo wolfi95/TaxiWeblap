@@ -11,4 +11,6 @@ export default interface ReservationDetailDto {
     preferences: string[];
     comment: string;
     price: number;
+    id: string;
+    identifier: string;
 }

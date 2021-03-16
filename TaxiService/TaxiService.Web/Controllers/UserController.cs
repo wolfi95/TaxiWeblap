@@ -17,7 +17,7 @@ using TaxiService.Web.Helpers;
 namespace TaxiService.Web.Controllers
 {
     [ApiController]
-    [Route("user")]
+    [Route("api/user")]
     [Authorize]
     public class UserController : ControllerBase
     {

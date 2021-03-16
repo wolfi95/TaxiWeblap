@@ -1,6 +1,7 @@
 import { Button, Card, CardContent } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
 import AccountPageWrapper from '../../../Components/AccountPageWrapper/AccountPageWrapper';
 import { axiosInstance } from '../../../config/Axiosconfig';
 import { ReservationType } from '../../../config/Enums/ReservationType';
@@ -15,16 +16,20 @@ interface IMappedProps {
 
 function MyReservationsPage(props: IMappedProps) {
     var [myReservations, setReservations] = useState([] as ReservationDetailDto[]);
+    const [init, setInit] = useState(true);
+    const [detailsRedirect, setDetailsRedirect] = useState("");
     
-    useEffect(() => {
-        if(myReservations.length === 0) {
-        axiosInstance.defaults.headers["Authorization"] = "Bearer " + props.token;
-        axiosInstance.get("/user/" + props.id + "/reservations")
-            .then(res => {
-                setReservations(res.data);
-            })
-            .catch(err => {
-            })
+    useEffect(() => {        
+        if(init) {
+            axiosInstance.defaults.headers["Authorization"] = "Bearer " + props.token;
+            axiosInstance.get("/user/" + props.id + "/reservations")
+                .then(res => {
+                    setReservations(res.data);
+                    setInit(false);
+                })
+                .catch(err => {
+                    setInit(false);
+                })            
         }
     })
 
@@ -33,7 +38,10 @@ function MyReservationsPage(props: IMappedProps) {
         var min = new Date(now.setHours(now.getHours() + 12));
         return min < new Date(date);
     }
-    
+    if(detailsRedirect !== ""){
+        return <Redirect to={"/account/" + detailsRedirect + "/details"}/>
+    }
+    else
     return (
         <AccountPageWrapper header="My Reservations">
             <div className="reservation-wrapper">
@@ -80,6 +88,7 @@ function MyReservationsPage(props: IMappedProps) {
                                 <div className="last-column">
                                     {isNotPastCancelDate(res.date) &&
                                     <Button variant="outlined">Cancel</Button>}
+                                    <Button onClick={() => setDetailsRedirect(res.id)} variant="outlined">Details</Button>
                                     <span>Price: {res.price + " "} .-</span>
                                 </div>
                             </CardContent>

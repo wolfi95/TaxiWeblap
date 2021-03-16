@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Dal;
@@ -143,6 +144,16 @@ namespace TaxiService.Bll.Services
             if (reservation.FromAddress.Length > 150)
             {
                 throw new ArgumentException("Origin address too long");
+            }
+
+            Discount discount = null;
+            if (!String.IsNullOrEmpty(reservation.DiscountCode))
+            {
+                discount = await context.Discounts.FirstOrDefaultAsync(d => d.DiscountCode == reservation.DiscountCode);
+                if (discount == null)
+                {
+                    throw new ArgumentNullException("Cannot find discount for this code!");
+                }
             }
 
             if (reservation.ReservationType == ReservationType.Oneway)
@@ -341,7 +352,31 @@ namespace TaxiService.Bll.Services
                 {
                     throw new ArgumentException("Cant find route");
                 }
-                return (reservation.CarType == CarType.Executive ? execPrice : reservation.CarType == CarType.Luxury ? luxPrice : sevenSeaterPrice);
+                if (discount != null)
+                {
+                    if (discount.DiscountPercent != null)
+                    {
+                        return (reservation.CarType == CarType.Executive ? (execPrice * discount.DiscountPercent.Value) 
+                                    : reservation.CarType == CarType.Luxury ? (luxPrice * discount.DiscountPercent.Value) 
+                                    : (sevenSeaterPrice * discount.DiscountPercent.Value)
+                                );
+                    }
+                    else
+                    {
+                        return (reservation.CarType == CarType.Executive ? (execPrice - discount.DiscountAmount.Value)
+                                    : reservation.CarType == CarType.Luxury ? (luxPrice - discount.DiscountAmount.Value)
+                                    : (sevenSeaterPrice - discount.DiscountAmount.Value)
+                                );
+                    }
+                }
+                else
+                {
+                    return reservation.CarType == CarType.Executive ? execPrice
+                                    : reservation.CarType == CarType.Luxury ? luxPrice
+                                    : sevenSeaterPrice;
+                }
+                
+                
             }
 
             if (reservation.ReservationType == ReservationType.ByTheHour)
@@ -353,12 +388,36 @@ namespace TaxiService.Bll.Services
                 if (reservation.Duration.Value < 3)
                     throw new ArgumentException("Minimum rent time is 3 hours");
 
-                //15 CC fee + hourly rate
-                return (reservation.CarType == CarType.Executive
-                    ? 15 + reservation.Duration.Value * 35
-                    : reservation.CarType == CarType.Luxury
-                        ? 15 + reservation.Duration.Value * 48.5
-                        : 15 + reservation.Duration.Value * 48.5);
+                if(discount != null)
+                {
+                    if (discount.DiscountPercent != null)
+                    {
+                        return (reservation.CarType == CarType.Executive
+                            ? ((15 + reservation.Duration.Value * 35) * discount.DiscountPercent.Value)
+                            : reservation.CarType == CarType.Luxury
+                                ? ((15 + reservation.Duration.Value * 48.5) * discount.DiscountPercent.Value)
+                                : ((15 + reservation.Duration.Value * 48.5) * discount.DiscountPercent.Value)
+                        );
+                    }
+                    else
+                    {
+                        return (reservation.CarType == CarType.Executive
+                            ? ((15 + reservation.Duration.Value * 35) - discount.DiscountAmount.Value)
+                            : reservation.CarType == CarType.Luxury
+                                ? ((15 + reservation.Duration.Value * 48.5) - discount.DiscountAmount.Value)
+                                : ((15 + reservation.Duration.Value * 48.5) - discount.DiscountAmount.Value)
+                        );
+                    }
+                }
+                else
+                {
+                    //15 CC fee + hourly rate
+                    return (reservation.CarType == CarType.Executive
+                        ? 15 + reservation.Duration.Value * 35
+                        : reservation.CarType == CarType.Luxury
+                            ? 15 + reservation.Duration.Value * 48.5
+                            : 15 + reservation.Duration.Value * 48.5);
+                }
                 
             }
             throw new ArgumentException("Invalid Rent type");
@@ -400,11 +459,13 @@ namespace TaxiService.Bll.Services
                         Preferences = x.Preferences.Select(x => x.Preference.Text).ToList(),
                         Price = x.Price,
                         ReservationType = x.ReservationType,
-                        ToAddrress = x.ToAddress
+                        ToAddrress = x.ToAddress,
+                        Id = x.Id,
+                        Identifier = x.Identifier
                     }).ToListAsync();
         }
 
-        public async Task MakeReservation(ReservationDto reservation, ApplicationClient user)
+        public async Task<Guid> MakeReservation(ReservationDto reservation, string userId)
         {
             var resPrefs = await context.Preferences.Where(x => reservation.PreferenceIds.Any(y => y == x.Id)).Select(x =>
                                 new ReservationPreference
@@ -412,6 +473,20 @@ namespace TaxiService.Bll.Services
                                     Preference = x,
                                     PrefId = x.Id,
                                 }).ToListAsync();
+
+            Discount discount = null;
+            if (!String.IsNullOrEmpty(reservation.DiscountCode))
+            {
+                discount = await context.Discounts.FirstOrDefaultAsync(d => d.DiscountCode == reservation.DiscountCode);
+
+                if (discount == null)
+                {
+                    throw new ArgumentException("Cannot find the supplied coupon code.");
+                }
+            }
+            
+
+            var identifier = GenerateAccessToken();
 
             var reservationData = new Reservation
             {
@@ -427,21 +502,75 @@ namespace TaxiService.Bll.Services
                                     Duration = reservation.Duration,
                                     CarType = reservation.CarType,
                                     PreferenceIds = reservation.PreferenceIds,
-                                    ToAddrress = reservation.ToAddrress
+                                    ToAddrress = reservation.ToAddrress,
+                                    DiscountCode = reservation.DiscountCode
                                 }),
                 ReservationType = reservation.ReservationType,
                 ToAddress = reservation.ToAddrress,
-                Client = user
+                ClientId = userId,
+                CreatedDate = DateTime.Now,
+                DiscountId = discount?.Id,
+                Identifier = identifier,
+                Status = ReservationStatus.Reserved,
             };
-            //TODO: Create payment session here
+            
             context.ReservationPreferences.AddRange(resPrefs);
             context.Reservations.Add(reservationData);
             await context.SaveChangesAsync();
+
+            return reservationData.Id;
         }
 
         public Task<PagedData<ReservationDetailDto>> SearchReservations(SearchReservationDto searchData)
         {
             throw new NotImplementedException();
+        }
+
+        public static string GenerateAccessToken() // generates a unique, random, and alphanumeric token
+        {
+            const string availableChars = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+            using (var generator = new RNGCryptoServiceProvider())
+            {
+                var bytes = new byte[16];
+                generator.GetBytes(bytes);
+                var chars = bytes.Select(b => availableChars[b % availableChars.Length]);
+                var token = new string(chars.ToArray());
+                return token;
+            }
+        }
+
+        public async Task<ReservationSummaryDto> GetReservationDetails(Guid reservationId, string userId)
+        {
+            var reservation = await context.Reservations
+                .Include(r => r.Worker)
+                .Include(r => r.Discount)
+                .Include(r => r.Preferences).ThenInclude(p => p.Preference)
+                .FirstOrDefaultAsync(r => r.Id == reservationId && r.ClientId == userId);
+
+            if(reservation == null)
+            {
+                throw new ArgumentNullException("Cannot find reservation.");
+            }
+
+            return new ReservationSummaryDto
+            {
+                ArriveTime = reservation.ArriveTime,
+                AssignedDriver = reservation.Worker?.UserName ?? "",
+                CarType = reservation.CarType,
+                Comment =  reservation.Comment,
+                CreatedDate = reservation.CreatedDate,
+                Date = reservation.Date,
+                DiscountCode = reservation.Discount?.DiscountCode ?? "",
+                Duration = reservation.Duration,
+                EditedDate = reservation.EditedDate,
+                FromAddress = reservation.FromAddress,
+                Identifier = reservation.Identifier,
+                Preferences = reservation.Preferences.Select(p => p.Preference.Text).ToList(),
+                ReservationType = reservation.ReservationType,
+                Price = reservation.Price,
+                Status = reservation.Status,
+                ToAddress = reservation.ToAddress
+            };
         }
     }
 }

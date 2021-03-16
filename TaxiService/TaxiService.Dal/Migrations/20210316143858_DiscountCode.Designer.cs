@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TaxiService.Dal;
@@ -9,9 +10,10 @@ using TaxiService.Dal;
 namespace TaxiService.Dal.Migrations
 {
     [DbContext(typeof(TaxiServiceContext))]
-    partial class TaxiServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20210316143858_DiscountCode")]
+    partial class DiscountCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -343,7 +345,7 @@ namespace TaxiService.Dal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime?>("ArriveTime")
+                    b.Property<DateTime>("ArriveTime")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("CarType")
@@ -361,13 +363,13 @@ namespace TaxiService.Dal.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid?>("DiscountId")
+                    b.Property<Guid>("DiscountId")
                         .HasColumnType("uuid");
 
                     b.Property<int?>("Duration")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime?>("EditedDate")
+                    b.Property<DateTime>("EditedDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("FromAddress")
@@ -537,7 +539,9 @@ namespace TaxiService.Dal.Migrations
 
                     b.HasOne("TaxiService.Dal.Entities.Models.Discount", "Discount")
                         .WithMany()
-                        .HasForeignKey("DiscountId");
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TaxiService.Dal.Entities.Models.Worker", "Worker")
                         .WithMany("Reservations")

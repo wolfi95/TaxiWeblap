@@ -14,7 +14,7 @@ using TaxiService.Dto.Utils;
 namespace TaxiService.Web.Controllers
 {
     [ApiController]
-    [Route("reservation")]
+    [Route("api/reservation")]
     [Authorize]
     public class ReservationController : ControllerBase
     {
@@ -32,6 +32,19 @@ namespace TaxiService.Web.Controllers
         public async Task<PagedData<ReservationDetailDto>> SearchReservations([FromBody] SearchReservationDto searchData)
         {
             return await reservationService.SearchReservations(searchData);
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<ReservationSummaryDto> GetReservationDetails([FromRoute] Guid id)
+        {
+            var user = await userManager.GetUserAsync(User);
+            if(user == null)
+            {
+                throw new ArgumentException("Cannot find user.");
+            }
+
+            return await reservationService.GetReservationDetails(id, user.Id);
         }
 
         [HttpPost]
@@ -56,11 +69,18 @@ namespace TaxiService.Web.Controllers
 
         [HttpPost]
         [Route("make")]
-        public async Task MakeReservation([FromBody] ReservationDto reservation)
+        public async Task<Guid> MakeReservation([FromBody] ReservationDto reservation)
         {
             ValidateReservation(reservation);
 
-            await reservationService.MakeReservation(reservation, (await userManager.GetUserAsync(User)) as ApplicationClient);
+            var user = await userManager.GetUserAsync(User);
+
+            if(user == null)
+            {
+                throw new ArgumentNullException("Cannot find user.");
+            }
+
+            return await reservationService.MakeReservation(reservation, user.Id);
         }
 
         [HttpDelete]

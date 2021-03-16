@@ -6,7 +6,7 @@ import HeaderComponent from './Components/Header/HeaderComponent';
 import { UserRoles } from './dtos/User/UserDto';
 import ChangePasswordPage from './Pages/Account/ChangePasswordPage/ChangePasswordPage';
 import ChangePersonalDataPage from './Pages/Account/ChangePersonalData/ChangePersonalDataPage';
-import OverViewPage from './Pages/Account/Overview/OverViewPage'
+import OverViewPage from './Pages/Account/Overview/OverViewPage';
 import MyReservationsPage from './Pages/Account/Reservations/MyReservationsPage';
 import SettingsPage from './Pages/Account/Settings/SettingsPage';
 import ContactPage from './Pages/ContactPage/ContactPage';
@@ -16,8 +16,10 @@ import ReservationPage from './Pages/Reservation/ReservationPage';
 import { RootState } from './redux/reducers/rootReducer';
 import ReservationsPage from './Pages/Admin/Reservations/ReservationsPage'
 import UsersPage from './Pages/Admin/Users/UsersPage';
-import UserReservationsPage from './Pages/Admin/Users/UserReservationsPage'
-import ManagePage from './Pages/Admin/Manage/ManagePage'
+import UserReservationsPage from './Pages/Admin/Users/UserReservationsPage';
+import ManagePage from './Pages/Admin/Manage/ManagePage';
+import ReservationDetailsPage from './Pages/Account/ReservationDetails/ReservationDetailsPage';
+import SuccessfulPaymentPage from './Pages/Reservation/SuccessfulPaymentPage';
 
 interface IMappedState{
     token:string;
@@ -47,11 +49,13 @@ function RouterPage(props: IMappedState){
                                     {props.role === UserRoles.Administrator && <Route exact path="/manage" component={ManagePage}/>}
                                     {props.role === UserRoles.Administrator && <Route exact path="/reserve" component={ReservationPage}/>}
                                     {props.role === UserRoles.Administrator || <Route exact path="/home" component={ReservationPage}/>}
+                                    <Route exact path="/successfulPayment"  component={SuccessfulPaymentPage} />
                                     <Route exact path="/about"/>
                                     <Route exact path="/account/overview" component={OverViewPage}/>
                                     <Route exact path="/account/pass" component={ChangePasswordPage}/>
                                     <Route exact path="/account/personal" component={ChangePersonalDataPage}/>
                                     <Route exact path="/account/reservations" component={MyReservationsPage}/>
+                                    <Route exact path="/account/:id/details" component={ReservationDetailsPage}/>
                                     <Route exact path="/account/settings" component={SettingsPage}/>
                                     <Route exact path="/contact" component={ContactPage}/>
                                     <Route exact path="/services/airport"/>
@@ -60,7 +64,7 @@ function RouterPage(props: IMappedState){
                                     <Redirect to="/home"/>
                         </React.Fragment>
                     )
-                }
+                }~
                 <Redirect to="/login"/>
             </Switch>
         <FooterComponent/>

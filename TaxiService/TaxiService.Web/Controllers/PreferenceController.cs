@@ -9,7 +9,7 @@ using TaxiService.Dal.Entities.Modles;
 namespace TaxiService.Web.Controllers
 {
     [ApiController]
-    [Route("preferences")]
+    [Route("api/preferences")]
     public class PreferenceController : Controller
     {
         private readonly IPreferenceService preferenceService;

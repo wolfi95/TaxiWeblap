@@ -46,7 +46,8 @@ export interface IReservationPageState {
   price?: number;
   preferences: Preference[];
   comment: string;
-  summary: boolean;
+  summary: string;
+  discount: string;
 }
 const initialState: IReservationPageState = { 
   date: getMinDate(),
@@ -55,12 +56,13 @@ const initialState: IReservationPageState = {
   open: false,
   origin: "",
   preferences: [],
-  summary: false,
+  summary: "",
   tab: ReservationType.Oneway,
   time: 0,
   price: undefined,
   selectedType: undefined,
   comment: "",
+  discount: ""
 }
 
 interface IMappedProps{
@@ -240,7 +242,8 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
         ReservationType: ReservationType.Oneway,
         CarType: this.state.selectedType,
         PreferenceIds: this.state.preferences.map(x => x.id),
-        Duration: undefined
+        Duration: undefined,
+        DiscountCode: this.state.discount
       };
 
       axiosInstance
@@ -279,7 +282,8 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
         ReservationType: ReservationType.ByTheHour,
         Duration: +hours,
         CarType: this.state.selectedType as CarType,
-        PreferenceIds: this.state.preferences.map(x => x.id)
+        PreferenceIds: this.state.preferences.map(x => x.id),
+        DiscountCode: this.state.discount
       };
 
       axiosInstance
@@ -437,13 +441,12 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
         PreferenceIds: prefs,
         ReservationType: this.state.tab,
         ToAddrress: destination?.value ?? "",
-        Duration: this.state.time
+        Duration: this.state.time,
+        DiscountCode: this.state.discount
       } as ReservationDto;
-      debugger;
       axiosInstance.post("reservation/make", data)
-        .then(res => {
-          //TODO: redirect to payment page
-          this.setState({summary: true});
+        .then(res => {          
+          this.setState({summary: res.data});
           this.saveState();
         })
         .catch(err => {
@@ -524,8 +527,8 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
   }
 
   render() {
-    if(this.state.summary)
-      return <Redirect to="/summary"/>    
+    if(this.state.summary !== "")
+      return <Redirect to={"/account/" + this.state.summary + "/details"}/>
     else {
       return (
         <div className="container-width">
@@ -733,6 +736,12 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                   rows={15}
                   rowsMax={15}>
                 </TextField>
+                <input
+                  type="text"
+                  placeholder="Discount Code"
+                  value={this.state.discount}
+                  onChange={(v) => this.setState({discount: v.currentTarget.value})}
+                />
                 <input
                   className="searchButton"
                   id="search-oneway"

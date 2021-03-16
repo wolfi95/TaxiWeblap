@@ -1,1 +1,1 @@
-export const apiKey = "AIzaSyDTwayprqd-pYQE82aU5iYKkIDcyXMIFMY&libraries=places";
+export const apiKey = "AIzaSyAJaF-auNDfH40ck5z5Q7SRCAYEsjjkIdY&libraries=places";

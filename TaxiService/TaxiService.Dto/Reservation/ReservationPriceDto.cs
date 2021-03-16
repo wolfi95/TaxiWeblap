@@ -13,5 +13,6 @@ namespace TaxiService.Dto.Reservation
         public ReservationType ReservationType { get; set; }
         public CarType CarType { get; set; }
         public List<int> PreferenceIds { get; set; }
+        public string DiscountCode { get; set; }
     }
 }

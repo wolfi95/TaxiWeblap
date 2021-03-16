@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TaxiService.Dal;
@@ -9,9 +10,10 @@ using TaxiService.Dal;
 namespace TaxiService.Dal.Migrations
 {
     [DbContext(typeof(TaxiServiceContext))]
-    partial class TaxiServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20210316144512_DiscountCodeOptional")]
+    partial class DiscountCodeOptional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -343,7 +345,7 @@ namespace TaxiService.Dal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime?>("ArriveTime")
+                    b.Property<DateTime>("ArriveTime")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("CarType")

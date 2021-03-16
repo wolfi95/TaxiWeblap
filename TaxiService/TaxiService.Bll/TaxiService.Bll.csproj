@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BarionClient" Version="2.0.0.6" />
     <PackageReference Include="GoogleMapsApi" Version="0.80.0" />
   </ItemGroup>
 
