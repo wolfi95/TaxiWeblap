@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Route, BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Switch, Redirect, StaticRouter, HashRouter } from 'react-router-dom';
 import FooterComponent from './Components/Footer/FooterComponent';
 import HeaderComponent from './Components/Header/HeaderComponent';
 import { UserRoles } from './dtos/User/UserDto';
@@ -28,7 +28,7 @@ interface IMappedState{
 
 function RouterPage(props: IMappedState){    
     return(
-        <Router>
+        <HashRouter >
         <HeaderComponent/>
             <Switch>  
                 <Route exact path="/login">
@@ -68,7 +68,7 @@ function RouterPage(props: IMappedState){
                 <Redirect to="/login"/>
             </Switch>
         <FooterComponent/>
-        </Router>
+        </HashRouter>
     )
 }
 

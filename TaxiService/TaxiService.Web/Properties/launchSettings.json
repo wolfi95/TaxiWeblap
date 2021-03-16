@@ -18,7 +18,6 @@
     "TaxiService.Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "home",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
