@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -217,7 +218,7 @@ namespace TaxiService.Web
 
             app.UseHttpsRedirection();
 
-            app.UseCors(options => options.WithOrigins("http://localhost:3000", "*.herokuapp.com").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
+            app.UseCors(options => options.WithOrigins("http://localhost:3000", "*.herokuapp.com", "*.barion.com").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
@@ -232,6 +233,12 @@ namespace TaxiService.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+            app.Use(async (context, next) =>
+            {
+                var cx = context.Request.Path.Value != "/reserve";
+                await next();
+                var x = context.Response;
             });
             app.UseSpa(spa =>
             {

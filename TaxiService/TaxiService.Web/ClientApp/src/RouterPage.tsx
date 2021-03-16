@@ -26,9 +26,10 @@ interface IMappedState{
     role:string;
 }
 
-function RouterPage(props: IMappedState){    
+function RouterPage(props: IMappedState){
+    console.log(window.location.href)
     return(
-        <HashRouter >
+        <Router >
         <HeaderComponent/>
             <Switch>  
                 <Route exact path="/login">
@@ -37,38 +38,29 @@ function RouterPage(props: IMappedState){
                 <Route exact path="/register">
                     <RegisterPage />
                 </Route>
-                
-                {!props.token ? 
-                    (
-                        <Redirect to="/login"/>
-                    ) : (
-                        <React.Fragment>
-                                    {props.role === UserRoles.Administrator && <Route exact path="/users" component={UsersPage}/>}
-                                    {props.role === UserRoles.Administrator && <Route exact path="/users/:id" component={UserReservationsPage}/>}
-                                    {props.role === UserRoles.Administrator && <Route exact path="/home" component={ReservationsPage}/>}
-                                    {props.role === UserRoles.Administrator && <Route exact path="/manage" component={ManagePage}/>}
-                                    {props.role === UserRoles.Administrator && <Route exact path="/reserve" component={ReservationPage}/>}
-                                    {props.role === UserRoles.Administrator || <Route exact path="/home" component={ReservationPage}/>}
-                                    <Route exact path="/successfulPayment"  component={SuccessfulPaymentPage} />
-                                    <Route exact path="/about"/>
-                                    <Route exact path="/account/overview" component={OverViewPage}/>
-                                    <Route exact path="/account/pass" component={ChangePasswordPage}/>
-                                    <Route exact path="/account/personal" component={ChangePersonalDataPage}/>
-                                    <Route exact path="/account/reservations" component={MyReservationsPage}/>
-                                    <Route exact path="/account/:id/details" component={ReservationDetailsPage}/>
-                                    <Route exact path="/account/settings" component={SettingsPage}/>
-                                    <Route exact path="/contact" component={ContactPage}/>
-                                    <Route exact path="/services/airport"/>
-                                    <Route exact path="/services/chaffeurs"/>
-                                    <Route exact path="/services/events"/>
-                                    <Redirect to="/home"/>
-                        </React.Fragment>
-                    )
-                }~
-                <Redirect to="/login"/>
+                {props.token || <Redirect to="/login"/>}
+                {props.role === UserRoles.Administrator && <Route exact path="/users" component={UsersPage}/>}
+                {props.role === UserRoles.Administrator && <Route exact path="/users/:id" component={UserReservationsPage}/>}
+                {props.role === UserRoles.Administrator && <Route exact path="/home" component={ReservationsPage}/>}
+                {props.role === UserRoles.Administrator && <Route exact path="/manage" component={ManagePage}/>}
+                {props.role === UserRoles.Administrator && <Route exact path="/reserve" component={ReservationPage}/>}
+                {props.role === UserRoles.Administrator || <Route exact path="/home" component={ReservationPage}/>}
+                <Route exact path="/successfulPayment"  component={SuccessfulPaymentPage} />
+                <Route exact path="/about"/>
+                <Route exact path="/account/overview" component={OverViewPage}/>
+                <Route exact path="/account/pass" component={ChangePasswordPage}/>
+                <Route exact path="/account/personal" component={ChangePersonalDataPage}/>
+                <Route exact path="/account/reservations" component={MyReservationsPage}/>
+                <Route exact path="/account/:id/details" component={ReservationDetailsPage}/>
+                <Route exact path="/account/settings" component={SettingsPage}/>
+                <Route exact path="/contact" component={ContactPage}/>
+                <Route exact path="/services/airport"/>
+                <Route exact path="/services/chaffeurs"/>
+                <Route exact path="/services/events"/>
+                <Redirect to="/home"/>
             </Switch>
         <FooterComponent/>
-        </HashRouter>
+        </Router>
     )
 }
 

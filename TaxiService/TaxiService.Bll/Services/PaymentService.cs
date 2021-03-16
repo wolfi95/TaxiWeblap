@@ -63,7 +63,7 @@ namespace TaxiService.Bll.Services
                 OrderNumber = reservation.Identifier,
                 PaymentRequestId = reservation.Id.ToString(),
                 CallbackUrl = "https://localhost:5001/payment/barionCallback",
-                RedirectUrl = "https://localhost:5001/#/successfulPayment",
+                RedirectUrl = "https://localhost:5001/successfulPayment",
             };
 
             var result = await barionClient.ExecuteAsync(startPayment);
