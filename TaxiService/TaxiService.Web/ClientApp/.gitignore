@@ -10,6 +10,7 @@
 
 # production
 /build
+tsconfig.json
 
 # misc
 .DS_Store
