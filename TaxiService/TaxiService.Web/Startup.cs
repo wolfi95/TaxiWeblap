@@ -159,9 +159,9 @@ namespace TaxiService.Web
 
             var barionSettings = new BarionSettings
             {
-                BaseUrl = new Uri("https://api.test.barion.com/"),
-                POSKey = Guid.Parse("3681fed64489418e8ece8c04d6500d02"),
-                Payee = "taxiservicediploma@gmail.com",
+                BaseUrl = new Uri(configuration["Barion:Url"]),
+                POSKey = Guid.Parse(configuration["Barion:POS"]),
+                Payee = configuration["Barion:PayeeEmail"],
             };
 
             services.AddSingleton(barionSettings);
@@ -192,21 +192,21 @@ namespace TaxiService.Web
             if (!roleManager.RoleExistsAsync(UserRoles.Administrator).Result)
                 roleManager.CreateAsync(new IdentityRole { Name = UserRoles.Administrator }).Wait();
 
-            var user = userManager.FindByEmailAsync("adminemail@smth.com");
+            var user = userManager.FindByEmailAsync(configuration["Admin:Email"]);
             user.Wait();
             if (user.Result == null)
             {
                 var cu = userManager.CreateAsync(new User
                 {
-                    Email = "adminemail@smth.com",
-                    UserName = "Admin1",
-                    Address = "new address 1",
+                    Email = configuration["Admin:Email"],
+                    UserName = configuration["Admin:Name"],
+                    Address = configuration["Admin:Address"],
                     Role = UserRoles.Administrator
                 });
                 cu.Wait();
-                var u = userManager.FindByEmailAsync("adminemail@smth.com");
+                var u = userManager.FindByEmailAsync(configuration["Admin:Email"]);
                 u.Wait();
-                userManager.AddPasswordAsync(u.Result, "AdminPass1").Wait();
+                userManager.AddPasswordAsync(u.Result, configuration["Admin:Password"]).Wait();
                 userManager.AddToRoleAsync(u.Result, UserRoles.Administrator).Wait();
             }
 

@@ -3,6 +3,7 @@ using BarionClientLibrary.Operations.Common;
 using BarionClientLibrary.Operations.PaymentState;
 using BarionClientLibrary.Operations.StartPayment;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -18,12 +19,14 @@ namespace TaxiService.Bll.Services
         private readonly TaxiServiceContext context;
         private readonly BarionClient barionClient;
         private readonly BarionSettings barionSettings;
+        private readonly IConfiguration configuration;
 
-        public PaymentService(TaxiServiceContext context, BarionClient barionClient, BarionSettings barionSettings)
+        public PaymentService(TaxiServiceContext context, BarionClient barionClient, BarionSettings barionSettings, IConfiguration configuration)
         {
             this.context = context;
             this.barionClient = barionClient;
             this.barionSettings = barionSettings;
+            this.configuration = configuration;
         }
         public async Task<string> StartBarionPayment(Guid reservationId, string userId)
         {
@@ -62,8 +65,8 @@ namespace TaxiService.Bll.Services
                 Locale = CultureInfo.CurrentCulture,
                 OrderNumber = reservation.Identifier,
                 PaymentRequestId = reservation.Id.ToString(),
-                CallbackUrl = "https://localhost:5001/payment/barionCallback",
-                RedirectUrl = "https://localhost:5001/successfulPayment",
+                CallbackUrl = configuration["Barion:CallbackUrl"],
+                RedirectUrl = configuration["Barion:RedirectUrl"],
             };
 
             var result = await barionClient.ExecuteAsync(startPayment);
