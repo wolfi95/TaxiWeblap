@@ -234,12 +234,6 @@ namespace TaxiService.Web
             {
                 endpoints.MapControllers();
             });
-            app.Use(async (context, next) =>
-            {
-                var cx = context.Request.Path.Value != "/reserve";
-                await next();
-                var x = context.Response;
-            });
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
