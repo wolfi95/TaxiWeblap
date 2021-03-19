@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Route, BrowserRouter as Router, Switch, Redirect, StaticRouter, HashRouter } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
 import FooterComponent from './Components/Footer/FooterComponent';
 import HeaderComponent from './Components/Header/HeaderComponent';
 import { UserRoles } from './dtos/User/UserDto';
 import ChangePasswordPage from './Pages/Account/ChangePasswordPage/ChangePasswordPage';
 import ChangePersonalDataPage from './Pages/Account/ChangePersonalData/ChangePersonalDataPage';
-import OverViewPage from './Pages/Account/Overview/OverViewPage';
+import OverViewPage from './Pages/Account/Overview//OverViewPage';
 import MyReservationsPage from './Pages/Account/Reservations/MyReservationsPage';
 import SettingsPage from './Pages/Account/Settings/SettingsPage';
 import ContactPage from './Pages/ContactPage/ContactPage';
@@ -20,17 +20,52 @@ import UserReservationsPage from './Pages/Admin/Users/UserReservationsPage';
 import ManagePage from './Pages/Admin/Manage/ManagePage';
 import ReservationDetailsPage from './Pages/Account/ReservationDetails/ReservationDetailsPage';
 import SuccessfulPaymentPage from './Pages/Reservation/SuccessfulPaymentPage';
+import { Snackbar } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import { AnyAction, bindActionCreators, Dispatch } from 'redux';
+import { clearError, setError } from './redux/actions/errorActions';
+import { axiosInstance } from './config/Axiosconfig';
 
 interface IMappedState{
-    token:string;
-    role:string;
+    token: string;
+    role: string;
+    error: string;
 }
 
-function RouterPage(props: IMappedState){
-    console.log(window.location.href)
+interface IDispatchedProps {
+    clearError: () => void;
+    setError: (msg: string) => void;
+}
+
+type Props = IMappedState & IDispatchedProps;
+
+function RouterPage(props: Props){
+
+    const [init, setInit] = useState(true);
+
+    useEffect(() => {
+        if(init){            
+            axiosInstance.interceptors.response.use((response) => response, (error) => {
+                if (error.response?.status === 404) {
+                    props.setError("Unknown error occured");
+                }
+                else {
+                    if (error.response?.data !== undefined) {
+                        props.setError(error.response.data.message);
+                    }
+                    else {
+                        props.setError("Cannot reach server");
+                    }
+                }
+                throw error;
+            });
+            setInit(false);
+        }
+    })
+    
     return(
         <Router >
-        <HeaderComponent/>
+            <HeaderComponent/>
             <Switch>  
                 <Route exact path="/login">
                     <LoginPage />
@@ -59,7 +94,15 @@ function RouterPage(props: IMappedState){
                 <Route exact path="/services/events"/>
                 <Redirect to="/home"/>
             </Switch>
-        <FooterComponent/>
+            <FooterComponent/>
+            <Snackbar
+                open={props.error !== ""}
+                onClose={() => props.clearError()}
+                >
+                <Alert onClose={() => props.clearError()} severity="error">
+                    {props.error}
+                </Alert>
+            </Snackbar>
         </Router>
     )
 }
@@ -67,8 +110,18 @@ function RouterPage(props: IMappedState){
 const mapStateToProps = (state: RootState): IMappedState => {
     return {
       token: state.user.token,
-      role: state.user.role
+      role: state.user.role,
+      error: state.error.message
     }
 }
-const connector = connect(mapStateToProps)
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
+    bindActionCreators(
+      {
+        clearError,
+        setError
+      },
+      dispatch
+    );
+const connector = connect(mapStateToProps, mapDispatchToProps)
 export default connector(RouterPage)

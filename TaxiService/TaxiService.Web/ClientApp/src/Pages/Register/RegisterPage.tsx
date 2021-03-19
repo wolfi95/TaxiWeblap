@@ -79,20 +79,7 @@ export default function RegisterPage() {
       .then(response => {
         setSuccess(true);
       })
-      .catch(error => {
-        if(error.response?.status === 404){
-          setError("Unknown error occured");
-        }
-        else {
-          if(error.response?.data !== undefined){
-            setError(error.response.data);
-          }          
-          else{
-            setError("Cannot reach server");
-          }
-        }        
-        setOpen(true); 
-      })
+      .catch(err => {})
   }
 
   if(success){

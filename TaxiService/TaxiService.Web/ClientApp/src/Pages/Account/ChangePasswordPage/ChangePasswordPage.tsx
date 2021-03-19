@@ -65,13 +65,9 @@ function ChangePasswordPage(props: IMappedProps) {
             .then(res => {
                 setErrorMsg("");
                 resetPage();
-            })
-            .catch(err => {
-                setErrorMsg(err.response.data?.message);
-            })
-            .finally(() =>{
                 setOpen(true);
-            });
+            })
+            .catch(err=>{})
     }
 
     return(

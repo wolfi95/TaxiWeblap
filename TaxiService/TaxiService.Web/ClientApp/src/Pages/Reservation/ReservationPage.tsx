@@ -86,7 +86,8 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
     axiosInstance.get("preferences")
       .then(res => {
         this.setState({preferences: res.data});
-      });
+      })
+      .catch(err => {});
   }
 
   autocompleteOrigin?: google.maps.places.Autocomplete;
@@ -251,18 +252,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
         .then((res) => {
           this.setState({price: res.data});
         })
-        .catch((error) => {
-          if(error.response?.status === 404){
-            this.setState({errorMsg: "Unknown error occured", open: true});
-          } else {
-            if(error.response?.data !== undefined){
-              this.setState({errorMsg: error.response.data.message, open: true})
-            }          
-            else{
-              this.setState({errorMsg: "Cannot reach server", open: true})
-            }
-          }
-        });
+        .catch(err => {})
     } else {
       var origin = (document.getElementById(
         "origin-bythehour"
@@ -291,19 +281,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
         .then((res) => {          
           this.setState({price: res.data});
         })
-        .catch((error) => {
-          if(error.response?.status === 404){
-            this.setState({errorMsg: "Unknown error occured", open: true});
-          }
-          else {
-            if(error.response?.data !== undefined){
-              this.setState({errorMsg: error.response.data.message, open: true});
-            }          
-            else{
-              this.setState({errorMsg: "Cannot reach server", open: true});
-            }
-          }
-        });
+        .catch(err => {})
     }    
   };
 
@@ -449,12 +427,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
           this.setState({summary: res.data});
           this.saveState();
         })
-        .catch(err => {
-          this.setState({
-            open: true,
-            errorMsg: err.response.data.message,
-          });
-        })
+        .catch(err => {})
     }
   };
 
@@ -762,7 +735,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
               </div>     
             </Container>           
             </div>
-          </div>                
+          </div>
           <Snackbar
             open={this.state.open}
             autoHideDuration={6000}

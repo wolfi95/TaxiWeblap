@@ -50,13 +50,9 @@ function ChangePersonalDataPage(props: Props) {
             .then(res => {
                 dispatchH(updateUserState(newState))
                 setErrorMsg("");
-            })
-            .catch(err => {
-                setErrorMsg(err.response.data?.message);
-            })
-            .finally(() =>{
                 setOpen(true);
-            });
+            })
+            .catch(err => {})
     }
 
     return(

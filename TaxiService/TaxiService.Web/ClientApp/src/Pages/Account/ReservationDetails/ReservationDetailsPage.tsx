@@ -15,7 +15,6 @@ export interface IReservationDetailProps {
 export default function ReservationDetailsPage() {
     const {id}: IReservationDetailProps = useParams();
     const [init, setInit] = useState(true);
-    const [error, setError] = useState("");
     const [data, setData] = useState<ReservationSummaryDto>(
         {
             arriveTime: new Date(),//
@@ -41,10 +40,7 @@ export default function ReservationDetailsPage() {
             .then(res => {
                 window.location.href = res.data;
             })
-            .catch(err => {
-                setError(err.response.data.message);
-                setInit(false);
-            });
+            .catch(err => {});
     }
 
     useEffect(() => {
@@ -54,10 +50,7 @@ export default function ReservationDetailsPage() {
                 setData(res.data);
                 setInit(false);
             })
-            .catch(err => {
-                setError(err.response.data.message);
-                setInit(false);
-            });
+            .catch(err => {});
         }
     })
     

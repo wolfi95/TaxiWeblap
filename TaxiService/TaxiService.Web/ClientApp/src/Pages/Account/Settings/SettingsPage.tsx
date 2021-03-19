@@ -32,6 +32,7 @@ function SettingsPage(props: Props) {
                 sessionStorage.clear();
                 setLogoutRedirect(true);
             })
+            .catch(err => {})
     }
 
     useEffect(() => {
@@ -42,6 +43,7 @@ function SettingsPage(props: Props) {
                 .then(res => {
                     setEmailChecked(res.data.allowEmails);
                 })
+                .catch(err => {})
         }
         if(logoutRedirect) {
             setLogoutRedirect(false);
@@ -54,9 +56,7 @@ function SettingsPage(props: Props) {
             .then(res => {
                 setEmailChecked(!emailChecked)
             })
-            .catch(err => {
-
-            });
+            .catch(err => {})
     }
     
     return(

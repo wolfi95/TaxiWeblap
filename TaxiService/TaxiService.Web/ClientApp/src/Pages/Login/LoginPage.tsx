@@ -6,7 +6,9 @@ import { Redirect } from 'react-router';
 import { bindActionCreators, Dispatch } from 'redux';
 import { axiosInstance } from '../../config/Axiosconfig';
 import UserLoginDto from '../../dtos/User/UserLoginDto';
+import { ErrorActionTypes } from '../../redux/actions/errorActions';
 import { saveToken, UserActionTypes } from '../../redux/actions/userActions';
+import { setError } from '../../redux/actions/errorActions';
 import { RootState } from '../../redux/reducers/rootReducer';
 import './LoginPage.scss'
 
@@ -40,8 +42,6 @@ function LoginPage(props: Mapped) {
   const [redirect, setRedirect] = useState(false);
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
-  const [open, setOpen] = useState(false);
-  const [errorMsg, setError] = useState("");
 
   const dispatchH = useDispatch();
 
@@ -57,20 +57,7 @@ function LoginPage(props: Mapped) {
         dispatchH(saveToken(response.data));
         setRedirect(true);
       })
-      .catch(error => {
-        if (error.response?.status === 404) {
-          setError("Unknown error occured");
-        }
-        else {
-          if (error.response?.data !== undefined) {
-            setError(error.response.data);
-          }
-          else {
-            setError("Cannot reach server");
-          }
-        }
-        setOpen(true);
-      })
+      .catch(err => {})
   }
 
   if (redirect) {
@@ -146,14 +133,6 @@ function LoginPage(props: Mapped) {
             </form>
           </div>
         </Container>
-        <Snackbar
-          open={open}
-          onClose={() => setOpen(!open)}
-        >
-          <Alert onClose={() => setOpen(!open)} severity="error">
-            {errorMsg}
-          </Alert>
-        </Snackbar>
       </div>
     );
 }
