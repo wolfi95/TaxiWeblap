@@ -111,16 +111,23 @@ namespace TaxiService.Bll.Services
                     throw new ArgumentException("Only completed payments can be refunded");
                 }
 
-                var transactionsToRefund = new TransactionToRefund[paymentState.Transactions.Length];
-                foreach (var tr in paymentState.Transactions) {
-                    transactionsToRefund.Append(
+                var refund = paymentState.Transactions.FirstOrDefault(x => x.TransactionType == "RefundToBankCard");
+                if(refund != null)
+                {
+                    throw new ArgumentException("Payment already refunded!");
+                }
+
+                var trs = paymentState.Transactions.Where(x => x.TransactionType == "CardPayment");
+                var transactionsToRefund = new TransactionToRefund[trs.Count()];
+                var i = 0;
+                foreach (var tr in trs) {
+                    transactionsToRefund[i++] =
                         new TransactionToRefund
                         {
                             AmountToRefund = tr.Total,
                             POSTransactionId = tr.POSTransactionId,
                             TransactionId = tr.TransactionId
-                        }
-                    );
+                        };
                 }
 
                 var startRefund = new RefundOperation
@@ -158,7 +165,8 @@ namespace TaxiService.Bll.Services
             if (result.IsOperationSuccessful)
             {
                 var paymentState = result as GetPaymentStateOperationResult;
-
+                if (paymentState.Transactions.Any(x => x.TransactionType == "RefundToBankCard"))
+                    return;
                 switch (paymentState.Status)
                 {
                     case PaymentStatus.Succeeded:
