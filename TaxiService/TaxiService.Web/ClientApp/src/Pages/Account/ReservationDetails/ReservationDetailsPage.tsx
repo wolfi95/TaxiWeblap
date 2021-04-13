@@ -39,6 +39,12 @@ export default function ReservationDetailsPage() {
     const [message, setMessage] = useState("");
     const [cancelConfirmOpen, setCancelConfirmOpen] = useState(false);
 
+    const canCancel = () => {
+        var now = new Date;
+        var res = data.date > now;
+        return res;
+    }
+
     const tryStartBarionPayment = () => {
         axiosInstance.get("payment/" + id + "/barion")
             .then(res => {
@@ -59,7 +65,9 @@ export default function ReservationDetailsPage() {
         if(init) {
             axiosInstance.get("/reservation/" + id)
             .then(res => {
-                setData(res.data);
+                var d = res.data;
+                d.date = new Date(res.data.date)
+                setData(d);
                 setInit(false);
             })
             .catch(err => {});
@@ -139,7 +147,7 @@ export default function ReservationDetailsPage() {
                     </div>
                 </div>
             }
-            {data.status === ReservationStatus.Payed &&
+            {(data.status === ReservationStatus.Payed && canCancel()) &&
                 <div>
                     <Button onClick={() => setCancelConfirmOpen(true)}>Cancel reservation</Button>
                 </div>

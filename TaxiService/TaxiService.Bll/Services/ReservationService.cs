@@ -126,6 +126,11 @@ namespace TaxiService.Bll.Services
                 throw new ArgumentNullException("Cannot find reservation");
             }
 
+            if(reservation.Date < DateTime.Now)
+            {
+                throw new ArgumentException("Cannot cancel past reservations.");
+            }
+
             reservation.Status = ReservationStatus.Canceled;
 
             if(reservation.Date.AddHours(-12) >= DateTime.Now)
