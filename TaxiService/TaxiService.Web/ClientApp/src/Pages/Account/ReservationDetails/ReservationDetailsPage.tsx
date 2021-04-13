@@ -30,7 +30,7 @@ export default function ReservationDetailsPage() {
             identifier: "",
             preferences: [],
             price: 0,
-            status: ReservationStatus.Reserved,
+            status: ReservationStatus.Payed,
             toAddress: "",
             duration: 0,
             editedDate: new Date()
