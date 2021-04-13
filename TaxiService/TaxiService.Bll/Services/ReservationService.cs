@@ -468,7 +468,7 @@ namespace TaxiService.Bll.Services
                         ToAddrress = x.ToAddress,
                         Id = x.Id,
                         Identifier = x.Identifier
-                    }).ToListAsync();
+                    }).OrderBy(r => r.Date).ToListAsync();
         }
 
         public async Task<Guid> MakeReservation(ReservationDto reservation, string userId)
