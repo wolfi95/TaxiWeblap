@@ -87,12 +87,18 @@ namespace TaxiService.Web.Controllers
         [Route("{id}")]
         public async Task CancelReservation([FromRoute] Guid id)
         {
+            var user = await userManager.GetUserAsync(User);
+            if(user == null)
+            {
+                throw new ArgumentException("Cannot find user");
+            }
+
             if (id == Guid.Empty)
             {
                 throw new ArgumentNullException("Reservation identifier cannot be empty.");
             }
 
-            await reservationService.CancelReservation(id, await userManager.GetUserAsync(User));
+            await reservationService.CancelReservation(id, user);
         }
 
         private void ValidateReservation(ReservationDto reservation)

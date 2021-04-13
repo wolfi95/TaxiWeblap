@@ -41,14 +41,14 @@ namespace TaxiService.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<UserDataResponse>> Login([FromBody] UserLoginDto loginData)
         {
-            if (loginData.Email == null || loginData.Password == null)
+            if (String.IsNullOrEmpty(loginData.Email) || String.IsNullOrEmpty(loginData.Password))
             {
-                return new UnauthorizedObjectResult("Email and password cannot be empty");
+                throw new ArgumentNullException("Email and password cannot be empty");
             }
             var user = await userManager.FindByEmailAsync(loginData.Email);
             if (user == null)
             {
-                return new UnauthorizedObjectResult("Cannot find user");
+                throw new ArgumentNullException("Cannot find user");
             }
 
             var result = await signInManager.PasswordSignInAsync(user, loginData.Password, false, false);
@@ -68,7 +68,7 @@ namespace TaxiService.Web.Controllers
             }
             else
             {
-                return new UnauthorizedObjectResult("Wrong password");
+                throw new ArgumentException("Wrong password");
             }
         }
         
@@ -82,26 +82,26 @@ namespace TaxiService.Web.Controllers
                 String.IsNullOrEmpty(registerData.EmailRe) ||
                 String.IsNullOrEmpty(registerData.PasswordRe))
             {
-                return new UnauthorizedObjectResult("Email and password cannot be empty.");
+                throw new ArgumentNullException("Email and password cannot be empty.");
             }
 
             if (String.IsNullOrEmpty(registerData.Name))
             {
-                return new UnauthorizedObjectResult("Name cannot be empty.");
+                throw new ArgumentNullException("Name cannot be empty.");
             }
 
             if(registerData.Email != registerData.EmailRe)
             {
-                return new BadRequestObjectResult("Email and confirmation doesnt match.");
+                throw new ArgumentException("Email and confirmation doesnt match.");
             }
             if(registerData.Password != registerData.PasswordRe)
             {
-                return new BadRequestObjectResult("Password and confirmation doesnt match.");
+                throw new ArgumentException("Password and confirmation doesnt match.");
             }
 
             if((await userManager.FindByEmailAsync(registerData.Email)) != null)
             {
-                return new BadRequestObjectResult("Email already in use.");
+                throw new ArgumentException("Email already in use.");
             }
 
             var newUser = new ApplicationClient
@@ -122,7 +122,7 @@ namespace TaxiService.Web.Controllers
                 {
                     msg += err.Description + Environment.NewLine;
                 }
-                return new BadRequestObjectResult(msg);
+                throw new ArgumentException(msg);
             }
             await userManager.AddToRoleAsync(newUser, UserRoles.User);
 
