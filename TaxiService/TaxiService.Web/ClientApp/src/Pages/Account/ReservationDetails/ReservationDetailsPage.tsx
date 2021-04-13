@@ -8,6 +8,7 @@ import { ReservationType, reservationTypeString } from '../../../config/Enums/Re
 import { ReservationStatus, reservationStatusString } from '../../../config/Enums/ReservationStatus';
 import { Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+import AccountPageWrapper from '../../../Components/AccountPageWrapper/AccountPageWrapper';
 
 export interface IReservationDetailProps {
     id: string;
@@ -75,127 +76,129 @@ export default function ReservationDetailsPage() {
     })
     
     return (
-        <Container className="reservation-details-wrapper">
-            <div>
-                <span>Reservation Identidier:</span>
-                <span>{data.identifier}</span>
-            </div>
-            <div>
-                <span>Reservation Type:</span>
-                <span>{reservationTypeString(data.reservationType)}</span>
-            </div>
-            <div>
-                <span>Car Type:</span>
-                <span>{carTypeString(data.carType)}</span>
-            </div>
-            <div>
-                <span>Date:</span>
-                <span>{data.date.toString()}</span>
-            </div>
-            <div>
-                <span>Activated Discount:</span>
-                <span>{data.discountCode}</span>
-            </div>
-            <div>
-                <span>From Address:</span>
-                <span>{data.fromAddress}</span>
-            </div>
-            {data.reservationType === ReservationType.Oneway &&
+        <AccountPageWrapper header="Reservation Details">
+            <Container className="reservation-details-wrapper">
                 <div>
-                    <span>To Address:</span>
-                    <span>{data.toAddress}</span>
+                    <span>Reservation Identidier:</span>
+                    <span>{data.identifier}</span>
                 </div>
-            }
-            {data.reservationType === ReservationType.ByTheHour &&
                 <div>
-                    <span>Reservation Duration:</span>
-                    <span>{data.duration}</span>
+                    <span>Reservation Type:</span>
+                    <span>{reservationTypeString(data.reservationType)}</span>
                 </div>
-            }
-            <div>
-                <span>Comment:</span>
-                <span>{data.comment}</span>
-            </div>
-            {data.preferences.length !== 0 && (
                 <div>
-                    <span>Selected Preferences:</span>
-                    {data.preferences.map((p,i) => {
-                        if((i + 1) !== data.preferences.length){
-                        return (
-                            <span>{p + ", "}</span>
-                        )
-                        }
-                        else {
-                            return p
-                        }
-                    })}
+                    <span>Car Type:</span>
+                    <span>{carTypeString(data.carType)}</span>
                 </div>
-            )}
-            <div>
-                <span>Price:</span>
-                <span>{data.price + "HUF"}</span>
-            </div>
-            <div>
-                <span>Reservation Status:</span>
-                <span>{reservationStatusString(data.status)}</span>
-            </div>
-            {data.status === ReservationStatus.Reserved &&
                 <div>
-                    <span>Select payment option:</span>
+                    <span>Date:</span>
+                    <span>{data.date.toString()}</span>
+                </div>
+                <div>
+                    <span>Activated Discount:</span>
+                    <span>{data.discountCode}</span>
+                </div>
+                <div>
+                    <span>From Address:</span>
+                    <span>{data.fromAddress}</span>
+                </div>
+                {data.reservationType === ReservationType.Oneway &&
                     <div>
-                        <img src={require("../../../resources/images/barion-logo.png").default} onClick={() => tryStartBarionPayment()}/>
+                        <span>To Address:</span>
+                        <span>{data.toAddress}</span>
                     </div>
-                </div>
-            }
-            {(data.status === ReservationStatus.Payed && canCancel()) &&
+                }
+                {data.reservationType === ReservationType.ByTheHour &&
+                    <div>
+                        <span>Reservation Duration:</span>
+                        <span>{data.duration}</span>
+                    </div>
+                }
                 <div>
-                    <Button onClick={() => setCancelConfirmOpen(true)}>Cancel reservation</Button>
+                    <span>Comment:</span>
+                    <span>{data.comment}</span>
                 </div>
-            }
-            {data.status === ReservationStatus.Assigned &&
+                {data.preferences.length !== 0 && (
+                    <div>
+                        <span>Selected Preferences:</span>
+                        {data.preferences.map((p,i) => {
+                            if((i + 1) !== data.preferences.length){
+                            return (
+                                <span>{p + ", "}</span>
+                            )
+                            }
+                            else {
+                                return p
+                            }
+                        })}
+                    </div>
+                )}
                 <div>
-                    <span>Assigned Driver:</span>
-                    <span>{data.assignedDriver}</span>
+                    <span>Price:</span>
+                    <span>{data.price + "HUF"}</span>
                 </div>
-            }
-            {data.status === ReservationStatus.OnTheWay &&
                 <div>
-                    <span>Estimated Arrival Time:</span>
-                    <span>{data.arriveTime.toString()}</span>
+                    <span>Reservation Status:</span>
+                    <span>{reservationStatusString(data.status)}</span>
                 </div>
-            }
-            {data.status === ReservationStatus.Arrived &&
+                {data.status === ReservationStatus.Reserved &&
+                    <div>
+                        <span>Select payment option:</span>
+                        <div>
+                            <img src={require("../../../resources/images/barion-logo.png").default} onClick={() => tryStartBarionPayment()}/>
+                        </div>
+                    </div>
+                }
+                {(data.status === ReservationStatus.Payed && canCancel()) &&
+                    <div>
+                        <Button onClick={() => setCancelConfirmOpen(true)}>Cancel reservation</Button>
+                    </div>
+                }
+                {data.status === ReservationStatus.Assigned &&
+                    <div>
+                        <span>Assigned Driver:</span>
+                        <span>{data.assignedDriver}</span>
+                    </div>
+                }
+                {data.status === ReservationStatus.OnTheWay &&
+                    <div>
+                        <span>Estimated Arrival Time:</span>
+                        <span>{data.arriveTime.toString()}</span>
+                    </div>
+                }
+                {data.status === ReservationStatus.Arrived &&
+                    <div>
+                        <span>Your car has arrived!</span>
+                    </div>
+                }
                 <div>
-                    <span>Your car has arrived!</span>
+                    <span>Reservation Made:</span>
+                    <span>{data.createdDate.toString()}</span>
                 </div>
-            }
-            <div>
-                <span>Reservation Made:</span>
-                <span>{data.createdDate.toString()}</span>
-            </div>
-            <div>
-                <span>Last Edited:</span>
-                <span>{data.editedDate?.toString() ?? "-"}</span>
-            </div>
-            <Snackbar
-                open={message !== ""}
-                autoHideDuration={5000}
-                onClose={() => setMessage("")}
-            >
-                <Alert onClose={() => setMessage("")} severity="success">
-                    {message}
-                </Alert>
-            </Snackbar>
-            <Dialog
-                open={cancelConfirmOpen}
-            >
-                <DialogTitle>Confirm reservation cancellation</DialogTitle>
-                <DialogContent>Are you sure you want to cancel this reservation? <span>Reservations within 12 hours are not applicable for refund!</span></DialogContent>
-                <DialogActions>
-                    <Button onClick={() => {setCancelConfirmOpen(false); tryCancelReservation()}}>Confirm</Button>
-                    <Button onClick={() => setCancelConfirmOpen(false)}>Cancel</Button>
-                </DialogActions>
-            </Dialog>
-        </Container>
+                <div>
+                    <span>Last Edited:</span>
+                    <span>{data.editedDate?.toString() ?? "-"}</span>
+                </div>
+                <Snackbar
+                    open={message !== ""}
+                    autoHideDuration={5000}
+                    onClose={() => setMessage("")}
+                >
+                    <Alert onClose={() => setMessage("")} severity="success">
+                        {message}
+                    </Alert>
+                </Snackbar>
+                <Dialog
+                    open={cancelConfirmOpen}
+                >
+                    <DialogTitle>Confirm reservation cancellation</DialogTitle>
+                    <DialogContent>Are you sure you want to cancel this reservation? <span>Reservations within 12 hours are not applicable for refund!</span></DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => {setCancelConfirmOpen(false); tryCancelReservation()}}>Confirm</Button>
+                        <Button onClick={() => setCancelConfirmOpen(false)}>Cancel</Button>
+                    </DialogActions>
+                </Dialog>
+            </Container>
+        </AccountPageWrapper>
     )
 }
