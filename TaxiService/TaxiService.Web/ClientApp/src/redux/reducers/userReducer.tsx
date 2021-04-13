@@ -1,6 +1,7 @@
 import { SAVE_TOKEN, CLEAR_USER_STATE, UPDATE_DATA } from "../actionTypes/userActionTypes";
 import { UserActionTypes } from "../actions/userActions";
 import ChangePersonalDataDto from "../../dtos/Account/ChangePersonalDataDto";
+import { axiosInstance } from "../../config/Axiosconfig";
 
 export interface IUserState{
   token: string;
@@ -21,7 +22,7 @@ const initialState: IUserState = {
 };
   
 export default function(state = initialState, action: UserActionTypes): IUserState {
-  switch (action.type) {
+  switch (action.type) {    
     case SAVE_TOKEN: {
         sessionStorage.setItem("token", action.payload?.token ?? "");
         sessionStorage.setItem("email", action.payload?.email ?? "");
@@ -61,8 +62,10 @@ export default function(state = initialState, action: UserActionTypes): IUserSta
         address: data.Address
       }
     }
-    default:
+    default: {
+      axiosInstance.defaults.headers["Authorization"] = "Bearer " + state.token;
       return state;
+    }
   }
 }
   

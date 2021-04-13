@@ -33,11 +33,6 @@ function MyReservationsPage(props: IMappedProps) {
         }
     })
 
-    const isNotPastCancelDate = (date: Date): boolean => {
-        var now = new Date();
-        var min = new Date(now.setHours(now.getHours() + 12));
-        return min < new Date(date);
-    }
     if(detailsRedirect !== ""){
         return <Redirect to={"/account/" + detailsRedirect + "/details"}/>
     }
@@ -86,8 +81,6 @@ function MyReservationsPage(props: IMappedProps) {
                                     }
                                 </div>
                                 <div className="last-column">
-                                    {isNotPastCancelDate(res.date) &&
-                                    <Button variant="outlined">Cancel</Button>}
                                     <Button onClick={() => setDetailsRedirect(res.id)} variant="outlined">Details</Button>
                                     <span>Price: {res.price + " "} .-</span>
                                 </div>
