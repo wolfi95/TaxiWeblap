@@ -31,5 +31,6 @@ namespace TaxiService.Dal.Entities.Modles
         public DateTime CreatedDate { get; set; }
         public DateTime? EditedDate { get; set; }
         public ReservationStatus Status { get; set; }
+        public Guid? PaymentId { get; set; }
     }
 }

@@ -1,12 +1,14 @@
 ﻿using BarionClientLibrary;
 using BarionClientLibrary.Operations.Common;
 using BarionClientLibrary.Operations.PaymentState;
+using BarionClientLibrary.Operations.Refund;
 using BarionClientLibrary.Operations.StartPayment;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaxiService.Bll.ServiceInterfaces;
@@ -50,7 +52,7 @@ namespace TaxiService.Bll.Services
             var transaction = new PaymentTransaction
             {
                 Items = new[] { item },
-                POSTransactionId = "T1",
+                POSTransactionId = reservation.Identifier,
                 Payee = barionSettings.Payee,
                 Total = Convert.ToDecimal(Math.Round(reservation.Price,0)),
             };
@@ -82,6 +84,68 @@ namespace TaxiService.Bll.Services
             }
         }
 
+        public async Task RefundBarionPayment(Guid reservationId, string userId)
+        {
+            var reservation = await context.Reservations.FirstOrDefaultAsync(x => x.Id == reservationId && x.ClientId == userId);
+            if (reservation == null)
+            {
+                throw new ArgumentNullException("Cannot find reservation");
+            }
+            if(reservation.PaymentId == null)
+            {
+                throw new ArgumentNullException("Unpaid reservation cannot be refunded.");
+            }
+
+            var checkStatusOperation = new GetPaymentStateOperation
+            {
+                PaymentId = reservation.PaymentId.Value
+            };
+
+            var result = await barionClient.ExecuteAsync(checkStatusOperation);
+
+            if (result.IsOperationSuccessful)
+            {
+                var paymentState = result as GetPaymentStateOperationResult;
+                if(paymentState.Status != PaymentStatus.Succeeded)
+                {
+                    throw new ArgumentException("Only completed payments can be refunded");
+                }
+
+                var transactionsToRefund = new TransactionToRefund[paymentState.Transactions.Length];
+                foreach (var tr in paymentState.Transactions) {
+                    transactionsToRefund.Append(
+                        new TransactionToRefund
+                        {
+                            AmountToRefund = tr.Total,
+                            POSTransactionId = tr.POSTransactionId,
+                            TransactionId = tr.TransactionId
+                        }
+                    );
+                }
+
+                var startRefund = new RefundOperation
+                {
+                    PaymentId = reservation.PaymentId.Value,
+                    TransactionsToRefund = transactionsToRefund
+                };
+                var refundResult = await barionClient.ExecuteAsync(startRefund);
+
+                if (refundResult.IsOperationSuccessful)
+                {
+                    reservation.Status = Dal.Enums.ReservationStatus.Refunded;
+                    await context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new ArgumentException("Communication failed with Barion please try again later.");
+                }
+            }
+            else
+            {
+                throw new ArgumentException("Communication failed with Barion please try again later.");
+            }
+        }
+
         public async Task UpdatePaymentStatus(Guid paymentId)
         {
             var checkStatusOperation = new GetPaymentStateOperation
@@ -106,6 +170,7 @@ namespace TaxiService.Bll.Services
                             }
 
                             reservation.Status = Dal.Enums.ReservationStatus.Payed;
+                            reservation.PaymentId = paymentId;
                             await context.SaveChangesAsync();
 
                             break;

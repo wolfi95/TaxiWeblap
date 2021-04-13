@@ -9,5 +9,6 @@ namespace TaxiService.Bll.ServiceInterfaces
     {
         public Task<string> StartBarionPayment(Guid reservationId, string userId);
         public Task UpdatePaymentStatus(Guid paymentId);
+        public Task RefundBarionPayment(Guid reservationId, string userId);
     }
 }

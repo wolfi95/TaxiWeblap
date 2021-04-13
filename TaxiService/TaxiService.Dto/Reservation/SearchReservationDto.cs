@@ -13,8 +13,9 @@ namespace TaxiService.Dto.Reservation
         public DateTime? ToDate { get; set; }
         public double? MinPrice { get; set; }
         public double? MaxPrice { get; set; }
-        public List<Guid> PrefIds { get; set; }
+        public List<int> PrefIds { get; set; }
         public ReservationType? ReservationType { get; set; }
         public CarType? CarType { get; set; }
+        public ReservationStatus? Status { get; set; }
     }
 }

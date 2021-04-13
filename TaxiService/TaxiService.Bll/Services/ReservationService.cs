@@ -24,8 +24,7 @@ namespace TaxiService.Bll.Services
     {
         private readonly TaxiServiceContext context;
         private readonly IConfiguration configuration;
-
-
+        private readonly IPaymentService paymentService;
         private static readonly PointF[] ccDevider =
         {
             new PointF{X = (float) -0.1047996, Y = (float) 51.4988006},
@@ -112,26 +111,28 @@ namespace TaxiService.Bll.Services
 
         private readonly List<PointF[]> airports = new List<PointF[]> { raf, farnborough, biggin, luton, southend, londonCity, stansted, gatwick, heathrow };
 
-        public ReservationService(TaxiServiceContext context, IConfiguration configuration)
+        public ReservationService(TaxiServiceContext context, IConfiguration configuration, IPaymentService paymentService)
         {
             this.context = context;
             this.configuration = configuration;
+            this.paymentService = paymentService;
         }
 
         public async Task CancelReservation(Guid reservationId, User user)
         {
-            var reservation = await context.Reservations.FirstOrDefaultAsync(x => x.Id == reservationId);
+            var reservation = await context.Reservations.FirstOrDefaultAsync(x => x.Id == reservationId && x.ClientId == user.Id);
             if(reservation == null)
             {
                 throw new ArgumentNullException("Cannot find reservation");
             }
-            if(reservation.Date.AddHours(-12) < DateTime.Now)
+
+            reservation.Status = ReservationStatus.Canceled;
+
+            if(reservation.Date.AddHours(-12) >= DateTime.Now)
             {
-                throw new ArgumentException("You can only cancel reservations 12 hours before.");
+                await paymentService.RefundBarionPayment(reservationId, user.Id);
             }
 
-            context.ReservationPreferences.RemoveRange(reservation.Preferences);
-            context.Reservations.Remove(reservation);
             await context.SaveChangesAsync();
         }
 
@@ -521,9 +522,55 @@ namespace TaxiService.Bll.Services
             return reservationData.Id;
         }
 
-        public Task<PagedData<ReservationDetailDto>> SearchReservations(SearchReservationDto searchData)
+        public async Task<PagedData<ReservationDetailDto>> SearchReservations(SearchReservationDto searchData)
         {
-            throw new NotImplementedException();
+            var q = context.Reservations.Include(r => r.Preferences).Include(r => r.Worker).AsQueryable();
+
+            if(searchData.FromDate != null)
+            {
+                q = q.Where(r => r.Date >= searchData.FromDate);
+            }
+            if (searchData.ToDate != null)
+            {
+                q = q.Where(r => r.Date <= searchData.ToDate);
+            }
+            if(searchData.CarType != null)
+            {
+                q = q.Where(r => r.CarType == searchData.CarType);
+            }
+            if (searchData.MinPrice != null)
+            {
+                q = q.Where(r => r.Price >= searchData.MinPrice);
+            }
+            if (searchData.MaxPrice != null)
+            {
+                q = q.Where(r => r.Price <= searchData.MaxPrice);
+            }
+            if (searchData.PrefIds.Count != 0)
+            {
+                q = q.Where(r => r.Preferences.Any(c => searchData.PrefIds.Contains(c.PrefId)));
+            }
+            if (searchData.ReservationType != null)
+            {
+                q = q.Where(r => r.ReservationType == searchData.ReservationType);
+            }
+            if (searchData.Status != null)
+            {
+                q = q.Where(r => r.Status == searchData.Status);
+            }
+
+            var count = await q.CountAsync();
+            q = q.Skip(searchData.PageSize * (searchData.PageNumber-1)).Take(searchData.PageSize);
+
+            var data = await q
+                .Select(r => new ReservationDetailDto { 
+
+                }).ToListAsync();
+            return new PagedData<ReservationDetailDto>
+            {
+                Data = data,
+                ResultCount = count
+            };
         }
 
         public static string GenerateAccessToken() // generates a unique, random, and alphanumeric token
