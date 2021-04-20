@@ -12,5 +12,6 @@ namespace TaxiService.Dto.User
         public string PasswordRe { get; set; }
         public string Name { get; set; }
         public bool AllowSpam { get; set; }
+        public string Phone { get; set; }
     }
 }

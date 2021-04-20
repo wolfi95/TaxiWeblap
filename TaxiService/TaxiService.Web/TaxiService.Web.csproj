@@ -52,9 +52,9 @@
 
 	<Target Name="DeleteTsConfigBeforeBuild" BeforeTargets="Build">
 		<ItemGroup>
-			<FileToDelete Include="$(SpaRoot)tsconfig.json"/>
+			<FileToDelete Include="$(SpaRoot)tsconfig.json" />
 		</ItemGroup>
-		<Exec ContinueOnError="true" Command="del /F /Q &quot;@(FileToDelete)&quot;"/>					
+		<Exec ContinueOnError="true" Command="del /F /Q &quot;@(FileToDelete)&quot;" />					
 	</Target>
 
 	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">		

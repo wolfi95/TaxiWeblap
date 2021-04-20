@@ -26,14 +26,16 @@ namespace TaxiService.Web.Controllers
         private readonly IConfiguration configuration;
         private readonly IReservationService reservationService;
         private readonly IUserService userService;
+        private readonly IEmailService emailService;
 
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration, IReservationService reservationService, IUserService userService)
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration, IReservationService reservationService, IUserService userService, IEmailService emailService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.configuration = configuration;
             this.reservationService = reservationService;
             this.userService = userService;
+            this.emailService = emailService;
         }
 
         [HttpPost]
@@ -54,6 +56,7 @@ namespace TaxiService.Web.Controllers
             var result = await signInManager.PasswordSignInAsync(user, loginData.Password, false, false);
             if (result.Succeeded)
             {
+                emailService.SendMail(loginData.Email, "login", "You just logged in!");
                 var token = AuthenticationHelper.GenerateJwtToken(user, configuration);
                 var res = new UserDataResponse
                 {
@@ -108,9 +111,11 @@ namespace TaxiService.Web.Controllers
             {
                 Email = registerData.Email,
                 TwoFactorEnabled = false,
-                UserName = registerData.Name,
+                UserName = registerData.Email,
                 AllowNews = registerData.AllowSpam,
-                Role = UserRoles.User
+                Role = UserRoles.User,
+                Name = registerData.Name,
+                Phone = registerData.Phone
             };
 
             var result = await userManager.CreateAsync(newUser, registerData.Password);            

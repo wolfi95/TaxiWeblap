@@ -171,7 +171,11 @@ namespace TaxiService.Web
             services.AddScoped<IPreferenceService, PreferenceService>();
             services.AddScoped<IReservationService, ReservationService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IWorkerService, WorkerService>();
+            services.AddScoped<IEmailService, EmailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -187,6 +191,11 @@ namespace TaxiService.Web
                 app.UseHsts();
             }
 
+            if (string.IsNullOrWhiteSpace(env.WebRootPath))
+            {
+                env.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp");
+            }
+
             if (!roleManager.RoleExistsAsync(UserRoles.User).Result)
                 roleManager.CreateAsync(new IdentityRole { Name = UserRoles.User }).Wait();
             if (!roleManager.RoleExistsAsync(UserRoles.Administrator).Result)
@@ -199,9 +208,10 @@ namespace TaxiService.Web
                 var cu = userManager.CreateAsync(new User
                 {
                     Email = configuration["Admin:Email"],
-                    UserName = configuration["Admin:Name"],
+                    UserName = configuration["Admin:Email"],
                     Address = configuration["Admin:Address"],
-                    Role = UserRoles.Administrator
+                    Role = UserRoles.Administrator,
+                    Name = configuration["Admin:Name"],
                 });
                 cu.Wait();
                 var u = userManager.FindByEmailAsync(configuration["Admin:Email"]);

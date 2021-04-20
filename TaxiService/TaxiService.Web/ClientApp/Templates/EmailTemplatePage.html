@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+        <style>
+            .wrapper {{
+                width: 100%;
+                display: table;
+            }}
+            .head {{
+                height: 100px;
+                background-color: black;
+                color: white;
+                display: table-row;
+                position: absolute;
+                height: 100px;
+                top: 40px;
+                font-size: 1.2rem;
+            }}
+            .head-img {{
+                height: 50px;
+                width: 50px;
+                margin-top: 25px;
+                margin-left: 50px;
+                margin-right: 200px;
+            }}
+            .head-text {{
+                position: absolute;
+                top: 40px;
+            }}
+            .main {{
+                min-height: 200px;
+                height: fit-content;
+                padding: 30px;
+            }}
+            .foot {{
+                height: 100px;
+                background-color: black;
+                color: white;
+                padding: 10px 50px;
+                text-align: center;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="head">
+                <img class="head-img"/>
+                <span class="head-text">TAXI SERVICE</span>
+            </div>
+            <div class="main">
+                {0}
+            </div>
+            <div class="foot">
+                <span>This is an automatically generated email.</span>
+            </div>
+        </div>
+    </body>
+</html>

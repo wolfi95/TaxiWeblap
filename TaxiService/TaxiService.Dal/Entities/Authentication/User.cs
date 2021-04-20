@@ -8,7 +8,9 @@ namespace TaxiService.Dal.Entities.Authentication
     public class User : IdentityUser
     {
         public string Address { get; set; }
-        public string Role { get; set; }        
+        public string Role { get; set; }
+        public string Name { get; set; }
+        public string Phone { get; set; }
         public DateTime CreatedDate { get; set; }
     }
 }
