@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaxiService.Bll.Exceptions;
 using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Dal;
 
@@ -93,7 +94,7 @@ namespace TaxiService.Bll.Services
             }
             if(reservation.PaymentId == null)
             {
-                throw new ArgumentNullException("Unpaid reservation cannot be refunded.");
+                throw new BuisnessLogicException("Unpaid reservation cannot be refunded.");
             }
 
             var checkStatusOperation = new GetPaymentStateOperation
@@ -108,13 +109,13 @@ namespace TaxiService.Bll.Services
                 var paymentState = result as GetPaymentStateOperationResult;
                 if(paymentState.Status != PaymentStatus.Succeeded)
                 {
-                    throw new ArgumentException("Only completed payments can be refunded");
+                    throw new BuisnessLogicException("Only completed payments can be refunded");
                 }
 
                 var refund = paymentState.Transactions.FirstOrDefault(x => x.TransactionType == "RefundToBankCard");
                 if(refund != null)
                 {
-                    throw new ArgumentException("Payment already refunded!");
+                    throw new BuisnessLogicException("Payment already refunded!");
                 }
 
                 var trs = paymentState.Transactions.Where(x => x.TransactionType == "CardPayment");

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TaxiService.Bll.Exceptions;
 using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Dal.Entities.Authentication;
 using TaxiService.Dal.Entities.Models;
@@ -45,12 +46,12 @@ namespace TaxiService.Web.Controllers
         {
             if (String.IsNullOrEmpty(loginData.Email) || String.IsNullOrEmpty(loginData.Password))
             {
-                throw new ArgumentNullException("Email and password cannot be empty");
+                throw new BuisnessLogicException("Email and password cannot be empty");
             }
             var user = await userManager.FindByEmailAsync(loginData.Email);
             if (user == null)
             {
-                throw new ArgumentNullException("Cannot find user");
+                throw new BuisnessLogicException("Cannot find user");
             }
 
             var result = await signInManager.PasswordSignInAsync(user, loginData.Password, false, false);
@@ -71,7 +72,7 @@ namespace TaxiService.Web.Controllers
             }
             else
             {
-                throw new ArgumentException("Wrong password");
+                throw new BuisnessLogicException("Wrong password");
             }
         }
         
@@ -85,26 +86,26 @@ namespace TaxiService.Web.Controllers
                 String.IsNullOrEmpty(registerData.EmailRe) ||
                 String.IsNullOrEmpty(registerData.PasswordRe))
             {
-                throw new ArgumentNullException("Email and password cannot be empty.");
+                throw new BuisnessLogicException("Email and password cannot be empty.");
             }
 
             if (String.IsNullOrEmpty(registerData.Name))
             {
-                throw new ArgumentNullException("Name cannot be empty.");
+                throw new BuisnessLogicException("Name cannot be empty.");
             }
 
             if(registerData.Email != registerData.EmailRe)
             {
-                throw new ArgumentException("Email and confirmation doesnt match.");
+                throw new BuisnessLogicException("Email and confirmation doesnt match.");
             }
             if(registerData.Password != registerData.PasswordRe)
             {
-                throw new ArgumentException("Password and confirmation doesnt match.");
+                throw new BuisnessLogicException("Password and confirmation doesnt match.");
             }
 
             if((await userManager.FindByEmailAsync(registerData.Email)) != null)
             {
-                throw new ArgumentException("Email already in use.");
+                throw new BuisnessLogicException("Email already in use.");
             }
 
             var newUser = new ApplicationClient
@@ -181,15 +182,15 @@ namespace TaxiService.Web.Controllers
             }
             if (String.IsNullOrEmpty(resetPassDto.OldPassword) || String.IsNullOrEmpty(resetPassDto.NewPassword) || String.IsNullOrEmpty(resetPassDto.NewPasswordConfirm))
             {
-                throw new ArgumentNullException("Fields cannot be empty.");
+                throw new BuisnessLogicException("Fields cannot be empty.");
             }
             if (!(await userManager.CheckPasswordAsync(user, resetPassDto.OldPassword)))
             {
-                throw new ArgumentException("Wrong old password.");
+                throw new BuisnessLogicException("Wrong old password.");
             }
             if(resetPassDto.NewPassword != resetPassDto.NewPasswordConfirm)
             {
-                throw new ArgumentException("New password and its confirmation must match!");
+                throw new BuisnessLogicException("New password and its confirmation must match!");
             }
 
             await userManager.ChangePasswordAsync(user, resetPassDto.OldPassword, resetPassDto.NewPassword);

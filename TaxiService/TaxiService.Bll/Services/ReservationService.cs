@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using TaxiService.Bll.Exceptions;
 using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Dal;
 using TaxiService.Dal.Entities.Authentication;
@@ -128,7 +129,7 @@ namespace TaxiService.Bll.Services
 
             if(reservation.Date < DateTime.Now)
             {
-                throw new ArgumentException("Cannot cancel past reservations.");
+                throw new BuisnessLogicException("Cannot cancel past reservations.");
             }
 
             reservation.Status = ReservationStatus.Canceled;
@@ -145,11 +146,11 @@ namespace TaxiService.Bll.Services
         {
             if (String.IsNullOrEmpty(reservation.FromAddress))
             {
-                throw new ArgumentException("Origin address cannot be empty");
+                throw new BuisnessLogicException("Origin address cannot be empty");
             }
             if (reservation.FromAddress.Length > 150)
             {
-                throw new ArgumentException("Origin address too long");
+                throw new BuisnessLogicException("Origin address too long");
             }
 
             Discount discount = null;
@@ -166,11 +167,11 @@ namespace TaxiService.Bll.Services
             {
                 if (String.IsNullOrEmpty(reservation.ToAddrress))
                 {
-                    throw new ArgumentException("Destination address cannot be empty");
+                    throw new BuisnessLogicException("Destination address cannot be empty");
                 }
                 if (reservation.ToAddrress?.Length > 150)
                 {
-                    throw new ArgumentException("Destination address too long");
+                    throw new BuisnessLogicException("Destination address too long");
                 }
 
                 DirectionsRequest directionsRequest = new DirectionsRequest()
@@ -487,7 +488,7 @@ namespace TaxiService.Bll.Services
 
                 if (discount == null)
                 {
-                    throw new ArgumentException("Cannot find the supplied coupon code.");
+                    throw new BuisnessLogicException("Cannot find the supplied coupon code.");
                 }
             }
             

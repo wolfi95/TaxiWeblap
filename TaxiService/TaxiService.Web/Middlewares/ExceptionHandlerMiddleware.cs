@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using TaxiService.Bll.Exceptions;
 
 namespace TaxiService.Web.Middlewares
 {
@@ -40,6 +41,16 @@ namespace TaxiService.Web.Middlewares
                             Message = e.ParamName ?? e.Message,
                             StackTrace = this._hostingEnvironment.IsDevelopment() ? e.StackTrace : null,
                         });
+            }
+            catch(BuisnessLogicException e)
+            {
+                await this.WriteAsJsonAsync(
+                       context,
+                       (int)HttpStatusCode.BadRequest,
+                       new ErrorDto
+                       {
+                           Message = e.Message
+                       });
             }
             catch (Exception e)
             {

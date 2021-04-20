@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TaxiService.Bll.Exceptions;
 using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Dal.Entities.Authentication;
 using TaxiService.Dal.Entities.Models;
@@ -53,15 +54,15 @@ namespace TaxiService.Web.Controllers
         {
             if (String.IsNullOrEmpty(reservation.FromAddress))
             {
-                throw new ArgumentNullException("From address cannot be empty.");
+                throw new BuisnessLogicException("From address cannot be empty.");
             }
             if (reservation.Duration == null && String.IsNullOrEmpty(reservation.ToAddrress))
             {
-                throw new ArgumentNullException("Destination address cannot be empty.");
+                throw new BuisnessLogicException("Destination address cannot be empty.");
             }
             if (reservation.ReservationType == Dal.Enums.ReservationType.ByTheHour && (reservation.Duration == null || (reservation.Duration < 0 || reservation.Duration > 12)))
             {
-                throw new ArgumentException("Reservation duration out of bounds.");
+                throw new BuisnessLogicException("Reservation duration out of bounds.");
             }
 
             return await reservationService.GetPrice(reservation);
@@ -105,19 +106,19 @@ namespace TaxiService.Web.Controllers
         {
             if (String.IsNullOrEmpty(reservation.FromAddress))
             {
-                throw new ArgumentNullException("From address cannot be empty.");
+                throw new BuisnessLogicException("From address cannot be empty.");
             }
             if (reservation.Duration == null && String.IsNullOrEmpty(reservation.ToAddrress))
             {
-                throw new ArgumentNullException("Destination address cannot be empty.");
+                throw new BuisnessLogicException("Destination address cannot be empty.");
             }
             if (DateTime.Parse(reservation.Date) < DateTime.Now.AddHours(-12))
             {
-                throw new ArgumentException("Reservation time must be in 12 hours advance.");
+                throw new BuisnessLogicException("Reservation time must be in 12 hours advance.");
             }
             if (reservation.ReservationType == Dal.Enums.ReservationType.ByTheHour && (reservation.Duration == null || (reservation.Duration < 0 || reservation.Duration > 12)))
             {
-                throw new ArgumentException("Reservation duration out of bounds.");
+                throw new BuisnessLogicException("Reservation duration out of bounds.");
             }            
         }
     }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaxiService.Bll.Exceptions;
 using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Dal;
 using TaxiService.Dal.Entities.Authentication;
@@ -59,7 +60,7 @@ namespace TaxiService.Bll.Services
             using (var transation = context.Database.BeginTransaction())
             {
                 if (context.Reservations.Where(x => x.Client== user).Any(x => x.Date < DateTime.Now)) {
-                    throw new ArgumentException("Cannot delete account while there are active reservations. Please cancel any active reservations or contact support.");
+                    throw new BuisnessLogicException("Cannot delete account while there are active reservations. Please cancel any active reservations or contact support.");
                 }
 
                 var reservations = await context.Reservations.Include(x => x.Preferences).Where(x => x.Client == user).ToListAsync();
