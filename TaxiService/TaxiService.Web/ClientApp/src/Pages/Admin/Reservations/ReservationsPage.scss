@@ -1,0 +1,40 @@
+.admin-reservations-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 2% 5%;
+
+    .search-component {
+        display: flex;
+        background-color: rgba(128, 128, 128, 0.788);
+        border-radius: 5px;
+        padding: 25px;
+        flex-wrap: wrap;
+
+        .MuiInputBase-root {
+            background-color: white;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .input-field {
+            display: flex;
+            flex-direction: column;
+            margin-right: 25px;
+            position: relative;
+            
+            > span {
+                margin-bottom: 10px;
+            }
+
+            .clear-button {
+                margin: 0 !important;
+                position: absolute;
+                right: 15px;
+                top: 44%;
+                font-size: 1.5rem;
+                font-weight: 600;
+                cursor: pointer;
+            }
+        }
+    }
+}

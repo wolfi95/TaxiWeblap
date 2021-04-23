@@ -24,4 +24,7 @@ export const reservationStatusString = (r: ReservationStatus): string => {
                                 : r === ReservationStatus.Refunded
                                     ? "Refunded"
                                     : "";
-  }
+}
+//make it available in all windwos
+const _global = (window /* browser */ || global /* node */) as any
+_global.reservationStatusString = reservationStatusString;

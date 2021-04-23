@@ -6,3 +6,6 @@ export enum ReservationType {
 export const reservationTypeString = (r: ReservationType): string => {
   return r === ReservationType.Oneway ? "Oneway" : "By the hour";
 }
+//make it available in all windwos
+const _global = (window /* browser */ || global /* node */) as any
+_global.reservationTypeString = reservationTypeString;

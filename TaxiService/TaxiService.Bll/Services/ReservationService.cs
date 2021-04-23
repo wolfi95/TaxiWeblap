@@ -530,7 +530,7 @@ namespace TaxiService.Bll.Services
 
         public async Task<PagedData<ReservationDetailDto>> SearchReservations(SearchReservationDto searchData)
         {
-            var q = context.Reservations.Include(r => r.Preferences).Include(r => r.Worker).AsQueryable();
+            var q = context.Reservations.Include(r => r.Preferences).ThenInclude(p =>p.Preference).Include(r => r.Worker).AsQueryable();
 
             if(searchData.FromDate != null)
             {
@@ -570,7 +570,17 @@ namespace TaxiService.Bll.Services
 
             var data = await q
                 .Select(r => new ReservationDetailDto { 
-
+                    CarType = r.CarType,
+                    Comment = r.Comment,
+                    Date = r.Date,
+                    Duration = r.Duration,
+                    FromAddress = r.FromAddress,
+                    Id = r.Id,
+                    Identifier = r.Identifier,
+                    Preferences = r.Preferences.Select(p => p.Preference.Text).ToList(),
+                    Price = r.Price,
+                    ReservationType = r.ReservationType,
+                    ToAddrress = r.ToAddress
                 }).ToListAsync();
             return new PagedData<ReservationDetailDto>
             {
