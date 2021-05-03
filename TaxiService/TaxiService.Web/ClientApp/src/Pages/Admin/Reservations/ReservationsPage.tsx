@@ -1,5 +1,5 @@
 import DateFnsUtils from '@date-io/date-fns';
-import { Container, Dialog, DialogContent, DialogTitle, Input, Modal, Select, Table, TableBody, TableCell, TableRow, TextField } from '@material-ui/core';
+import { Button, Container, Dialog, DialogContent, DialogTitle, Input, Modal, Select, Table, TableBody, TableCell, TableRow, TextField } from '@material-ui/core';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import React, { useEffect, useState } from 'react';
 import ReservationDetailDto from '../../../dtos/Reservation/ReservationDetailDto';
@@ -197,32 +197,31 @@ export default function ReservationsPage() {
                     </Select>
                 </div>
             </Container>
-            <div className="reservation-list">
-                <div className="pager-controls">
-                    <span>Page size:</span>
+            <div className="pager-controls">
+                <div className="pagesize-section">
+                    <span className="text">Page size:</span>
                     <Select
-                        className="admin-select-list"
                         value={searchData.PageSize}
-                        onChange={(val) => setSearchData({...searchData, PageSize: +(val.target.value as string)})}
+                        onChange={(val) => setSearchData({...searchData, PageSize: +(val.target.value as string), PageNumber: 1})}
                     >
                         <MenuItem value={1}>1</MenuItem>
                         <MenuItem value={5}>5</MenuItem>
                         <MenuItem value={10}>10</MenuItem>
                         <MenuItem value={50}>50</MenuItem>
                     </Select>
-                    <span>{"<<"}</span>
-                    <span>{"<"}</span>
-                    <span>{searchData.PageNumber}</span>
-                    <span>{">"}</span>
-                    <span>{">>"}</span>
+                </div>
+                <div className="button-section">
+                    <Button onClick={() => {setSearchData({...searchData, PageNumber: 1})}} disabled={searchData.PageNumber === 1} className="first-button">{"<<"}</Button>
+                    <Button onClick={() => {setSearchData({...searchData, PageNumber: searchData.PageNumber - 1})}} disabled={searchData.PageNumber === 1} className="back-button">{"<"}</Button>
+                    <span className="page-button">{searchData.PageNumber}</span>
+                    <Button onClick={() => {setSearchData({...searchData, PageNumber: searchData.PageNumber + 1})}} disabled={searchData.PageNumber >= ((reservations?.resultCount ?? 1) / searchData.PageSize)} className="next-button">{">"}</Button>
+                    <Button onClick={() => {setSearchData({...searchData, PageNumber: Math.ceil((reservations?.resultCount ?? 1) / searchData.PageSize)})}} disabled={searchData.PageNumber >= ((reservations?.resultCount ?? 1) / searchData.PageSize)} className="last-button">{">>"}</Button>
                 </div>
             </div>
-            <div>
+            <div className="results-section">
                 {reservations?.data.map(r => {
                     return (
-                        <div>
-                            <ReservationCardComponent reservation={r} onAssignClicked={(id) => {openAssignModal(id)}} />
-                        </div>
+                        <ReservationCardComponent reservation={r} onAssignClicked={(id) => {openAssignModal(id)}} />
                     );
                 })}
             </div>
@@ -242,7 +241,6 @@ export default function ReservationsPage() {
                                         </TableCell>
                                     )
                                 })}
-                                
                             </TableRow>
                         </TableBody>
                     </Table>

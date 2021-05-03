@@ -1,6 +1,7 @@
 .admin-reservations-wrapper {
     display: flex;
     flex-direction: column;
+    align-items: center;
     padding: 2% 5%;
 
     .search-component {
@@ -9,6 +10,7 @@
         border-radius: 5px;
         padding: 25px;
         flex-wrap: wrap;
+        margin: 0 !important;
 
         .MuiInputBase-root {
             background-color: white;
@@ -36,5 +38,23 @@
                 cursor: pointer;
             }
         }
+    }
+
+    .pager-controls {
+        display: flex;
+        justify-content: space-between;
+        margin: 15px 0;
+        width: 100%;
+
+        .pagesize-section {
+
+            & .text {
+                margin-right: 15px;
+            }
+        }
+    }
+
+    .results-section {
+        width: 100%;
     }
 }
