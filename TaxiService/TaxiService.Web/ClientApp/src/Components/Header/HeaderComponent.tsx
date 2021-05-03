@@ -141,6 +141,7 @@ function HeaderComponent(props: Props) {
                     </Button>
                     <Menu
                         id="services-menu"
+                        className="services-menu"
                         anchorEl={anchorEl}
                         keepMounted
                         open={Boolean(anchorEl)}

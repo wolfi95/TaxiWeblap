@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Dal.Entities.Authentication;
 using TaxiService.Dto.Reservation;
+using TaxiService.Dto.User;
 
 namespace TaxiService.Web.Controllers
 {
     [ApiController]
     [Route("api/admin")]
-    [Authorize(UserRoles.Administrator)]
+    [Authorize(Roles = UserRoles.Administrator)]
     public class AdminController : Controller
     {
         private readonly IAdminService adminService;
@@ -28,6 +29,12 @@ namespace TaxiService.Web.Controllers
         {
             await adminService.AssignWorkerToReservation(assignWorkerDto.WorkerId, assignWorkerDto.ReservationId);
             return Ok();
+        }
+
+        [HttpGet("workers")]
+        public async Task<IEnumerable<WorkerDto>> HetAllWorkers()
+        {
+            return await adminService.GetAllWorkersAsync();
         }
     }
 }

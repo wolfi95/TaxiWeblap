@@ -18,5 +18,6 @@ namespace TaxiService.Dto.Reservation
         public double Price { get; set; }
         public Guid Id { get; set; }
         public string Identifier { get; set; }
+        public ReservationStatus Status { get; set; }
     }
 }

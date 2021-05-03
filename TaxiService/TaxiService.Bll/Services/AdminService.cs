@@ -1,10 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Dal;
+using TaxiService.Dal.Entities.Authentication;
+using TaxiService.Dto.User;
 
 namespace TaxiService.Bll.Services
 {
@@ -36,6 +39,11 @@ namespace TaxiService.Bll.Services
 
             await context.SaveChangesAsync();
 
+        }
+
+        public async Task<IEnumerable<WorkerDto>> GetAllWorkersAsync()
+        {
+            return await context.Users.Where(x => x.Role == UserRoles.Worker).Select(x => new WorkerDto { Name = x.Name, Id = x.Id }).ToListAsync();
         }
     }
 }

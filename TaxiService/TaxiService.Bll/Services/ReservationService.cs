@@ -580,7 +580,8 @@ namespace TaxiService.Bll.Services
                     Preferences = r.Preferences.Select(p => p.Preference.Text).ToList(),
                     Price = r.Price,
                     ReservationType = r.ReservationType,
-                    ToAddrress = r.ToAddress
+                    ToAddrress = r.ToAddress,
+                    Status = r.Status
                 }).ToListAsync();
             return new PagedData<ReservationDetailDto>
             {

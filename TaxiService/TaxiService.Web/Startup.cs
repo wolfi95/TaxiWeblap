@@ -200,6 +200,8 @@ namespace TaxiService.Web
                 roleManager.CreateAsync(new IdentityRole { Name = UserRoles.User }).Wait();
             if (!roleManager.RoleExistsAsync(UserRoles.Administrator).Result)
                 roleManager.CreateAsync(new IdentityRole { Name = UserRoles.Administrator }).Wait();
+            if (!roleManager.RoleExistsAsync(UserRoles.Worker).Result)
+                roleManager.CreateAsync(new IdentityRole { Name = UserRoles.Worker }).Wait();
 
             var user = userManager.FindByEmailAsync(configuration["Admin:Email"]);
             user.Wait();
@@ -218,6 +220,24 @@ namespace TaxiService.Web
                 u.Wait();
                 userManager.AddPasswordAsync(u.Result, configuration["Admin:Password"]).Wait();
                 userManager.AddToRoleAsync(u.Result, UserRoles.Administrator).Wait();
+            }
+
+            var worker1 = userManager.FindByEmailAsync("worker1@taxiservice.com");
+            worker1.Wait();
+            if (worker1.Result == null)
+            {
+                var cu = userManager.CreateAsync(new User
+                {
+                    Email = "worker1@taxiservice.com",
+                    UserName = "worker1@taxiservice.com",
+                    Role = UserRoles.Worker,
+                    Name = "Worker1",
+                });
+                cu.Wait();
+                var u = userManager.FindByEmailAsync("worker1@taxiservice.com");
+                u.Wait();
+                userManager.AddPasswordAsync(u.Result, "WorkerPass").Wait();
+                userManager.AddToRoleAsync(u.Result, UserRoles.Worker).Wait();
             }
 
             app.UseSwagger();

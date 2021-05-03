@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import AccountPageWrapper from '../../../Components/AccountPageWrapper/AccountPageWrapper';
+import ReservationCardComponent from '../../../Components/ReservationCard/ReservationCardComponent';
 import { axiosInstance } from '../../../config/Axiosconfig';
 import { ReservationType } from '../../../config/Enums/ReservationType';
 import ReservationDetailDto from '../../../dtos/Reservation/ReservationDetailDto';
@@ -41,51 +42,8 @@ function MyReservationsPage(props: IMappedProps) {
         <AccountPageWrapper header="My Reservations">
             <div className="reservation-wrapper">
                 {myReservations.map(res => {
-                    console.log(res) 
                     return(
-                        <Card variant="outlined">
-                            <CardContent>
-                                <div className="address-column">
-                                    <div className="address-row">
-                                        <span>From: </span>
-                                        <span>{ res.fromAddress }</span>
-                                    </div>
-                                    {res.reservationType === ReservationType.Oneway 
-                                        ? (
-                                            <div className="address-row">
-                                                <span>To:</span>
-                                                <span>{ res.toAddrress }</span>                                                                                    
-                                            </div>
-                                        ) : (
-                                            <div className="address-row">
-                                                <span>Duration:</span>
-                                                <span>{ res.duration }</span>                                                                                    
-                                            </div>
-                                        )}
-                                </div>
-                                <div className="preferences-column">
-                                    <span>Preferences:</span>
-                                    {res.preferences.length !== 0 ? (
-                                    <ul>                                        
-                                        {res.preferences.map(pref => {
-                                            return (
-                                                <li>
-                                                    {pref}
-                                                </li>
-                                            )
-                                        })}
-                                    </ul>
-                                    ) : (
-                                        <span className="no-preference">-</span>
-                                    )
-                                    }
-                                </div>
-                                <div className="last-column">
-                                    <Button onClick={() => setDetailsRedirect(res.id)} variant="outlined">Details</Button>
-                                    <span>Price: {res.price + " "} .-</span>
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <ReservationCardComponent reservation={res} />
                     )
                 })
                 }
