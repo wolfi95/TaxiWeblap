@@ -1,5 +1,5 @@
 import DateFnsUtils from '@date-io/date-fns';
-import { Button, Container, Dialog, DialogContent, DialogTitle, Input, Modal, Select, Table, TableBody, TableCell, TableRow, TextField } from '@material-ui/core';
+import { Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Input, Modal, Select, Table, TableBody, TableCell, TableRow, TextField } from '@material-ui/core';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import React, { useEffect, useState } from 'react';
 import ReservationDetailDto from '../../../dtos/Reservation/ReservationDetailDto';
@@ -13,9 +13,9 @@ import { ReservationStatus } from '../../../config/Enums/ReservationStatus';
 import { Preference } from '../../../config/Interfaces/Preference';
 import ReservationCardComponent from '../../../Components/ReservationCard/ReservationCardComponent'
 import WorkerDto from '../../../dtos/User/WorkerDto';
-import AssigWorkerDto from '../../../dtos/AssignWorkerDto'
-import { propTypes } from 'react-bootstrap/esm/Image';
+import AssigWorkerDto from '../../../dtos/Worker/AssignWorkerDto'
 import { MenuItem } from '@material-ui/core';
+import getEnumAsOptions from '../../../config/Enums/EnumHelper'
 
 export default function ReservationsPage() {
     const [reservations, setReservations] = useState<PagedData<ReservationDetailDto>>();
@@ -82,25 +82,7 @@ export default function ReservationsPage() {
                 setReservations({...reservations!, data: temp});
                 setAssignDialogOpen("");
             })
-    }
-
-    const getEnumAsOptions = (enumType: any, enumName: string) => {
-        var items = [];
-        items.push(<MenuItem value={-1}>None</MenuItem>)
-        for (let item in enumType) {
-            if(!isNaN(Number(item))) {
-                
-                
-                var fnString = enumName + "String";
-                
-                // @ts-ignore
-                var fn = window[fnString];
-                
-                items.push(<MenuItem value={+item}>{fn(+item)}</MenuItem>)
-            }
-        }
-        return items;
-    }
+    }    
 
     return (
         <div className="admin-reservations-wrapper">
@@ -213,7 +195,7 @@ export default function ReservationsPage() {
                 <div className="button-section">
                     <Button onClick={() => {setSearchData({...searchData, PageNumber: 1})}} disabled={searchData.PageNumber === 1} className="first-button">{"<<"}</Button>
                     <Button onClick={() => {setSearchData({...searchData, PageNumber: searchData.PageNumber - 1})}} disabled={searchData.PageNumber === 1} className="back-button">{"<"}</Button>
-                    <span className="page-button">{searchData.PageNumber}</span>
+                    <span className="page-button">{searchData.PageNumber / Math.ceil((reservations?.resultCount ?? 1) / searchData.PageSize)}</span>
                     <Button onClick={() => {setSearchData({...searchData, PageNumber: searchData.PageNumber + 1})}} disabled={searchData.PageNumber >= ((reservations?.resultCount ?? 1) / searchData.PageSize)} className="next-button">{">"}</Button>
                     <Button onClick={() => {setSearchData({...searchData, PageNumber: Math.ceil((reservations?.resultCount ?? 1) / searchData.PageSize)})}} disabled={searchData.PageNumber >= ((reservations?.resultCount ?? 1) / searchData.PageSize)} className="last-button">{">>"}</Button>
                 </div>
@@ -245,6 +227,9 @@ export default function ReservationsPage() {
                         </TableBody>
                     </Table>
                 </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setAssignDialogOpen("")}>Cancel</Button>
+                </DialogActions>
             </Dialog>
         </div>
     ) 

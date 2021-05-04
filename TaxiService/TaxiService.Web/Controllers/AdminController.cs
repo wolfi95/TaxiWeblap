@@ -32,7 +32,7 @@ namespace TaxiService.Web.Controllers
         }
 
         [HttpGet("workers")]
-        public async Task<IEnumerable<WorkerDto>> HetAllWorkers()
+        public async Task<IEnumerable<WorkerDto>> GetAllWorkers()
         {
             return await adminService.GetAllWorkersAsync();
         }

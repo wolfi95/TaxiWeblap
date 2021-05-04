@@ -6,7 +6,7 @@ import ReservationDetailDto from '../../dtos/Reservation/ReservationDetailDto'
 import { RootState } from '../../redux/reducers/rootReducer';
 import { connect } from 'react-redux';
 import { UserRoles } from '../../dtos/User/UserDto';
-import { ReservationStatus } from '../../config/Enums/ReservationStatus';
+import { ReservationStatus, reservationStatusString } from '../../config/Enums/ReservationStatus';
 import { Redirect } from 'react-router';
 
 export interface ReservationCardProps {
@@ -47,6 +47,10 @@ function ReservationCardComponent(props: Props) {
                                 <span>{ props.reservation.duration }</span>                                                                                    
                             </div>
                         )}
+                    <div className="address-row">
+                        <span>Status: </span>
+                        <span>{ reservationStatusString(props.reservation.status) }</span>
+                    </div>
                 </div>
                 <div className="preferences-column">
                     <span>Preferences:</span>
@@ -66,13 +70,18 @@ function ReservationCardComponent(props: Props) {
                     }
                 </div>
                 <div className="last-column">
-                    { props.role === UserRoles.Administrator || 
+                    { props.role === UserRoles.User && 
                         <Button onClick={() => setDetailsRedirect(props.reservation.id)} variant="outlined">Details</Button> 
                     }
                     { (props.role === UserRoles.Administrator && props.reservation.status === ReservationStatus.Payed) &&
                         <Button onClick={() => {if(props.onAssignClicked !== undefined) props.onAssignClicked(props.reservation.id)}} variant="outlined">Assign</Button> 
                     }
-                    <span>Price: {props.reservation.price + " "} .-</span>
+                    { (props.role === UserRoles.Worker && (props.reservation.status === ReservationStatus.Assigned || props.reservation.status === ReservationStatus.OnTheWay)) &&
+                        <Button onClick={() => {if(props.onAssignClicked !== undefined) props.onAssignClicked(props.reservation.id)}} variant="outlined">Update</Button> 
+                    }
+                    { props.role === UserRoles.Worker || 
+                        <span>Price: {props.reservation.price + " "} .-</span>
+                    }
                 </div>
             </CardContent>
         </Card>

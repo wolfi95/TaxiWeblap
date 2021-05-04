@@ -9,21 +9,24 @@ using TaxiService.Bll.ServiceInterfaces;
 using TaxiService.Dal.Entities.Authentication;
 using TaxiService.Dal.Enums;
 using TaxiService.Dto.Reservation;
+using TaxiService.Dto.Utils;
 
 namespace TaxiService.Web.Controllers
 {
     [ApiController]
     [Route("api/worker")]
-    [Authorize(UserRoles.Worker)]
+    [Authorize(Roles = UserRoles.Worker)]
     public class WorkerController : ControllerBase
     {
         private readonly IWorkerService workerService;
         private readonly UserManager<User> userManager;
+        private readonly IReservationService reservationService;
 
-        public WorkerController(IWorkerService workerService, UserManager<User> userManager)
+        public WorkerController(IWorkerService workerService, UserManager<User> userManager, IReservationService reservationService)
         {
             this.workerService = workerService;
             this.userManager = userManager;
+            this.reservationService = reservationService;
         }
 
         [HttpPost]
@@ -38,6 +41,13 @@ namespace TaxiService.Web.Controllers
 
             await workerService.UpdateReservationStatus(user.Id, resId, status);
             return Ok();
+        }
+
+        [HttpPost("jobs")]
+        public async Task<PagedData<ReservationDetailDto>> GetCurrentJobs([FromBody] PagerDto pager)
+        {
+            var user = await userManager.GetUserAsync(User);
+            return await reservationService.GetWorkerReservations(user.Id, pager);
         }
     }
 }

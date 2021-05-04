@@ -17,5 +17,6 @@ namespace TaxiService.Bll.ServiceInterfaces
         public Task CancelReservation(Guid reservationId, User user);
         public Task<PagedData<ReservationDetailDto>> SearchReservations(SearchReservationDto searchData);
         public Task<ReservationSummaryDto> GetReservationDetails(Guid reservationId, string userId);
+        public Task<PagedData<ReservationDetailDto>> GetWorkerReservations(string workerId, PagerDto pager);
     }
 }

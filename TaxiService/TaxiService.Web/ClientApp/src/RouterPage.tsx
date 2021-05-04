@@ -25,6 +25,7 @@ import { Alert } from '@material-ui/lab';
 import { AnyAction, bindActionCreators, Dispatch } from 'redux';
 import { clearError, setError } from './redux/actions/errorActions';
 import { axiosInstance } from './config/Axiosconfig';
+import JobsPage from './Pages/Worker/Jobs/JobsPage';
 
 interface IMappedState{
     token: string;
@@ -79,7 +80,8 @@ function RouterPage(props: Props){
                 {props.role === UserRoles.Administrator && <Route exact path="/home" component={ReservationsPage}/>}
                 {props.role === UserRoles.Administrator && <Route exact path="/manage" component={ManagePage}/>}
                 {props.role === UserRoles.Administrator && <Route exact path="/reserve" component={ReservationPage}/>}
-                {props.role === UserRoles.Administrator || <Route exact path="/home" component={ReservationPage}/>}
+                {props.role === UserRoles.User && <Route exact path="/home" component={ReservationPage}/>}
+                {props.role === UserRoles.Worker && <Route exact path="/home" component={JobsPage}/>}
                 <Route exact path="/successfulPayment"  component={SuccessfulPaymentPage} />
                 <Route exact path="/about"/>
                 <Route exact path="/account/overview" component={OverViewPage}/>

@@ -468,7 +468,8 @@ namespace TaxiService.Bll.Services
                         ReservationType = x.ReservationType,
                         ToAddrress = x.ToAddress,
                         Id = x.Id,
-                        Identifier = x.Identifier
+                        Identifier = x.Identifier,
+                        Status = x.Status
                     }).OrderBy(r => r.Date).ToListAsync();
         }
 
@@ -634,6 +635,30 @@ namespace TaxiService.Bll.Services
                 Price = reservation.Price,
                 Status = reservation.Status,
                 ToAddress = reservation.ToAddress
+            };
+        }
+
+        public async Task<PagedData<ReservationDetailDto>> GetWorkerReservations(string workerId, PagerDto pager)
+        {
+            var data = await context.Reservations.Where(x => x.WorkerId == workerId).Select(x => new ReservationDetailDto {
+                CarType = x.CarType,
+                Comment = x.Comment,
+                Date = x.Date,
+                Duration = x.Duration,
+                FromAddress = x.FromAddress,
+                Preferences = x.Preferences.Select(x => x.Preference.Text).ToList(),
+                ReservationType = x.ReservationType,
+                ToAddrress = x.ToAddress,
+                Id = x.Id,
+                Status = x.Status
+            })
+            .Skip(pager.PageSize * (pager.PageNumber - 1)).Take(pager.PageSize)
+            .ToListAsync();
+            
+            return new PagedData<ReservationDetailDto>
+            {
+                Data = data,
+                ResultCount = data.Count()
             };
         }
     }
