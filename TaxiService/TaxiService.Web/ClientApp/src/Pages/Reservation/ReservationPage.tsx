@@ -19,6 +19,7 @@ import ReservationPriceDto from '../../dtos/Reservation/ReservationPriceDto';
 import { apiKey } from '../../config/Googleconfig';
 import 'bootstrap'
 import ReservationDto from '../../dtos/Reservation/ReservationDto';
+import AppCheckbox from '../../Components/AppCheckbox/Appcheckbox';
 
 export interface DispatchedProps {
   mock: any;
@@ -289,7 +290,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
     this.setState({ date: date });
   };
 
-  onSelectClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+  onSelectClick = (id: string) => {
     switch (this.state.selectedType) {
       case CarType.Executive:
         var element = document.getElementById("executive-card");
@@ -312,8 +313,8 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
       default:
         break;
     }
-    console.log(event.currentTarget.id);
-    switch (event.currentTarget.id) {      
+    
+    switch (id) {
       case "executive": {
         var element = document.getElementById("executive-card");
         if (element != null) {
@@ -455,7 +456,8 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
   }
 
   handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    this.setState({comment: e.currentTarget.value})
+    if(e.currentTarget.value.length <= 500)
+      this.setState({comment: e.currentTarget.value})
   }
 
   componentDidMount() {
@@ -525,10 +527,10 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
               </button>
             </div>        
 
-            <Container id="oneway" className="tabcontent" maxWidth="xl">
+            <Container id="oneway" className="tabcontent" maxWidth="lg">
               <div className="row">            
                 <input
-                  className="col-md-4"
+                  className="col-sm-4"
                   id="origin-oneway"
                   value={this.state.origin}
                   onChange={(e) => this.handleOriginChange(e)}
@@ -543,13 +545,14 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                   onChange={(e) => this.handleDestinationChange(e)}
                   type="text"
                   onFocus={(e) => this.startAutoSession(e)}
-                  className="col-md-4"
+                  className="col-sm-4"
                 />
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <DateTimePicker
                     ampm={true}
+                    inputVariant="filled"
                     strictCompareDates
-                    className="col-md datepicker"
+                    className="col-sm datepicker"
                     minDate={getSettableMinDate()}
                     variant="inline"
                     format="MM/dd/yyyy h:mm a"
@@ -589,6 +592,7 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <DateTimePicker
                     ampm={true}
+                    inputVariant="filled"
                     strictCompareDates                  
                     className="col-md datepicker"
                     minDate={getSettableMinDate()}             
@@ -611,24 +615,22 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                 <Grid item md={4} className="typeCard">
                   <ul className="price" id="executive-card">
                     <li className="header">Executive</li>
-                    <li className="grey">
-                      <div id="execprice"></div>
-                    </li>
                     <li>
                       <img
-                        src={require('../../resources/images/executive/mercedes_e.jpg').default}
+                        src={require('../../resources/images/executive/mercedes_e.png').default}
                         className="car"
                       />
                     </li>
                     <li>Max 4 passengers</li>
                     <li className="grey">
-                      <a
+                      <Button
                         id="executive"
-                        className="button"
-                        onClick={(e) => this.onSelectClick(e)}
+                        variant="contained"
+                        color={this.state.selectedType === CarType.Executive ? "primary" : "secondary"}
+                        onClick={(e) => this.onSelectClick(e.currentTarget.id)}
                       >
                         Select
-                      </a>
+                      </Button>
                     </li>
                   </ul>
                 </Grid>
@@ -636,9 +638,6 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                 <Grid item md={4} className="typeCard">
                   <ul className="price" id="luxury-card">
                     <li className="header">Luxury</li>
-                    <li className="grey">
-                      <div id="luxprice"></div>
-                    </li>
                     <li>
                       <img
                         src={require("../../resources/images/luxury/mercedes_s.png").default}
@@ -647,13 +646,14 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                     </li>
                     <li>Max 4 passengers</li>
                     <li className="grey">
-                      <a
+                      <Button
+                        variant="contained"
+                        color={this.state.selectedType === CarType.Luxury ? "primary" : "secondary"}
                         id="luxury"
-                        className="button"
-                        onClick={(e) => this.onSelectClick(e)}
+                        onClick={(e) => this.onSelectClick(e.currentTarget.id)}
                       >
                         Select
-                      </a>
+                      </Button>
                     </li>
                   </ul>
                 </Grid>
@@ -661,47 +661,48 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                 <Grid item md={4} className="typeCard">
                   <ul className="price" id="sevenSeater-card">
                     <li className="header">7 seater</li>
-                    <li className="grey">
-                      <div id="7seaterprice"></div>
-                    </li>
                     <li>
                       <img
-                        src={require("../../resources/images/7seater/mercedes_v.jpg").default}
+                        src={require("../../resources/images/7seater/mercedes_v.png").default}
                         className="car"
                       />
                     </li>
                     <li>Max 7 passengers</li>
                     <li className="grey">
-                      <a
+                      <Button
                         id="sevenSeater"
-                        className="button"
-                        onClick={(e) => this.onSelectClick(e)}
+                        variant="contained"
+                        color={this.state.selectedType === CarType.SevenSeater ? "primary" : "secondary"}
+                        onClick={(e) => this.onSelectClick(e.currentTarget.id)}
                       >
                         Select
-                      </a>
+                      </Button>
                     </li>
                   </ul>
                 </Grid>
               </Grid>
             </div>              
             <div>
-              <Container>
-                {this.state.preferences.map(pref => {
-                  return (
-                  <div className="pref-row">
-                    <Checkbox
-                      id={pref.text}
-                      checked={pref.value}
-                      onChange={(e) => this.handlePrefChange(e)}
-                      inputProps={{ "aria-label": "Checkbox A" }}
-                    />
-                    <span>{pref.text}</span>
-                  </div>
+              <Container className="reservation-details">
+                <h2>Preferences:</h2>
+                <div className="prefs">
+                  {this.state.preferences.map(pref => {
+                    return (
+                    <div className="pref-row">
+                      <AppCheckbox
+                        id={pref.text}
+                        checked={pref.value}
+                        onChange={(e) => this.handlePrefChange(e)}
+                        label={pref.text}
+                      />
+                    </div>
+                    )}
                   )}
-                )}
+                </div>
                 <TextField 
                   className="comment-box"
-                  label="Comment" 
+                  label="Comment"
+                  variant="filled"
                   value={this.state.comment} 
                   onChange={(e) => this.handleCommentChange(e)}
                   fullWidth={true}
@@ -709,23 +710,32 @@ class ReservationPage extends React.Component<Props, IReservationPageState> {
                   rows={15}
                   rowsMax={15}>
                 </TextField>
-                <input
-                  type="text"
-                  placeholder="Discount Code"
-                  value={this.state.discount}
-                  onChange={(v) => this.setState({discount: v.currentTarget.value})}
-                />
-                <input
-                  className="searchButton"
-                  id="search-oneway"
-                  type="button"
-                  value="Calculate"
-                  onClick={() => this.getPrice()}
-                /> 
-                <span>{this.state.price ?? "xxx"} .-</span>               
+                <div className="price-row">
+                  <TextField
+                    className="discount-input"
+                    variant="filled"
+                    label="Discount Code"
+                    value={this.state.discount}
+                    onChange={(v) => this.setState({discount: v.currentTarget.value})}
+                  />
+                  <div className="calc">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className="searchButton"
+                    id="search-oneway"
+                    onClick={() => this.getPrice()}
+                  >
+                    Calculate
+                  </Button>
+                  <span>{this.state.price ?? "xxx"} .-</span>
+                  </div>
+                </div>
                              
-              <div className="d-md-flex justify-content-md-end mt-3 form-end">                
+              <div className="d-md-flex justify-content-md-end form-end">                
                 <Button
+                  variant="contained"
+                  color="primary"
                   className="continueButton"
                   id="continue-button"                  
                   onClick={(e) => this.submit(e)}

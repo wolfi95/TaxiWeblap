@@ -15,6 +15,7 @@ import { Snackbar } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import './RegisterPage.scss'
 import { axiosInstance } from "../../config/Axiosconfig";
+import AppCheckbox from '../../Components/AppCheckbox/Appcheckbox'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -102,7 +103,7 @@ export default function RegisterPage() {
                     <TextField
                         autoComplete="name"
                         name="Name"
-                        variant="outlined"
+                        variant="filled"
                         required
                         fullWidth
                         id="Name"
@@ -114,7 +115,7 @@ export default function RegisterPage() {
                     </Grid>                
                     <Grid item xs={12}>
                     <TextField
-                        variant="outlined"
+                        variant="filled"
                         required
                         fullWidth
                         id="email"
@@ -127,7 +128,7 @@ export default function RegisterPage() {
                     </Grid>
                     <Grid item xs={12}>
                     <TextField
-                        variant="outlined"
+                        variant="filled"
                         required
                         fullWidth
                         id="emailRe"
@@ -140,7 +141,7 @@ export default function RegisterPage() {
                     </Grid>
                     <Grid item xs={12}>
                     <TextField
-                        variant="outlined"
+                        variant="filled"
                         required
                         fullWidth
                         name="password"
@@ -154,7 +155,7 @@ export default function RegisterPage() {
                     </Grid>
                     <Grid item xs={12}>
                     <TextField
-                        variant="outlined"
+                        variant="filled"
                         required
                         fullWidth
                         name="passwordRe"
@@ -166,19 +167,18 @@ export default function RegisterPage() {
                     />
                     </Grid>
                     <Grid item xs={12}>
-                    <FormControlLabel
-                        control={
-                        <Checkbox value="allowExtraEmails" color="secondary" checked={spam} onChange={(e) => setSpam(!spam)}/>
-                        }
+                      <AppCheckbox
+                        checked={spam}
                         label="I want to receive inspiration, marketing promotions and updates via email."
-                    />
+                        onChange={(e) => setSpam(!spam)}
+                      />
                     </Grid>
                 </Grid>
                 <Button
                     type="submit"
                     fullWidth
                     variant="contained"
-                    color="secondary"
+                    color="primary"
                     className={classes.submit}
                     onClick={(e) => tryRegister(e)}
                 >
@@ -187,7 +187,7 @@ export default function RegisterPage() {
                 <Button
                     fullWidth
                     variant="contained"
-                    color="primary"
+                    color="secondary"
                     className={classes.submit}
                     onClick={() => {
                     setRedirect(true);

@@ -33,15 +33,19 @@ body {
 }
 
 .datepicker {
-  min-width: 275px !important;
-  max-width: 275px !important;
+  min-width: 250px !important;
+  max-width: 300px !important;
+
+  .MuiInputLabel-formControl {
+    left: 8px !important;
+  }
 }
 
 .row {
   text-align: center;
   padding-top: 8px;
   padding-bottom: 10px;
-  
+  justify-content: space-evenly;
   height: fit-content;
   align-items: center;
 }
@@ -50,22 +54,12 @@ body {
   margin: 10px;
 }
 
-.results {
-  margin: 50px;
-  text-align: center;
-  justify-content: center;
-}
-
 .typeContainer {
-  margin: 0 40px !important;
+  margin: 20px 40px !important;
 }
 
 .typeCard {
   width: 100%;
-}
-
-.devider {
-  width: 40vw;
 }
 
 .price {
@@ -75,7 +69,9 @@ body {
   padding: 0;
   -webkit-transition: 0.3s;
   transition: 0.3s;
-  width:100%
+  width:100%;
+  background-color: rgba(78, 78, 78, 0.39);
+  border-radius: 15px;
 }
 
 /* Add shadows on hover */
@@ -86,16 +82,13 @@ body {
 
 .price-selected {
   box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2);
-  transform: scale(1.03);
-}
-
-.price-selected a {
-  background-color: #4A569D;
+  transform: scale(1.08) !important;
 }
 
 /* Pricing header */
 .price .header {
-  background-color: #111;
+  background-color: rgba(17, 17, 17, 0.692);
+  border-radius: 15px;
   color: white;
   font-size: 25px;
 }
@@ -105,92 +98,44 @@ body {
   border-bottom: 1px solid #eee;
   padding: 20px;
   text-align: center;
+
+  &:last-child {
+    border: none !important
+  }
 }
 
-/* Grey list item */
-.price .grey {
-  background-color: #eee;
-  font-size: 20px;
-}
+.price-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 
-.result {
-  text-align: center;
-  display: inline-block;
-  width: calc(100%/3);
-}
+  .discount-input {
+    min-width: 250px;
+    margin-right: 25px;
+  }
 
-.result:hover {
-  background-color: lightgray;
-}
+  .calc {
+    @media screen and (max-width:503px) {
+      margin-top: 15px;
+    }
 
-.searchButton {
-  color: white;
-  font-family: Helvetica;
-  font-size: 1.2em;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  background-image: linear-gradient(315deg, #dc244c 0%, #4A569D 100%);
-  padding: 5px;
-  margin: 10px;
-  width: 100px !important;
-  height: 40px;
-}
-
-.searchButton:hover{
-  background-image: linear-gradient(315deg, #4A569D 0%, #DC2424 100%);
-  text-decoration: none;
-  color: white;
-  box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2);
-}
-
-.login-button {
-  color: white !important;
-  font-family: Helvetica;
-  font-size: 1.2em;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  background-image: linear-gradient(315deg, #dc244c 0%, #4A569D 100%);
-  padding: 5px;
-  margin: 10px;
-  height: 40px;
-  margin-bottom: 15px !important;
-  margin-left: 8px !important;
-}
-
-.login-button:hover{
-  background-image: linear-gradient(315deg, #4A569D 0%, #dc244c 100%);
-  text-decoration: none !important;
-  color: white;
-  box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2);
-}
-
-.continueButton {
-  color: white !important;
-  font-weight: 800 !important;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  background-image: linear-gradient(315deg, #dc244c 0%, #4A569D 100%);
-  padding: 5px;
-  margin: 10px;
-  height: 40px;
-}
-
-.continueButton:hover{
-  background-image: linear-gradient(315deg, #4A569D 0%, #dc244c 100%);
-  text-decoration: none;
-  color: white;
-  box-shadow: 0 8px 12px 0 rgba(0,0,0,0.2);
+    .searchButton {
+      margin-right: 25px;
+    }
+  }
 }
 
 #origin-oneway, #origin-bythehour, #destination-oneway, #destination-bythehour, #duration, #email-input, #name-input{
   flex-grow: 2;
-  background-color: #e5e5e5;
-  border: 1px solid transparent;
+  background-color: white;
   font-size: 1.1em;
   padding: 5px;
   border-radius: 5px;
   margin: 10px;
   width: 90%;
+  height: 56px;
+  min-width: 200px;
+  outline: none;
 }
 
 .tab button {
@@ -203,38 +148,23 @@ body {
   transition: 0.3s;
   width: 50%;
   font-size: 1.1em;
-  color: black;
+  color: white;
   font-weight: bold;
 }
 
 .tab button:hover {
-  background-color: #ddd;
+  background-color: rgb(77, 77, 77);
   cursor: pointer;
 }
 
 .tab button.active {
-  background-color: #ccc;
+  background-color: rgb(63, 63, 63);
 }
 
 .tabcontent {
   display: none;
   padding: 6px 12px;
   border-top: none;
-}
-
-.button {
-  background-color: #dc244c;
-  border: none;
-  color: white !important;
-  padding: 10px 25px;
-  text-align: center;
-  text-decoration: none;
-  font-size: 18px;
-}
-
-.button:hover {
-  text-decoration: none;
-  cursor: pointer;
 }
 
 .hour-select {
@@ -245,9 +175,13 @@ body {
   border: 2px solid red !important;
 }
 
-.pref-row {
-  display: flex;
-  align-items: center;
+.prefs {
+  margin-left: 25px;
+
+  .pref-row {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .initial-height {
@@ -255,37 +189,15 @@ body {
 }
 
 .form-end {
-  margin-bottom: 20px;
+  margin-top: 35px !important;
 }
 
-.accordions {
-  margin-top: 200px;
-}
-
-.offer-button {
-  color: white !important;
-  width: fit-content !important;
-  margin-left: 15px !important;
-
-  @media screen and(max-width: 769px) {
-    margin-left: 0 !important;
-    margin-top: 15px !important;
-  }
-}
-
-.offer-text {
-  @media screen and(max-width: 769px) {
-    display: block !important;
-  }
-}
-
-.comment-box {
-  .MuiInputLabel-formControl{
-    top: 5px !important;
-    left: 5px !important;
-  }
-  textarea {
-    border: 1px solid grey !important;
-    padding: 5px;
+.reservation-details {
+  display: flex;
+  flex-direction: column;
+  .comment-box {
+    margin: 25px 0;
+    max-width: 800px;
+    display: block;
   }
 }

@@ -65,7 +65,7 @@ function LoginPage(props: Mapped) {
   }
   else
     return (
-      <div className="wrapper">
+      <div className="login-wrapper">
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
@@ -74,7 +74,7 @@ function LoginPage(props: Mapped) {
             </Typography>
             <form className={classes.form} noValidate>
               <TextField
-                variant="outlined"
+                variant="filled"
                 margin="normal"
                 required
                 fullWidth
@@ -87,7 +87,7 @@ function LoginPage(props: Mapped) {
                 onChange={(e) => { setEmail(e.currentTarget.value) }}
               />
               <TextField
-                variant="outlined"
+                variant="filled"
                 margin="normal"
                 required
                 fullWidth
@@ -103,20 +103,11 @@ function LoginPage(props: Mapped) {
                 type="submit"
                 fullWidth
                 variant="contained"
-                color="secondary"
+                color="primary"
                 className={classes.submit}
                 onClick={(e) => tryLogin(e)}
               >
                 Sign In
-              </Button>
-              <Button
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-                onClick={() => { setRedirect(true) }}
-              >
-                Cancel
               </Button>
               <Grid container>
                 <Grid item xs>

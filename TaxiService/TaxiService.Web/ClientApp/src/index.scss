@@ -1,0 +1,98 @@
+body {
+  position: relative;
+  min-height: 100vh;
+  height: 100%;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: white !important;
+  background-size: 100vw 200vh !important;
+  background-image: url("./resources/backgrounds/background_abstract_long.png");
+}
+
+.wrapper {
+  height: 100%;
+  position: relative;
+}
+
+html {
+  height: fit-content;
+  min-height: 100vh;
+  position: relative;
+}
+
+#root {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+html, body, #root, .App, .wrapper{  
+  height: fit-content;
+  min-height: calc(100vh - 280px);
+}
+
+//Global styles
+
+.MuiButton-containedPrimary {
+  background-color: goldenrod !important;
+
+  &:hover {
+    background-color: rgb(163, 124, 26) !important;
+  }
+}
+
+.MuiButton-containedSecondary {
+  background-color: rgba(146, 145, 145, 0.842) !important;
+  color: black !important;
+
+  &:hover {
+    background-color: rgb(87, 86, 86) !important;
+  }
+}
+
+.MuiInputLabel-root.Mui-focused {
+  color: goldenrod !important
+}
+
+.MuiInputBase-root {
+  background-color: white !important;
+}
+
+.MuiFilledInput-underline {
+
+  &::after {
+    border-color: goldenrod !important;
+  }
+}
+
+.MuiFilledInput-root {
+  border-radius: 4px !important;
+}
+
+.MuiCheckbox-root {
+  &:hover {
+    background-color: rgba(218, 165, 32, 0.075) !important;
+  }
+}
+
+.MuiFormControl-marginNormal {
+  margin-top: 8px !important;
+}
+
+a {
+  color: goldenrod !important;
+
+  &:hover {
+    text-decoration: none !important;
+  }
+}
