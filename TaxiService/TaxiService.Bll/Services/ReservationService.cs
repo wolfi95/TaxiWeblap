@@ -638,7 +638,7 @@ namespace TaxiService.Bll.Services
             };
         }
 
-        public async Task<PagedData<ReservationDetailDto>> GetWorkerReservations(string workerId, PagerDto pager)
+        public async Task<PagedData<ReservationDetailDto>> GetWorkerReservations(string workerId, WorkerJobsFilterDto filter)
         {
             var q = context.Reservations.Where(x => x.WorkerId == workerId).Select(x => new ReservationDetailDto {
                 CarType = x.CarType,
@@ -652,9 +652,15 @@ namespace TaxiService.Bll.Services
                 Id = x.Id,
                 Status = x.Status
             });
+
+            if(filter.HideComplete)
+            {
+                q = q.Where(x => x.Status == ReservationStatus.Assigned || x.Status == ReservationStatus.OnTheWay);
+            }
+
             var count = await q.CountAsync();
 
-            var data = await q.Skip(pager.PageSize * (pager.PageNumber - 1)).Take(pager.PageSize)
+            var data = await q.Skip(filter.PageSize * (filter.PageNumber - 1)).Take(filter.PageSize)
             .ToListAsync();
             
             return new PagedData<ReservationDetailDto>

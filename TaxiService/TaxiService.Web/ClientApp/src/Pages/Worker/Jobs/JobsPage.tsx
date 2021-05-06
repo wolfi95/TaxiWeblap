@@ -10,15 +10,17 @@ import getEnumAsOptions from '../../../config/Enums/EnumHelper'
 import { ReservationStatus } from '../../../config/Enums/ReservationStatus';
 import WorkerReservationStatusUpdateDto from '../../../dtos/Worker/WorkerReservationStatusUpdateDto';
 import { WorkerReservationStatus } from '../../../config/Enums/WorkerReservationStatus';
+import AppCheckbox from '../../../Components/AppCheckbox/Appcheckbox';
+import WorkerJobsFilterDto from "../../../dtos/Worker/WorkerJobsFilterDto"
 
 export default function JobsPage() {
     const [reservations, setReservations] = useState<PagedData<ReservationDetailDto>>();
-    const [pager, setPager] = useState<{ PageSize: number, PageNumber: number}>({PageNumber: 1, PageSize: 1});
+    const [pager, setPager] = useState<WorkerJobsFilterDto>({PageNumber: 1, PageSize: 1, HideComplete: true});
     const [updateDialogId, setUpdateDialogId] = useState("");
     const [newStatus, setNewStatus] = useState<ReservationStatus | undefined>();
 
     useEffect(() => {
-        axiosInstance.post("worker/jobs", pager)
+        axiosInstance.post<PagedData<ReservationDetailDto>>("worker/jobs", pager)
             .then(res => {
                 setReservations(res.data)
             })
@@ -44,16 +46,21 @@ export default function JobsPage() {
         <Container maxWidth="lg" className="jobs-page-wrapper">
             <div className="pager-controls">
                 <div className="pagesize-section">
-                    <span className="text">Page size:</span>
-                    <Select
-                        value={pager.PageSize}
-                        onChange={(val) => setPager({...pager, PageSize: +(val.target.value as string), PageNumber: 1})}
-                    >
-                        <MenuItem value={1}>1</MenuItem>
-                        <MenuItem value={5}>5</MenuItem>
-                        <MenuItem value={10}>10</MenuItem>
-                        <MenuItem value={50}>50</MenuItem>
-                    </Select>
+                    <div>
+                        <span className="text">Page size:</span>
+                        <Select
+                            value={pager.PageSize}
+                            onChange={(val) => setPager({...pager, PageSize: +(val.target.value as string), PageNumber: 1})}
+                        >
+                            <MenuItem value={1}>1</MenuItem>
+                            <MenuItem value={5}>5</MenuItem>
+                            <MenuItem value={10}>10</MenuItem>
+                            <MenuItem value={50}>50</MenuItem>
+                        </Select>
+                    </div>
+                    <div>
+                        <AppCheckbox checked={pager.HideComplete} label="Show done jobs." onChange={(e) => setPager({...pager, HideComplete: !pager.HideComplete})} />
+                    </div>
                 </div>
                 <div className="button-section">
                     <Button variant="contained" color="secondary" onClick={() => {setPager({...pager, PageNumber: 1})}} disabled={pager.PageNumber === 1} className="first-button">{"<<"}</Button>

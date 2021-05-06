@@ -6,9 +6,15 @@
         width: 100%;
 
         .pagesize-section {
+            display: flex;
+            align-items: center;
 
-            & .text {
+            >div {
                 margin-right: 15px;
+
+                & .text {
+                    margin-right: 15px;
+                }
             }
         }
 

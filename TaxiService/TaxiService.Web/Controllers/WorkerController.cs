@@ -44,10 +44,10 @@ namespace TaxiService.Web.Controllers
         }
 
         [HttpPost("jobs")]
-        public async Task<PagedData<ReservationDetailDto>> GetCurrentJobs([FromBody] PagerDto pager)
+        public async Task<PagedData<ReservationDetailDto>> GetCurrentJobs([FromBody] WorkerJobsFilterDto filter)
         {
             var user = await userManager.GetUserAsync(User);
-            return await reservationService.GetWorkerReservations(user.Id, pager);
+            return await reservationService.GetWorkerReservations(user.Id, filter);
         }
     }
 }
