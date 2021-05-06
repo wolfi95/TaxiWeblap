@@ -60,6 +60,11 @@ html, body, #root, .App, .wrapper{
   }
 }
 
+.MuiButton-root.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26) !important;
+  background-color: rgba(223, 223, 223, 0.842) !important;
+}
+
 .MuiInputLabel-root.Mui-focused {
   color: goldenrod !important
 }
@@ -87,6 +92,9 @@ html, body, #root, .App, .wrapper{
 
 .MuiFormControl-marginNormal {
   margin-top: 8px !important;
+}
+.MuiSelect-select.MuiSelect-select {
+  padding-left: 5px;
 }
 
 a {

@@ -22,9 +22,6 @@
     margin-right: 10px;
     display: flex;
     flex-direction: row;
-    ul li:first-child {
-        padding-top: 20px;
-    }
 }
 
 .no-preference {
@@ -44,6 +41,10 @@
 
 .res-card {
     overflow-y: auto;
+    background-color: rgba(71, 71, 71, 0.568) !important;
+    color: white !important;
+    text-align: end;
+
     & .MuiCardContent-root {
         display: flex;
         flex-direction: row;

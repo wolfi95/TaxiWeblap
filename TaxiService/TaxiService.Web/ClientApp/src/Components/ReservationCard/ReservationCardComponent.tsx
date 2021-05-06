@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import './ReservationCardComponent.scss'
 import { Button, Card, CardContent } from '@material-ui/core';
-import { ReservationType } from '../../config/Enums/ReservationType';
+import { ReservationType, reservationTypeString } from '../../config/Enums/ReservationType';
 import ReservationDetailDto from '../../dtos/Reservation/ReservationDetailDto'
 import { RootState } from '../../redux/reducers/rootReducer';
 import { connect } from 'react-redux';
 import { UserRoles } from '../../dtos/User/UserDto';
 import { ReservationStatus, reservationStatusString } from '../../config/Enums/ReservationStatus';
 import { Redirect } from 'react-router';
+import { dateToString } from '../../helpers/DateStringHelper'
+import { carTypeString } from '../../config/Enums/CarType';
 
 export interface ReservationCardProps {
+    showDetails?: boolean;
     reservation: ReservationDetailDto;
     onAssignClicked?(id:string): void;
 }
@@ -44,12 +47,20 @@ function ReservationCardComponent(props: Props) {
                         ) : (
                             <div className="address-row">
                                 <span>Duration:</span>
-                                <span>{ props.reservation.duration }</span>                                                                                    
+                                <span>{ props.reservation.duration + " hours" }</span>                                                                                    
                             </div>
                         )}
                     <div className="address-row">
                         <span>Status: </span>
                         <span>{ reservationStatusString(props.reservation.status) }</span>
+                    </div>
+                    <div className="address-row">
+                        <span>Reservation type: </span>
+                        <span>{ reservationTypeString(props.reservation.reservationType) }</span>
+                    </div>
+                    <div className="address-row">
+                        <span>Car type: </span>
+                        <span>{ carTypeString(props.reservation.carType) }</span>
                     </div>
                 </div>
                 <div className="preferences-column">
@@ -70,7 +81,7 @@ function ReservationCardComponent(props: Props) {
                     }
                 </div>
                 <div className="last-column">
-                    { props.role === UserRoles.User && 
+                    { (props.role === UserRoles.User || props.showDetails) && 
                         <Button onClick={() => setDetailsRedirect(props.reservation.id)} variant="outlined">Details</Button> 
                     }
                     { (props.role === UserRoles.Administrator && props.reservation.status === ReservationStatus.Payed) &&
@@ -82,6 +93,7 @@ function ReservationCardComponent(props: Props) {
                     { props.role === UserRoles.Worker || 
                         <span>Price: {props.reservation.price + " "} .-</span>
                     }
+                    <span>Date: {dateToString(props.reservation.date)} </span>
                 </div>
             </CardContent>
         </Card>

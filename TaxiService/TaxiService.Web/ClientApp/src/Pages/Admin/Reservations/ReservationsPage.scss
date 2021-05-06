@@ -6,11 +6,12 @@
 
     .search-component {
         display: flex;
-        background-color: rgba(128, 128, 128, 0.788);
+        background-color: rgba(128, 128, 128, 0.438);
         border-radius: 5px;
         padding: 25px;
         flex-wrap: wrap;
         margin: 0 !important;
+        margin-bottom: 25px !important;
 
         .MuiInputBase-root {
             background-color: white;
@@ -23,6 +24,8 @@
             flex-direction: column;
             margin-right: 25px;
             position: relative;
+            flex-grow: 1;
+            max-width: 450px;
             
             > span {
                 margin-bottom: 10px;
@@ -50,6 +53,14 @@
 
             & .text {
                 margin-right: 15px;
+            }
+        }
+
+        .button-section {
+            .MuiButton-root {
+                padding: 6px 0 !important;
+                min-width: 40px;
+                margin: 0 10px;
             }
         }
     }
