@@ -97,6 +97,11 @@ html, body, #root, .App, .wrapper{
   padding-left: 5px;
 }
 
+.MuiDialog-paper {
+  background-color: rgba(41, 41, 41, 0.897) !important;
+  color: white !important;
+}
+
 a {
   color: goldenrod !important;
 

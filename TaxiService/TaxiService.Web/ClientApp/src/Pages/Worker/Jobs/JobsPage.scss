@@ -1,0 +1,23 @@
+.jobs-page-wrapper {
+    .pager-controls {
+        display: flex;
+        justify-content: space-between;
+        margin: 15px 0;
+        width: 100%;
+
+        .pagesize-section {
+
+            & .text {
+                margin-right: 15px;
+            }
+        }
+
+        .button-section {
+            .MuiButton-root {
+                padding: 6px 0 !important;
+                min-width: 40px;
+                margin: 0 10px;
+            }
+        }
+    }
+}

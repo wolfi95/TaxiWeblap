@@ -17,6 +17,42 @@
     button {
         margin-bottom: 15px;
     }
+
+    .assign {
+        position: relative;
+
+        .assign-select {
+            position: absolute;
+            bottom: -31px;
+            left: 4px;
+            background-color: rgba(26, 26, 26, 0.911);
+            color: white;
+            border-radius: 5px;
+            padding: 10px;
+            
+            &>span {
+                cursor: pointer;
+                display: block;
+                white-space: nowrap;
+            }
+        }
+
+        .update-select {
+            position: absolute;
+            bottom: -56px;
+            left: 0px;
+            background-color: rgba(26, 26, 26, 0.911);
+            color: white;
+            border-radius: 5px;
+            padding: 10px;
+            
+            &>span {
+                cursor: pointer;
+                display: block;
+                white-space: nowrap;
+            }
+        }
+    }
 }
 
 .preferences-column {

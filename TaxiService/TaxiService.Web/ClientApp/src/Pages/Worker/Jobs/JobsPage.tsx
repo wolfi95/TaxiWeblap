@@ -41,7 +41,7 @@ export default function JobsPage() {
     }
 
     return (
-        <div>
+        <Container maxWidth="lg" className="jobs-page-wrapper">
             <div className="pager-controls">
                 <div className="pagesize-section">
                     <span className="text">Page size:</span>
@@ -56,17 +56,18 @@ export default function JobsPage() {
                     </Select>
                 </div>
                 <div className="button-section">
-                    <Button onClick={() => {setPager({...pager, PageNumber: 1})}} disabled={pager.PageNumber === 1} className="first-button">{"<<"}</Button>
-                    <Button onClick={() => {setPager({...pager, PageNumber: pager.PageNumber - 1})}} disabled={pager.PageNumber === 1} className="back-button">{"<"}</Button>
-                    <span className="page-button">{pager.PageNumber / Math.ceil((reservations?.resultCount ?? 1) / pager.PageSize)}</span>
-                    <Button onClick={() => {setPager({...pager, PageNumber: pager.PageNumber + 1})}} disabled={pager.PageNumber >= ((reservations?.resultCount ?? 1) / pager.PageSize)} className="next-button">{">"}</Button>
-                    <Button onClick={() => {setPager({...pager, PageNumber: Math.ceil((reservations?.resultCount ?? 1) / pager.PageSize)})}} disabled={pager.PageNumber >= ((reservations?.resultCount ?? 1) / pager.PageSize)} className="last-button">{">>"}</Button>
+                    <Button variant="contained" color="secondary" onClick={() => {setPager({...pager, PageNumber: 1})}} disabled={pager.PageNumber === 1} className="first-button">{"<<"}</Button>
+                    <Button variant="contained" color="secondary" onClick={() => {setPager({...pager, PageNumber: pager.PageNumber - 1})}} disabled={pager.PageNumber === 1} className="back-button">{"<"}</Button>
+                    <span className="page-button">{pager.PageNumber + "/" + Math.ceil((reservations?.resultCount ?? 1) / pager.PageSize)}</span>
+                    <Button variant="contained" color="secondary" onClick={() => {setPager({...pager, PageNumber: pager.PageNumber + 1})}} disabled={pager.PageNumber >= ((reservations?.resultCount ?? 1) / pager.PageSize)} className="next-button">{">"}</Button>
+                    <Button variant="contained" color="secondary" onClick={() => {setPager({...pager, PageNumber: Math.ceil((reservations?.resultCount ?? 1) / pager.PageSize)})}} disabled={pager.PageNumber >= ((reservations?.resultCount ?? 1) / pager.PageSize)} className="last-button">{">>"}</Button>
                 </div>
+                
             </div>
             <div className="results-section">
                 {reservations?.data.map(r => {
                     return (
-                        <ReservationCardComponent reservation={r} onAssignClicked={(id) => {setUpdateDialogId(id)}} />
+                        <ReservationCardComponent reservation={r} />
                     );
                 })}
             </div>
@@ -85,6 +86,6 @@ export default function JobsPage() {
                     <Button onClick={() => setUpdateDialogId("")}>Cancel</Button>
                 </DialogActions>
             </Dialog>
-        </div>
+        </Container>
     )
 }

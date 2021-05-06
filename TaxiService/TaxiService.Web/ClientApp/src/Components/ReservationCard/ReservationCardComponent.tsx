@@ -10,11 +10,15 @@ import { ReservationStatus, reservationStatusString } from '../../config/Enums/R
 import { Redirect } from 'react-router';
 import { dateToString } from '../../helpers/DateStringHelper'
 import { carTypeString } from '../../config/Enums/CarType';
+import { axiosInstance } from '../../config/Axiosconfig';
+import WorkerDto from '../../dtos/User/WorkerDto';
+import AssignWorkerDto from '../../dtos/Worker/AssignWorkerDto';
+import { WorkerReservationStatus, workerReservationStatusString } from '../../config/Enums/WorkerReservationStatus';
+import WorkerReservationStatusUpdateDto from '../../dtos/Worker/WorkerReservationStatusUpdateDto';
 
 export interface ReservationCardProps {
     showDetails?: boolean;
     reservation: ReservationDetailDto;
-    onAssignClicked?(id:string): void;
 }
 
 interface IMappedProps {
@@ -25,6 +29,48 @@ type Props = IMappedProps & ReservationCardProps
 
 function ReservationCardComponent(props: Props) {
     const [detailsRedirect, setDetailsRedirect] = useState("");
+    const [workers, setWorkers] = useState<WorkerDto[]>([])
+    const [assignSelectOpen, setAssignSelectOpen] = useState(false);
+    const [updateSelectOpen, setUpdateSelectOpen] = useState(false);
+
+    const openAssignSelect = (e: any) => {
+        if(assignSelectOpen) {
+            setAssignSelectOpen(false)
+        } else {
+            axiosInstance.get("admin/workers")
+                .then(res => {
+                    setWorkers(res.data);
+                    setAssignSelectOpen(true)
+                })
+                .catch(err => {})
+        }
+    }
+
+    const onAssignClicked = (id: string) => {
+        var data: AssignWorkerDto = {
+            ReservationId: props.reservation.id,
+            WorkerId: id
+        }
+
+        axiosInstance.post("admin/assign", data)
+            .then(res => {
+                props.reservation.status = ReservationStatus.Assigned;
+                setAssignSelectOpen(false)
+            })
+    }
+
+    const onUpdateClicked = (status: WorkerReservationStatus) => {
+        var data: WorkerReservationStatusUpdateDto = {
+            Status: +status
+        }
+
+        axiosInstance.post("worker/jobs/" + props.reservation.id + "/update", data)
+            .then(res => {
+                props.reservation.status = +status
+                setUpdateSelectOpen(false)
+            })
+            .catch(err => {})
+    }
 
     if(detailsRedirect !== ""){
         return <Redirect to={"/account/" + detailsRedirect + "/details"}/>
@@ -84,11 +130,28 @@ function ReservationCardComponent(props: Props) {
                     { (props.role === UserRoles.User || props.showDetails) && 
                         <Button variant="contained" color="primary" onClick={() => setDetailsRedirect(props.reservation.id)}>Details</Button> 
                     }
-                    { (props.role === UserRoles.Administrator && props.reservation.status === ReservationStatus.Payed) &&
-                        <Button variant="contained" color="primary" onClick={() => {if(props.onAssignClicked !== undefined) props.onAssignClicked(props.reservation.id)}}>Assign</Button> 
+                    { ((props.role === UserRoles.Administrator && props.reservation.status === ReservationStatus.Payed) && !props.showDetails) && 
+                        <div className="assign">
+                            <Button variant="contained" color="primary" onClick={(e) => openAssignSelect(e)}>Assign</Button>
+                            { assignSelectOpen &&
+                                <div className="assign-select">
+                                    {workers.map(r => {
+                                        return(<span onClick={() => onAssignClicked(r.id)}>{r.name}</span>)
+                                    })}
+                                </div>
+                            }
+                        </div>
                     }
                     { (props.role === UserRoles.Worker && (props.reservation.status === ReservationStatus.Assigned || props.reservation.status === ReservationStatus.OnTheWay)) &&
-                        <Button variant="contained" color="primary" onClick={() => {if(props.onAssignClicked !== undefined) props.onAssignClicked(props.reservation.id)}}>Update</Button> 
+                        <div className="assign">
+                            <Button variant="contained" color="primary" onClick={(e) => setUpdateSelectOpen(!updateSelectOpen)}>Update</Button>
+                            { updateSelectOpen &&
+                                <div className="update-select">
+                                    <span onClick={() => {onUpdateClicked(WorkerReservationStatus.OnTheWay)}}>{ workerReservationStatusString(WorkerReservationStatus.OnTheWay) }</span>
+                                    <span onClick={() => {onUpdateClicked(WorkerReservationStatus.Arrived)}}>{ workerReservationStatusString(WorkerReservationStatus.Arrived) }</span>
+                                </div>
+                            }
+                        </div>
                     }
                     { props.role === UserRoles.Worker || 
                         <span>Price: {props.reservation.price + " "} .-</span>

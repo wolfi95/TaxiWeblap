@@ -197,13 +197,13 @@ export default function ReservationsPage() {
                     <Button variant="contained" color="secondary" onClick={() => {setSearchData({...searchData, PageNumber: searchData.PageNumber - 1})}} disabled={searchData.PageNumber === 1} className="back-button">{"<"}</Button>
                     <span className="page-button">{searchData.PageNumber + "/" + Math.ceil((reservations?.resultCount ?? 1) / searchData.PageSize)}</span>
                     <Button variant="contained" color="secondary" onClick={() => {setSearchData({...searchData, PageNumber: searchData.PageNumber + 1})}} disabled={searchData.PageNumber >= ((reservations?.resultCount ?? 1) / searchData.PageSize)} className="next-button">{">"}</Button>
-                    <Button onClick={() => {setSearchData({...searchData, PageNumber: Math.ceil((reservations?.resultCount ?? 1) / searchData.PageSize)})}} disabled={searchData.PageNumber >= ((reservations?.resultCount ?? 1) / searchData.PageSize)} className="last-button">{">>"}</Button>
+                    <Button variant="contained" color="secondary"  onClick={() => {setSearchData({...searchData, PageNumber: Math.ceil((reservations?.resultCount ?? 1) / searchData.PageSize)})}} disabled={searchData.PageNumber >= ((reservations?.resultCount ?? 1) / searchData.PageSize)} className="last-button">{">>"}</Button>
                 </div>
             </div>
             <div className="results-section">
                 {reservations?.data.map(r => {
                     return (
-                        <ReservationCardComponent reservation={r} onAssignClicked={(id) => {openAssignModal(id)}} />
+                        <ReservationCardComponent reservation={r} />
                     );
                 })}
             </div>

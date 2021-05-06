@@ -640,7 +640,7 @@ namespace TaxiService.Bll.Services
 
         public async Task<PagedData<ReservationDetailDto>> GetWorkerReservations(string workerId, PagerDto pager)
         {
-            var data = await context.Reservations.Where(x => x.WorkerId == workerId).Select(x => new ReservationDetailDto {
+            var q = context.Reservations.Where(x => x.WorkerId == workerId).Select(x => new ReservationDetailDto {
                 CarType = x.CarType,
                 Comment = x.Comment,
                 Date = x.Date,
@@ -651,14 +651,16 @@ namespace TaxiService.Bll.Services
                 ToAddrress = x.ToAddress,
                 Id = x.Id,
                 Status = x.Status
-            })
-            .Skip(pager.PageSize * (pager.PageNumber - 1)).Take(pager.PageSize)
+            });
+            var count = await q.CountAsync();
+
+            var data = await q.Skip(pager.PageSize * (pager.PageNumber - 1)).Take(pager.PageSize)
             .ToListAsync();
             
             return new PagedData<ReservationDetailDto>
             {
                 Data = data,
-                ResultCount = data.Count()
+                ResultCount = count
             };
         }
     }
