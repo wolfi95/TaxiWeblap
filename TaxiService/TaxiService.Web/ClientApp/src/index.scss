@@ -104,3 +104,12 @@ a {
     text-decoration: none !important;
   }
 }
+
+.error-button {
+  background-color: rgb(146, 4, 4) !important;
+  color: white !important;
+
+  &:hover {
+      background-color: rgb(119, 3, 3) !important;
+  }
+}
