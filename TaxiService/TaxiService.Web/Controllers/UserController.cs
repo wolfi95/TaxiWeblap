@@ -143,15 +143,12 @@ namespace TaxiService.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{id}/reservations")]
-        public async Task<List<ReservationDetailDto>> GetUserReservations([FromRoute] string id)
+        [Route("reservations")]
+        public async Task<List<ReservationDetailDto>> GetUserReservations()
         {
-            if (String.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException("User identifier cannot be empty");
-            }
             var user = await userManager.GetUserAsync(User);
-            if (user.Id != id)
+
+            if (user == null)
             {
                 if(!(await userManager.IsInRoleAsync(user, UserRoles.Administrator)))
                 {
@@ -159,27 +156,20 @@ namespace TaxiService.Web.Controllers
                 }
             }
 
-            return await reservationService.GetUserReservations(id);
+            return await reservationService.GetUserReservations(user.Id);
         }  
         
         [HttpPost]
-        [Route("{id}/changePassword")]
-        public async Task ChangePassword([FromRoute] string id, [FromBody] ResetPassDto resetPassDto)
+        [Route("changePassword")]
+        public async Task ChangePassword([FromBody] ResetPassDto resetPassDto)
         {
-            if (String.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException("User identifier cannot be empty");
-            }
             var user = await userManager.GetUserAsync(User);
+
             if(user == null)
             {
                 throw new ArgumentException("Cannot find user");
             }
 
-            if ( user.Id != id)
-            {
-                throw new ArgumentException("Unauthorized access attempt.");
-            }
             if (String.IsNullOrEmpty(resetPassDto.OldPassword) || String.IsNullOrEmpty(resetPassDto.NewPassword) || String.IsNullOrEmpty(resetPassDto.NewPasswordConfirm))
             {
                 throw new BuisnessLogicException("Fields cannot be empty.");
@@ -197,79 +187,63 @@ namespace TaxiService.Web.Controllers
         }
 
         [HttpPost]
-        [Route("{id}/changeData")]
-        public async Task ChangePersonalData([FromRoute] string id, ChangePersonalDataDto personalDataDto)
+        [Route("changeData")]
+        public async Task ChangePersonalData(ChangePersonalDataDto personalDataDto)
         {
-            if (String.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException("User identifier cannot be empty");
-            }
-            if ((await userManager.GetUserAsync(User)).Id != id)
+            var user = await userManager.GetUserAsync(User);
+
+            if (user == null)
             {
                 throw new ArgumentException("Unauthorized access attempt.");
             }
 
-            await userService.ChangePersonalData(personalDataDto, userManager.GetUserId(User));
+            await userService.ChangePersonalData(personalDataDto, user.Id);
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public async Task<UserDetailDto> GetUserData([FromRoute] string id)
+        public async Task<UserDetailDto> GetUserData()
         {
-            if (String.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException("User identifier cannot be empty");
-            }
-            if ((await userManager.GetUserAsync(User)).Id != id)
+            var user = await userManager.GetUserAsync(User);
+            if (user == null)
             {
                 throw new ArgumentException("Unauthorized access attempt.");
             }
 
-            return await userService.GetUserDetail(id);
+            return await userService.GetUserDetail(user.Id);
         }
 
         [HttpPost]
-        [Route("{id}/emailNotifications")]
-        public async Task ChangeEmailNotificationsSetting([FromRoute] string id)
+        [Route("emailNotifications")]
+        public async Task ChangeEmailNotificationsSetting()
         {
-            if (String.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException("User identifier cannot be empty");
-            }
-            if ((await userManager.GetUserAsync(User)).Id != id)
+            var user = await userManager.GetUserAsync(User);
+
+            if (user == null)
             {
                 throw new ArgumentException("Unauthorized access attempt.");
             }
 
-            await userService.ChangeEmailNotificationSetting(id);
+            await userService.ChangeEmailNotificationSetting(user.Id);
         }
 
         [HttpGet]
-        [Route("{id}/settings")]
-        public async Task<UserSettingsDto> GetUserSettings([FromRoute] string id)
+        [Route("settings")]
+        public async Task<UserSettingsDto> GetUserSettings()
         {
-            if (String.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException("User identifier cannot be empty");
-            }
-            if ((await userManager.GetUserAsync(User)).Id != id)
+            var user = await userManager.GetUserAsync(User);
+            if (user == null)
             {
                 throw new ArgumentException("Unauthorized access attempt.");
             }
 
-            return await userService.GetUserSettings(id);
+            return await userService.GetUserSettings(user.Id);
         }
 
         [HttpDelete]
-        [Route("{id}")]
-        public async Task DeleteAccount([FromRoute] string id)
+        public async Task DeleteAccount()
         {
-            if (String.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException("User identifier cannot be empty");
-            }
             var user = await userManager.GetUserAsync(User);
-            if (user.Id != id)
+            if (user == null)
             {
                 throw new ArgumentException("Unauthorized access attempt.");
             }

@@ -27,16 +27,19 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     drawerRoot: {
       display: 'flex',
-      flexDirection: 'row'
+      flexDirection: 'row',
+      justifyContent: "center",
+      backgroundColor: 'transparent'
     },
     appBar: {
         height: 'fit-content',
-      transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
+        transition: theme.transitions.create(['margin', 'width'], {
+          easing: theme.transitions.easing.sharp,
+          duration: theme.transitions.duration.leavingScreen,
+        })
     },
     appBarShift: {
+      whiteSpace: 'nowrap',
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
       transition: theme.transitions.create(['margin', 'width'], {
@@ -67,13 +70,14 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'flex-end',
     },
     content: {
-      maxWidth: '100%',
       flexGrow: 1,
+      maxWidth: '80%',
       padding: theme.spacing(3),
       transition: theme.transitions.create('margin', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
+      margin: '25px',
       marginLeft: -drawerWidth,
     },
     contentShift: {
@@ -124,68 +128,68 @@ function AccountPageWrapper(props: Props) {
       return(<Redirect to={content}/>)
     }
     else {
-        return (
-            <div className="acc-nav-root">
-                <CssBaseline />
-                <AppBar
-                  position="relative"
-                  className={clsx(classes.appBar, {
-                      [classes.appBarShift]: open,
-                  })}
-                >
-                <Toolbar>
-                    <IconButton
-                    color="inherit"
-                    aria-label="open drawer"
-                    onClick={handleDrawerOpen}
-                    edge="start"
-                    className={clsx(classes.menuButton, open && classes.hide)}
-                    >
-                    <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6">
-                    <span>My Account / </span>
-                    <span>{" " + props.header}</span>
-                    </Typography>
-                </Toolbar>
-                </AppBar>
-                <div className={classes.drawerRoot}>
-                <Drawer
-                  className={classes.drawer}
-                  variant="persistent"
-                  anchor="left"
-                  open={open}
-                  classes={{
-                    paper: classes.drawerPaper,
-                  }}
-                >
-                <div className={classes.drawerHeader}>
-                    <IconButton onClick={handleDrawerClose}>
-                    {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                    </IconButton>
-                </div>
-                <Divider />
-                <List>
-                    {['Account overview', 'Change password', 'Change personal data', 'My reservations', 'Settings'].map((text, index) => (
-                        <div>
-                            <ListItem button onClick={() => handleMenuClick(index)} key={text}>
-                                <ListItemText primary={text} />
-                            </ListItem>
-                            <Divider />
-                        </div>
-                    ))}
-                </List>
-                </Drawer>
-                <main
-                className={clsx(classes.content, {
-                    [classes.contentShift]: open,
-                })}
-                >
-                    {props.children}
-                </main>
-            </div>
-        </div>
-        )
+      return (
+        <div className="acc-nav-root">
+          <CssBaseline />
+          <AppBar
+            position="relative"
+            className={clsx(classes.appBar, {
+                [classes.appBarShift]: open,
+            })}
+          >
+            <Toolbar>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                className={clsx(classes.menuButton, open && classes.hide)}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6">
+              <span>My Account / </span>
+              <span>{" " + props.header}</span>
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <div className={classes.drawerRoot}>
+            <Drawer
+              className={classes.drawer}
+              variant="persistent"
+              anchor="left"
+              open={open}
+              classes={{
+                paper: classes.drawerPaper,
+              }}
+            >
+              <div className={classes.drawerHeader}>
+                  <IconButton onClick={handleDrawerClose}>
+                  {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                  </IconButton>
+              </div>
+              <Divider />
+              <List>
+                {['Account overview', 'Change password', 'Change personal data', 'My reservations', 'Settings'].map((text, index) => (
+                  <div>
+                    <ListItem className="drawer-list-item" button onClick={() => handleMenuClick(index)} key={text}>
+                      <ListItemText primary={text} />
+                    </ListItem>
+                    <Divider />
+                  </div>
+                ))}
+              </List>
+            </Drawer>
+            <main
+              className={clsx(classes.content, {
+                  [classes.contentShift]: open,
+              })}
+            >
+              {props.children}
+            </main>
+          </div>
+      </div>
+      )
     }
 }
 

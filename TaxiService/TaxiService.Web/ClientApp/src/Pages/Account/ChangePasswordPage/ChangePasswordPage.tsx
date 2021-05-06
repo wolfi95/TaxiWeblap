@@ -61,7 +61,7 @@ function ChangePasswordPage(props: IMappedProps) {
             return;
         }        
         axiosInstance.defaults.headers["Authorization"] = "Bearer " + props.token;
-        axiosInstance.post("user/" + props.id + "/changePassword", {NewPassword: newPass, NewPasswordConfirm: newPassRe, OldPassword: oldPass} as  ChangePasswordDto)
+        axiosInstance.post("user/changePassword", {NewPassword: newPass, NewPasswordConfirm: newPassRe, OldPassword: oldPass} as  ChangePasswordDto)
             .then(res => {
                 setErrorMsg("");
                 resetPage();
@@ -73,12 +73,12 @@ function ChangePasswordPage(props: IMappedProps) {
     return(
         <AccountPageWrapper header="Change Password">
             <div className="form-wrapper">
-                <TextField id="old-pass-field" label="Old password" type="password" variant="outlined" value={oldPass} onChange={(e) => setOldPass(e.currentTarget.value)}/>
-                <TextField id="new-pass-field"  error={passwordInvalid !== ""} label="New password" type="password" variant="outlined" value={newPass} onChange={(e) => setNewPass(e.currentTarget.value)}/>
+                <TextField id="old-pass-field" label="Old password" type="password" variant="filled" value={oldPass} onChange={(e) => setOldPass(e.currentTarget.value)}/>
+                <TextField id="new-pass-field"  error={passwordInvalid !== ""} label="New password" type="password" variant="filled" value={newPass} onChange={(e) => setNewPass(e.currentTarget.value)}/>
                 {passwordInvalid && <span className="error-text">{passwordInvalid}</span>}
-                <TextField id="new-pass-re-field" error={error !== ""} label="New password confirm" type="password" variant="outlined" value={newPassRe} onChange={(e) => setNewPassRe(e.currentTarget.value)}/>
+                <TextField id="new-pass-re-field" error={error !== ""} label="New password confirm" type="password" variant="filled" value={newPassRe} onChange={(e) => setNewPassRe(e.currentTarget.value)}/>
                 {error && <span className="error-text">{error}</span>}
-                <Button className="change-button" variant="outlined" onClick={() => handleSubmit()}>Change</Button>
+                <Button color="primary" className="change-button" variant="contained" onClick={() => handleSubmit()}>Change</Button>
                 <Snackbar
                     autoHideDuration={5000}
                     open={open}

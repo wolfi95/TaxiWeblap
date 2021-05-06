@@ -1,13 +1,16 @@
 .acc-nav-root {
     .MuiDrawer-paper {
         top: auto !important;
-        position: relative !important;    
+        position: absolute;
     }
 
-    .MuiList-root {
-        background-color: white;
-        color: black;
+    & .MuiList-root {
+        background-color: transparent !important;
         border-right: 1px solid rgba(0, 0, 0, 0.12) !important;
+    }
+
+    .MuiSvgIcon-root {
+        color: white !important
     }
 
     ul {
@@ -15,13 +18,27 @@
     }
 
     .MuiAppBar-colorPrimary {
-        background-color: black !important;
-        border-top: 1px solid white !important;    
+        background-color: rgba(0, 0, 0, 0.473) !important;
+        border-top: 1px solid white !important;   
     }
 
     .MuiDrawer-paperAnchorDockedLeft {
         border-right: none !important;
     }
+    
+    .MuiDrawer-paper {
+        background-color: transparent !important;
+    }
 
     overflow-x: hidden;
+
+    .drawer-list-item {
+        color: white;
+        background-color: rgba(0, 0, 0, 0.808);
+    }
+
+    main {
+        background-color: rgba(0, 0, 0, 0.192);
+        border-radius: 15px;
+    }
 }

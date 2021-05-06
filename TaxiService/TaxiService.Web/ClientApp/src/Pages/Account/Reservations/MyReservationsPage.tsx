@@ -23,7 +23,7 @@ function MyReservationsPage(props: IMappedProps) {
     useEffect(() => {        
         if(init) {
             axiosInstance.defaults.headers["Authorization"] = "Bearer " + props.token;
-            axiosInstance.get("/user/" + props.id + "/reservations")
+            axiosInstance.get("/user/reservations")
                 .then(res => {
                     setReservations(res.data);
                     setInit(false);
@@ -43,7 +43,7 @@ function MyReservationsPage(props: IMappedProps) {
             <div className="reservation-wrapper">
                 {myReservations.map(res => {
                     return(
-                        <ReservationCardComponent reservation={res} />
+                        <ReservationCardComponent reservation={res} showDetails />
                     )
                 })
                 }

@@ -8,10 +8,12 @@ import './SettingsPage.scss'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { bindActionCreators, Dispatch } from 'redux';
 import { clearUserState, UserActionTypes } from '../../../redux/actions/userActions';
+import { UserRoles } from '../../../dtos/User/UserDto';
 
 interface IMappedProps {
     token: string;
     id: string;
+    role: string;
 }
 
 interface IDispatchedProps {
@@ -27,7 +29,7 @@ function SettingsPage(props: Props) {
     const [logoutRedirect, setLogoutRedirect] = useState(false);
 
     const tryDeleteAccount = () => {
-        axiosInstance.delete("/user/" + props.id)
+        axiosInstance.delete("/user")
             .then(res => {
                 sessionStorage.clear();
                 setLogoutRedirect(true);
@@ -39,11 +41,13 @@ function SettingsPage(props: Props) {
         if(init) {
             setInit(false);
             axiosInstance.defaults.headers["Authorization"] = "Bearer " + props.token;
-            axiosInstance.get("/user/" + props.id + "/settings")
+            if(props.role === UserRoles.User) {
+            axiosInstance.get("/user/settings")
                 .then(res => {
                     setEmailChecked(res.data.allowEmails);
                 })
                 .catch(err => {})
+            }
         }
         if(logoutRedirect) {
             setLogoutRedirect(false);
@@ -52,7 +56,7 @@ function SettingsPage(props: Props) {
     })
 
     const trySetEmailChecked = () => {
-        axiosInstance.post("/user/" + props.id + "/emailNotifications")
+        axiosInstance.post("/user/emailNotifications")
             .then(res => {
                 setEmailChecked(!emailChecked)
             })
@@ -62,14 +66,16 @@ function SettingsPage(props: Props) {
     return(
         <AccountPageWrapper header="Settings">
             <div className="settings-root">
-                <div className="switch-gorup">
-                    <span>Email notifications:</span>
-                    <Switch
-                        checked={emailChecked}
-                        onChange={() => trySetEmailChecked()}
-                        color="primary"
-                    />
-                </div>
+                { props.role === UserRoles.User &&
+                    <div className="switch-gorup">
+                        <span>Email notifications:</span>
+                        <Switch
+                            checked={emailChecked}
+                            onChange={() => trySetEmailChecked()}
+                            color="primary"
+                        />
+                    </div>
+                }
                 <Button 
                     className="delete-button"
                     variant="contained"
@@ -109,8 +115,9 @@ function SettingsPage(props: Props) {
 
 const mapStateToProps = (state: RootState): IMappedProps => {
     return { 
-        token: state.user.token ,
-        id: state.user.userId
+        token: state.user.token,
+        id: state.user.userId,
+        role: state.user.role
     }
 };
 const mapDispatchToProps = (dispatch: Dispatch<UserActionTypes>) =>

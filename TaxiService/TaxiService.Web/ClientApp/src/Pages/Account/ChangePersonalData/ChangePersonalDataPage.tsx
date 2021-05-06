@@ -46,7 +46,7 @@ function ChangePersonalDataPage(props: Props) {
         }
         var newState = {Address: address, Email: email, Name: name} as  ChangePersonalDataDto        
         axiosInstance.defaults.headers["Authorization"] = "Bearer " + props.token;
-        axiosInstance.post("user/" + props.id + "/changeData", newState)
+        axiosInstance.post("user/changeData", newState)
             .then(res => {
                 dispatchH(updateUserState(newState))
                 setErrorMsg("");
@@ -58,11 +58,11 @@ function ChangePersonalDataPage(props: Props) {
     return(
         <AccountPageWrapper header="Change Personal Data">
             <div className="personal-form-wrapper">
-                <TextField id="name-field" label="Name" variant="outlined" value={name} onChange={(e) => setName(e.currentTarget.value)}/>
-                <TextField id="email-field"  error={emailError !== ""} label="Email" variant="outlined" value={email} onChange={(e) => setEmail(e.currentTarget.value)}/>
+                <TextField id="name-field" label="Name" variant="filled" value={name} onChange={(e) => setName(e.currentTarget.value)}/>
+                <TextField id="email-field"  error={emailError !== ""} label="Email" variant="filled" value={email} onChange={(e) => setEmail(e.currentTarget.value)}/>
                 {emailError && <span className="error-text">{emailError}</span>}
-                <TextField id="address-field" label="Address" variant="outlined" value={address} onChange={(e) => setAddress(e.currentTarget.value)}/>
-                <Button className="change-button" variant="outlined" onClick={() => handleSubmit()}>Change</Button>
+                <TextField id="address-field" label="Address" variant="filled" value={address} onChange={(e) => setAddress(e.currentTarget.value)}/>
+                <Button color="primary" className="change-button" variant="contained" onClick={() => handleSubmit()}>Change</Button>
                 <Snackbar
                     autoHideDuration={5000}
                     open={open}
