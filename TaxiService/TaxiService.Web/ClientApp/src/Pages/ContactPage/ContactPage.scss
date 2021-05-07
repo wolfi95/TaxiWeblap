@@ -1,26 +1,18 @@
 .contact-card {
     margin: 2% 10%;
+    padding: 3%;
     display: flex;
     flex-direction: column;
-    div span {
-        width: 70px;
-        display: inline-block;
-        margin: 15px;
-    }
-    
-    .MuiTextField-root {
-        width: 80%;
-        margin-left: 15px;
-        &:last-child {
-            margin-bottom: 15px;
-        }        
+    justify-content: center;
+    align-items: center;
+
+    &.MuiPaper-root {
+        background-color: rgba(78, 78, 78, 0.856);
     }
 
-    .reason-input {
-        input {
-            padding-top: 30px !important;
-            padding-bottom: 16px;
-        }
+    .MuiTextField-root {
+        width: 80% !important;
+        margin: 25px;
     }
 
     button {
@@ -28,7 +20,7 @@
         margin-bottom: 25px;
         margin-right: 5%;
         margin-left: 15px;
-        @media screen and (max-width: 736px){
+        @media screen and (max-width: 736px) {
             width: 80% !important;
             align-self: auto !important;
         }
@@ -38,5 +30,10 @@
 .contact-page-wrapper {
     h1 {
         margin: 25px;
+        color: goldenrod;
+
+        @media screen and (max-width: 736px) {
+           text-align: center;
+        }
     }
 }

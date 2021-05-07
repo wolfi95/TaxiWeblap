@@ -257,5 +257,20 @@ namespace TaxiService.Web.Controllers
         {
             return await userService.GetAllUsers();
         }
+
+        [HttpPost("contact")]
+        public async Task<IActionResult> ContactUs([FromBody] ContactUsDto contactUsDto)
+        {
+            var user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ArgumentException("Unauthorized access attempt.");
+            }
+
+            emailService.SendMail(Environment.GetEnvironmentVariable("BOOKING_EMAIL") ?? configuration["EmailService:User"], "Contact - " + contactUsDto.Reason, contactUsDto.Message + "\nFrom: " + user.Email);
+            emailService.SendMail(user.Email, "Taxi service contact", "You have reached out to us with the following message:\n" + contactUsDto.Message);
+
+            return Ok();
+        }
     }
 }

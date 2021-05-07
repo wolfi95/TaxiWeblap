@@ -106,10 +106,12 @@
     font-weight: lighter;
 }
 
-.MuiList-root.services-menu {
-    background-color: black;
-    color: white;
-    li {
-        font-weight: bolder;
+.services-menu {
+    .MuiList-root {
+        background-color: rgba(24, 24, 24, 0.89);
+        color: white;
+        li {
+            font-weight: bolder;
+        }
     }
 }
