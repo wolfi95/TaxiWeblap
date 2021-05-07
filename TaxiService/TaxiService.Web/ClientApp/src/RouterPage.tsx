@@ -26,6 +26,7 @@ import { AnyAction, bindActionCreators, Dispatch } from 'redux';
 import { clearError, setError } from './redux/actions/errorActions';
 import { axiosInstance } from './config/Axiosconfig';
 import JobsPage from './Pages/Worker/Jobs/JobsPage';
+import AboutPage from './Pages/About/AboutPage'
 
 interface IMappedState{
     token: string;
@@ -74,6 +75,10 @@ function RouterPage(props: Props){
                 <Route exact path="/register">
                     <RegisterPage />
                 </Route>
+                <Route exact path="/about" component={AboutPage}/>
+                <Route exact path="/services/airport"/>
+                <Route exact path="/services/chaffeurs"/>
+                <Route exact path="/services/events"/>
                 {props.token || <Redirect to="/login"/>}
                 {props.role === UserRoles.Administrator && <Route exact path="/users" component={UsersPage}/>}
                 {props.role === UserRoles.Administrator && <Route exact path="/users/:id" component={UserReservationsPage}/>}
@@ -83,7 +88,6 @@ function RouterPage(props: Props){
                 {props.role === UserRoles.User && <Route exact path="/home" component={ReservationPage}/>}
                 {props.role === UserRoles.Worker && <Route exact path="/home" component={JobsPage}/>}
                 <Route exact path="/successfulPayment"  component={SuccessfulPaymentPage} />
-                <Route exact path="/about"/>
                 <Route exact path="/account/overview" component={OverViewPage}/>
                 <Route exact path="/account/pass" component={ChangePasswordPage}/>
                 <Route exact path="/account/personal" component={ChangePersonalDataPage}/>
@@ -91,9 +95,6 @@ function RouterPage(props: Props){
                 <Route exact path="/account/:id/details" component={ReservationDetailsPage}/>
                 <Route exact path="/account/settings" component={SettingsPage}/>
                 <Route exact path="/contact" component={ContactPage}/>
-                <Route exact path="/services/airport"/>
-                <Route exact path="/services/chaffeurs"/>
-                <Route exact path="/services/events"/>
                 <Redirect to="/home"/>
             </Switch>
             <FooterComponent/>

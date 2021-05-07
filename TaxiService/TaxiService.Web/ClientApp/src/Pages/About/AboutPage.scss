@@ -1,0 +1,42 @@
+.about-wrapper {
+    h1 {
+        color: goldenrod;
+        text-align: center;
+        margin-top: 25px;
+        margin-bottom: 50px;
+    }
+
+    .picture-section {
+        margin: 55px 0;
+        display: flex;
+        justify-content: center;
+
+        img {
+            width: 60%;
+            object-fit: contain;
+        }
+
+        p {
+            width: 40%;
+            margin-top: auto;
+            margin-bottom: auto;
+            padding-left: 25px;
+            text-align: justify;
+        }
+
+        @media screen and (max-width: 730px) {
+            flex-direction: column;
+            align-items: center;
+
+            img {
+                width: 100%;
+                margin-bottom: 25px;
+            }
+
+            p {
+                width: 100%;
+                padding: 0;
+            }
+        }
+    }
+}
