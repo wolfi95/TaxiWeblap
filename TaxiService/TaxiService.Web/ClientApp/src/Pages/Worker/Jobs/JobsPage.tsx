@@ -59,7 +59,7 @@ export default function JobsPage() {
                         </Select>
                     </div>
                     <div>
-                        <AppCheckbox checked={pager.HideComplete} label="Show done jobs." onChange={(e) => setPager({...pager, HideComplete: !pager.HideComplete})} />
+                        <AppCheckbox checked={pager.HideComplete} label="Hide completed jobs." onChange={(e) => setPager({...pager, HideComplete: !pager.HideComplete})} />
                     </div>
                 </div>
                 <div className="button-section">

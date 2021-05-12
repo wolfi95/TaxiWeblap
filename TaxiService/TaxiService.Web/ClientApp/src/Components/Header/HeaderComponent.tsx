@@ -125,7 +125,7 @@ function HeaderComponent(props: Props) {
             <Navbar variant="dark" expand="md" className="header-container">                        
                 <img
                 className="header-img"
-                //src={require("../images/logo_black.jpg")}
+                src={require("../../resources/images/logo.jpg").default}
                 ></img>
                 <span className="header-title">TAXI SERVICES</span>
                 <Navbar.Toggle />            
