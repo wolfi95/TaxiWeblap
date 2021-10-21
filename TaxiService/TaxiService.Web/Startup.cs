@@ -226,14 +226,6 @@ namespace TaxiService.Web
             worker1.Wait();
             if (worker1.Result != null)
             {
-                //var cu = userManager.CreateAsync(new User
-                //{
-                //    Email = "worker1@taxiservice.com",
-                //    UserName = "worker1@taxiservice.com",
-                //    Role = UserRoles.Worker,
-                //    Name = "Worker1",
-                //});
-                //cu.Wait();
                 var w = userManager.FindByEmailAsync("worker1@taxiservice.com");
                 w.Wait();
                 var x = userManager.AddPasswordAsync(w.Result, "WorkerPass1");

@@ -81,10 +81,17 @@
 
         > div {
             display: flex;
+            margin-top: 25px;
 
             img {
                 width: 200px;
                 cursor: pointer;
+                background-color: rgba(104, 104, 104, 0.212);
+                border-radius: 10px;
+
+                &:hover {
+                    background-color: rgba(255, 255, 255, 0.212);
+                }
             }
         }
     }
